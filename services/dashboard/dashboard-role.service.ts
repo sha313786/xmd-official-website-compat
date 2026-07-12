@@ -32,7 +32,7 @@ export class DashboardRoleService {
       console.log("========== AUTH USER ==========");
       console.log(user);
 
-      // Get Discord ID from every possible location
+      // Resolve Discord ID
       const discordId =
         user.user_metadata?.provider_id ||
         user.user_metadata?.sub ||
@@ -51,18 +51,19 @@ export class DashboardRoleService {
         return null;
       }
 
-      // Find verification
+      // Get the latest verified record
       const {
-        data: verification,
+        data: verifications,
         error: verificationError,
       } = await supabase
         .from("discord_verifications")
         .select("*")
         .eq("discord_id", String(discordId))
         .eq("verified", true)
-        .maybeSingle();
+        .order("created_at", { ascending: false })
+        .limit(1);
 
-      console.log("Verification:", verification);
+      console.log("Verification Records:", verifications);
       console.log("Verification Error:", verificationError);
 
       if (verificationError) {
@@ -70,10 +71,12 @@ export class DashboardRoleService {
         return null;
       }
 
-      if (!verification) {
+      if (!verifications || verifications.length === 0) {
         console.error("No verified record found.");
         return null;
       }
+
+      const verification = verifications[0];
 
       // Load member
       const {
@@ -99,8 +102,7 @@ export class DashboardRoleService {
       }
 
       const isManagement =
-        member.department?.trim().toUpperCase() ===
-        "MANAGEMENT";
+        member.department?.trim().toUpperCase() === "MANAGEMENT";
 
       return {
         id: member.id,
@@ -108,9 +110,7 @@ export class DashboardRoleService {
         badgeNumber: member.badge_number,
         fullName: member.full_name,
         rank: member.rank,
-        dashboard: isManagement
-          ? "management"
-          : "member",
+        dashboard: isManagement ? "management" : "member",
       };
     } catch (err) {
       console.error("DashboardRoleService Error:", err);
