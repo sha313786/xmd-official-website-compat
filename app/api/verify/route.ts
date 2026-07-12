@@ -3,75 +3,147 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export async function POST(req: Request) {
   try {
-    const { badgeNumber, verificationCode } = await req.json();
+    const body = await req.json();
+
+    const badgeNumber = String(body.badgeNumber ?? "").trim();
+    const verificationCode = String(body.verificationCode ?? "").trim();
+
+    console.log("========== VERIFY REQUEST ==========");
+    console.log("Badge Number:", badgeNumber);
+    console.log("Verification Code:", verificationCode);
+    console.log("Verification Code Type:", typeof verificationCode);
 
     if (!badgeNumber || !verificationCode) {
       return NextResponse.json(
-        { error: "Badge number and verification code are required." },
-        { status: 400 }
+        {
+          error: "Badge number and verification code are required.",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
     // Find verification
-    const { data: verification, error: verificationError } =
-      await supabaseAdmin
-        .from("discord_verifications")
-        .select("*")
-        .eq("verification_code", verificationCode)
-        .single();
+    const {
+      data: verification,
+      error: verificationError,
+    } = await supabaseAdmin
+      .from("discord_verifications")
+      .select("*")
+      .eq("verification_code", verificationCode)
+      .maybeSingle();
 
-    if (verificationError || !verification) {
+    console.log("Verification Record:", verification);
+    console.log("Verification Error:", verificationError);
+
+    if (verificationError) {
       return NextResponse.json(
-        { error: "Invalid verification code." },
-        { status: 400 }
+        {
+          error: verificationError.message,
+          details: verificationError,
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (!verification) {
+      return NextResponse.json(
+        {
+          error: "Verification code not found.",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
     if (verification.verified) {
       return NextResponse.json(
-        { error: "Verification code already used." },
-        { status: 400 }
+        {
+          error: "This verification code has already been used.",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
     // Find member
-    const { data: member, error: memberError } =
-      await supabaseAdmin
-        .from("members")
-        .select("*")
-        .eq("badge_number", badgeNumber)
-        .single();
+    const {
+      data: member,
+      error: memberError,
+    } = await supabaseAdmin
+      .from("members")
+      .select("*")
+      .eq("badge_number", badgeNumber)
+      .maybeSingle();
 
-    if (memberError || !member) {
+    console.log("Member:", member);
+    console.log("Member Error:", memberError);
+
+    if (memberError) {
       return NextResponse.json(
-        { error: "Invalid badge number." },
-        { status: 400 }
+        {
+          error: memberError.message,
+          details: memberError,
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (!member) {
+      return NextResponse.json(
+        {
+          error: "Badge number not found.",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
     if (member.discord_id) {
       return NextResponse.json(
-        { error: "Member already linked." },
-        { status: 400 }
+        {
+          error: "This member is already linked to a Discord account.",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
     // Check duplicate Discord account
-    const { data: existing } = await supabaseAdmin
+    const {
+      data: existingDiscord,
+      error: existingDiscordError,
+    } = await supabaseAdmin
       .from("members")
       .select("id")
       .eq("discord_id", verification.discord_id)
       .maybeSingle();
 
-    if (existing) {
+    console.log("Existing Discord:", existingDiscord);
+    console.log("Existing Discord Error:", existingDiscordError);
+
+    if (existingDiscord) {
       return NextResponse.json(
-        { error: "Discord account already linked." },
-        { status: 400 }
+        {
+          error: "This Discord account is already linked to another member.",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
     // Update verification
-    const { error: verifyUpdateError } =
+    const { error: verificationUpdateError } =
       await supabaseAdmin
         .from("discord_verifications")
         .update({
@@ -80,11 +152,20 @@ export async function POST(req: Request) {
         })
         .eq("id", verification.id);
 
-    if (verifyUpdateError) {
-      throw verifyUpdateError;
+    if (verificationUpdateError) {
+      console.error("Verification Update Error:", verificationUpdateError);
+
+      return NextResponse.json(
+        {
+          error: verificationUpdateError.message,
+        },
+        {
+          status: 400,
+        }
+      );
     }
 
-    // Link member
+    // Link Discord account
     const { error: memberUpdateError } =
       await supabaseAdmin
         .from("members")
@@ -94,18 +175,30 @@ export async function POST(req: Request) {
         .eq("id", member.id);
 
     if (memberUpdateError) {
-      throw memberUpdateError;
+      console.error("Member Update Error:", memberUpdateError);
+
+      return NextResponse.json(
+        {
+          error: memberUpdateError.message,
+        },
+        {
+          status: 400,
+        }
+      );
     }
+
+    console.log("========== VERIFY SUCCESS ==========");
 
     return NextResponse.json({
       success: true,
     });
+
   } catch (error) {
-    console.error(error);
+    console.error("VERIFY API ERROR:", error);
 
     return NextResponse.json(
       {
-        error: "Verification failed.",
+        error: error instanceof Error ? error.message : "Verification failed.",
       },
       {
         status: 500,
