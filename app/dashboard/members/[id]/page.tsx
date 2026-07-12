@@ -1,0 +1,97 @@
+import { MemberStatCard } from "@/components/members/member-stat-card";
+import { memberService } from "@/services";
+
+interface MemberProfilePageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export default async function MemberProfilePage({
+  params,
+}: MemberProfilePageProps) {
+  const { id } = await params;
+
+  const member = await memberService.getById(id);
+
+  if (!member) {
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-bold">
+          Member not found
+        </h1>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Profile Header */}
+      <div className="rounded-xl border bg-card p-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center">
+          <div className="flex h-24 w-24 items-center justify-center rounded-full bg-red-600 text-3xl font-bold text-white">
+            {member.fullName
+              .split(" ")
+              .map((name) => name[0])
+              .join("")
+              .slice(0, 2)}
+          </div>
+
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold">
+              {member.fullName}
+            </h1>
+
+            <p className="mt-1 text-muted-foreground">
+              {member.rank}
+            </p>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="rounded-full bg-red-600 px-3 py-1 text-sm text-white">
+                {member.department}
+              </span>
+
+              <span className="rounded-full border px-3 py-1 text-sm">
+                {member.badgeNumber}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Statistics */}
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <MemberStatCard
+          label="Badge Number"
+          value={member.badgeNumber}
+        />
+
+        <MemberStatCard
+          label="Department"
+          value={member.department}
+        />
+
+        <MemberStatCard
+          label="Duty Hours"
+          value={member.dutyHours}
+        />
+
+        <MemberStatCard
+          label="Duty Days"
+          value={member.dutyDays}
+        />
+
+        <MemberStatCard
+          label="Joined Date"
+          value={member.joinedAt}
+        />
+
+        <MemberStatCard
+          label="Promotion Progress"
+          value={`${member.promotionProgress}%`}
+          valueClassName="text-red-600"
+        />
+      </div>
+    </div>
+  );
+}
