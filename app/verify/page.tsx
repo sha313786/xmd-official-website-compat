@@ -26,11 +26,11 @@ export default function VerifyPage() {
         verificationCode.trim()
       );
 
-      setSuccess("Discord account linked successfully.");
+      setSuccess("Verification successful! Redirecting...");
 
       setTimeout(() => {
-        router.push("/dashboard");
-      }, 1500);
+        router.replace("/dashboard");
+      }, 1000);
     } catch (err) {
       setError(
         err instanceof Error
