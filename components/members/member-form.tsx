@@ -25,7 +25,7 @@ const memberSchema = z.object({
     .string()
     .min(1, "Badge number is required"),
 
-  ddiscordId: z
+  discordId: z
   .string()
   .trim()
   .optional()
