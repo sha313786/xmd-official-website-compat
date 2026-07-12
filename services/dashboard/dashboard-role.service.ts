@@ -2,7 +2,6 @@ import { createClient } from "@/lib/supabase/client";
 
 const supabase = createClient();
 
-
 export interface DashboardUser {
   id: string;
   discordId: string;
@@ -14,71 +13,108 @@ export interface DashboardUser {
 
 export class DashboardRoleService {
   static async getDashboardUser(): Promise<DashboardUser | null> {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    try {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
 
-    if (!user) return null;
+      if (authError) {
+        console.error("Auth Error:", authError);
+        return null;
+      }
 
-    // Discord OAuth ID
-    const discordId = user.identities?.find(
-      (identity) => identity.provider === "discord"
-    )?.id;
+      if (!user) {
+        console.error("No authenticated user.");
+        return null;
+      }
 
-    if (!discordId) {
-      console.error("Discord identity not found.");
+      console.log("========== AUTH USER ==========");
+      console.log(user);
+
+      // Get Discord ID from every possible location
+      const discordId =
+        user.user_metadata?.provider_id ||
+        user.user_metadata?.sub ||
+        user.app_metadata?.provider_id ||
+        user.identities?.find(
+          (identity) => identity.provider === "discord"
+        )?.identity_data?.provider_id ||
+        user.identities?.find(
+          (identity) => identity.provider === "discord"
+        )?.id;
+
+      console.log("Resolved Discord ID:", discordId);
+
+      if (!discordId) {
+        console.error("Discord ID not found.");
+        return null;
+      }
+
+      // Find verification
+      const {
+        data: verification,
+        error: verificationError,
+      } = await supabase
+        .from("discord_verifications")
+        .select("*")
+        .eq("discord_id", String(discordId))
+        .eq("verified", true)
+        .maybeSingle();
+
+      console.log("Verification:", verification);
+      console.log("Verification Error:", verificationError);
+
+      if (verificationError) {
+        console.error(verificationError);
+        return null;
+      }
+
+      if (!verification) {
+        console.error("No verified record found.");
+        return null;
+      }
+
+      // Load member
+      const {
+        data: member,
+        error: memberError,
+      } = await supabase
+        .from("members")
+        .select("*")
+        .eq("id", verification.member_id)
+        .maybeSingle();
+
+      console.log("Member:", member);
+      console.log("Member Error:", memberError);
+
+      if (memberError) {
+        console.error(memberError);
+        return null;
+      }
+
+      if (!member) {
+        console.error("Member not found.");
+        return null;
+      }
+
+      const isManagement =
+        member.department?.trim().toUpperCase() ===
+        "MANAGEMENT";
+
+      return {
+        id: member.id,
+        discordId: member.discord_id,
+        badgeNumber: member.badge_number,
+        fullName: member.full_name,
+        rank: member.rank,
+        dashboard: isManagement
+          ? "management"
+          : "member",
+      };
+    } catch (err) {
+      console.error("DashboardRoleService Error:", err);
       return null;
     }
-
-    // Find verified Discord account
-    const { data: verification, error: verificationError } = await supabase
-      .from("discord_verifications")
-      .select("member_id, verified")
-      .eq("discord_id", discordId)
-      .eq("verified", true)
-      .single();
-
-    console.log("Discord ID:", discordId);
-    console.log("Verification:", verification);
-    console.log("Verification Error:", verificationError);
-
-    if (verificationError || !verification) {
-      return null;
-    }
-
-    // Load member
-    const { data: member, error: memberError } = await supabase
-      .from("members")
-      .select(
-        `
-          id,
-          discord_id,
-          badge_number,
-          full_name,
-          rank,
-          department
-        `
-      )
-      .eq("id", verification.member_id)
-      .single();
-
-    console.log("Member:", member);
-    console.log("Member Error:", memberError);
-
-    if (memberError || !member) {
-      return null;
-    }
-
-    const isManagement =
-      member.department?.trim().toUpperCase() === "MANAGEMENT";
-
-    return {
-      id: member.id,
-      discordId: member.discord_id,
-      badgeNumber: member.badge_number,
-      fullName: member.full_name,
-      rank: member.rank,
-      dashboard: isManagement ? "management" : "member",
-    };
- }
+  }
 }
