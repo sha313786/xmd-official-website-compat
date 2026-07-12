@@ -25,10 +25,21 @@ const memberSchema = z.object({
     .string()
     .min(1, "Badge number is required"),
 
-  discordId: z
-    .string()
-    .min(17, "Discord ID is required")
-    .max(20, "Invalid Discord ID"),
+  ddiscordId: z
+  .string()
+  .trim()
+  .optional()
+  .or(z.literal(""))
+  .refine(
+    (value) =>
+      !value ||
+      (/^\d+$/.test(value) &&
+        value.length >= 17 &&
+        value.length <= 20),
+    {
+      message: "Invalid Discord ID",
+    }
+  ),
 
   rank: z
     .string()
@@ -148,7 +159,7 @@ export function MemberForm({
 
         <Input
           {...register("discordId")}
-          placeholder="123456789012345678"
+          placeholder="Optional (Linked after Discord verification)"
         />
 
         {errors.discordId && (
