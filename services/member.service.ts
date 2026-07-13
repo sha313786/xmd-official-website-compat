@@ -170,7 +170,7 @@ export const memberService = {
     console.error("UPDATE MEMBER ERROR:", error);
     throw new Error(error.message);
   }
-}
+},
 
   async delete(id: string) {
     const { error } = await supabase
