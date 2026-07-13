@@ -22,7 +22,7 @@ export const memberService = {
         id: member.id,
         badgeNumber: member.badge_number,
         fullName: member.full_name,
-        discordId: member.discord_id ?? "",
+        discordId: member.discord_id ?? null,
         rank: member.rank,
         department: member.department,
         status: member.status ?? "Active",
@@ -63,7 +63,7 @@ export const memberService = {
       id: data.id,
       badgeNumber: data.badge_number,
       fullName: data.full_name,
-      discordId: data.discord_id ?? "",
+      discordId: data.discord_id ?? null,
       rank: data.rank,
       department: data.department,
       status: data.status ?? "Active",
@@ -101,7 +101,7 @@ export const memberService = {
       id: data.id,
       badgeNumber: data.badge_number,
       fullName: data.full_name,
-      discordId: data.discord_id ?? "",
+      discordId: data.discord_id ?? null,
       rank: data.rank,
       department: data.department,
       status: data.status ?? "Active",
@@ -115,62 +115,62 @@ export const memberService = {
   },
 
   async create(member: {
+  fullName: string;
+  badgeNumber: string;
+  discordId?: string | null;
+  rank: string;
+  department: string;
+  status?: string;
+}) {
+  const { data, error } = await supabase
+    .from("members")
+    .insert({
+      full_name: member.fullName,
+      badge_number: member.badgeNumber,
+      discord_id: member.discordId || null,
+      rank: member.rank,
+      department: member.department,
+      status: member.status ?? "Active",
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("CREATE MEMBER ERROR:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+},
+
+  async update(
+  id: string,
+  member: {
     fullName: string;
     badgeNumber: string;
-    discordId: string;
+    discordId?: string | null;
     rank: string;
     department: string;
     status?: string;
-  }) {
-    const { data, error } = await supabase
-      .from("members")
-      .insert({
-        full_name: member.fullName,
-        badge_number: member.badgeNumber,
-        discord_id: member.discordId,
-        rank: member.rank,
-        department: member.department,
-        status: member.status ?? "Active",
-      })
-      .select()
-      .single();
+  }
+) {
+  const { error } = await supabase
+    .from("members")
+    .update({
+      full_name: member.fullName,
+      badge_number: member.badgeNumber,
+      discord_id: member.discordId || null,
+      rank: member.rank,
+      department: member.department,
+      status: member.status ?? "Active",
+    })
+    .eq("id", id);
 
-    if (error) {
-      console.error(error);
-      throw error;
-    }
-
-    return data;
-  },
-
-  async update(
-    id: string,
-    member: {
-      fullName: string;
-      badgeNumber: string;
-      discordId: string;
-      rank: string;
-      department: string;
-      status?: string;
-    }
-  ) {
-    const { error } = await supabase
-      .from("members")
-      .update({
-        full_name: member.fullName,
-        badge_number: member.badgeNumber,
-        discord_id: member.discordId,
-        rank: member.rank,
-        department: member.department,
-        status: member.status ?? "Active",
-      })
-      .eq("id", id);
-
-    if (error) {
-      console.error(error);
-      throw error;
-    }
-  },
+  if (error) {
+    console.error("UPDATE MEMBER ERROR:", error);
+    throw new Error(error.message);
+  }
+}
 
   async delete(id: string) {
     const { error } = await supabase

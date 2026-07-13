@@ -51,7 +51,7 @@ export function AddMemberDialog({
       alert("Member created successfully.");
     } catch (error) {
       console.error(error);
-      alert("Failed to create member.");
+      alert(error instanceof Error ? error.message : JSON.stringify(error));
     } finally {
       setLoading(false);
     }
