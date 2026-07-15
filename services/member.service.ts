@@ -2,6 +2,7 @@ import { members } from "@/data";
 import { config } from "@/lib/config";
 import { supabase } from "@/lib/supabase";
 import { Member } from "@/types/member";
+import { dutyService } from "@/services/duty-service";
 
 export const memberService = {
   async getAll(): Promise<Member[]> {
@@ -18,21 +19,30 @@ export const memberService = {
         throw error;
       }
 
-      return (data ?? []).map((member: any) => ({
-        id: member.id,
-        badgeNumber: member.badge_number,
-        fullName: member.full_name,
-        discordId: member.discord_id ?? null,
-        rank: member.rank,
-        department: member.department,
-        status: member.status ?? "Active",
-        avatar: member.avatar ?? "",
-        joinedAt: member.joined_at,
-        dutyHours: member.duty_hours ?? 0,
-        dutyDays: member.duty_days ?? 0,
-        promotionProgress:
-          member.promotion_progress ?? 0,
-      }));
+      return await Promise.all(
+        (data ?? []).map(async (member: any) => {
+          const stats =
+            await dutyService.getMemberDutyStats(
+              member.id
+            );
+
+          return {
+            id: member.id,
+            discordId: member.discord_id ?? "",
+            badgeNumber: member.badge_number,
+            fullName: member.full_name,
+            rank: member.rank,
+            department: member.department,
+            avatar: member.avatar ?? "",
+            joinedAt: member.joined_at,
+            status: member.status ?? "Active",
+
+            dutyHours: stats.dutyHours,
+            dutyDays: stats.dutyDays,
+            promotionProgress: stats.progress,
+          };
+        })
+      );
     } catch (err) {
       console.error("FULL ERROR:", err);
       return [];
@@ -59,20 +69,25 @@ export const memberService = {
       return undefined;
     }
 
+    const stats =
+      await dutyService.getMemberDutyStats(
+        data.id
+      );
+
     return {
       id: data.id,
+      discordId: data.discord_id ?? "",
       badgeNumber: data.badge_number,
       fullName: data.full_name,
-      discordId: data.discord_id ?? null,
       rank: data.rank,
       department: data.department,
-      status: data.status ?? "Active",
       avatar: data.avatar ?? "",
       joinedAt: data.joined_at,
-      dutyHours: data.duty_hours ?? 0,
-      dutyDays: data.duty_days ?? 0,
-      promotionProgress:
-        data.promotion_progress ?? 0,
+      status: data.status ?? "Active",
+
+      dutyHours: stats.dutyHours,
+      dutyDays: stats.dutyDays,
+      promotionProgress: stats.progress,
     };
   },
 
@@ -97,80 +112,127 @@ export const memberService = {
       return undefined;
     }
 
+    const stats =
+      await dutyService.getMemberDutyStats(
+        data.id
+      );
+
     return {
       id: data.id,
+      discordId: data.discord_id ?? "",
       badgeNumber: data.badge_number,
       fullName: data.full_name,
-      discordId: data.discord_id ?? null,
       rank: data.rank,
       department: data.department,
-      status: data.status ?? "Active",
       avatar: data.avatar ?? "",
       joinedAt: data.joined_at,
-      dutyHours: data.duty_hours ?? 0,
-      dutyDays: data.duty_days ?? 0,
-      promotionProgress:
-        data.promotion_progress ?? 0,
+      status: data.status ?? "Active",
+
+      dutyHours: stats.dutyHours,
+      dutyDays: stats.dutyDays,
+      promotionProgress: stats.progress,
+    };
+  },
+    async getByDiscordId(
+    discordId: string
+  ): Promise<Member | undefined> {
+    if (config.useMockData) {
+      return members.find(
+        (member) =>
+          member.discordId === discordId
+      );
+    }
+
+    const { data, error } = await supabase
+      .from("members")
+      .select("*")
+      .eq("discord_id", discordId)
+      .single();
+
+    if (error || !data) {
+      console.error(error);
+      return undefined;
+    }
+
+    const stats =
+      await dutyService.getMemberDutyStats(
+        data.id
+      );
+
+    return {
+      id: data.id,
+      discordId: data.discord_id ?? "",
+      badgeNumber: data.badge_number,
+      fullName: data.full_name,
+      rank: data.rank,
+      department: data.department,
+      avatar: data.avatar ?? "",
+      joinedAt: data.joined_at,
+      status: data.status ?? "Active",
+
+      dutyHours: stats.dutyHours,
+      dutyDays: stats.dutyDays,
+      promotionProgress: stats.progress,
     };
   },
 
   async create(member: {
-  fullName: string;
-  badgeNumber: string;
-  discordId?: string | null;
-  rank: string;
-  department: string;
-  status?: string;
-}) {
-  const { data, error } = await supabase
-    .from("members")
-    .insert({
-      full_name: member.fullName,
-      badge_number: member.badgeNumber,
-      discord_id: member.discordId || null,
-      rank: member.rank,
-      department: member.department,
-      status: member.status ?? "Active",
-    })
-    .select()
-    .single();
-
-  if (error) {
-    console.error("CREATE MEMBER ERROR:", error);
-    throw new Error(error.message);
-  }
-
-  return data;
-},
-
-  async update(
-  id: string,
-  member: {
     fullName: string;
     badgeNumber: string;
     discordId?: string | null;
     rank: string;
     department: string;
     status?: string;
-  }
-) {
-  const { error } = await supabase
-    .from("members")
-    .update({
-      full_name: member.fullName,
-      badge_number: member.badgeNumber,
-      discord_id: member.discordId || null,
-      rank: member.rank,
-      department: member.department,
-      status: member.status ?? "Active",
-    })
-    .eq("id", id);
+  }) {
+    const { data, error } = await supabase
+      .from("members")
+      .insert({
+        full_name: member.fullName,
+        badge_number: member.badgeNumber,
+        discord_id: member.discordId ?? null,
+        rank: member.rank,
+        department: member.department,
+        status: member.status ?? "Active",
+      })
+      .select()
+      .single();
 
-  if (error) {
-    console.error("UPDATE MEMBER ERROR:", error);
-    throw new Error(error.message);
-  }
-},
+    if (error) {
+      console.error("CREATE MEMBER ERROR:", error);
+      throw new Error(error.message);
+    }
+
+    return data;
+  },
+
+  async update(
+    id: string,
+    member: {
+      fullName: string;
+      badgeNumber: string;
+      discordId?: string | null;
+      rank: string;
+      department: string;
+      status?: string;
+    }
+  ) {
+    const { error } = await supabase
+      .from("members")
+      .update({
+        full_name: member.fullName,
+        badge_number: member.badgeNumber,
+        discord_id: member.discordId ?? null,
+        rank: member.rank,
+        department: member.department,
+        status: member.status ?? "Active",
+      })
+      .eq("id", id);
+
+    if (error) {
+      console.error("UPDATE MEMBER ERROR:", error);
+      throw new Error(error.message);
+    }
+  },
 
   async delete(id: string) {
     const { error } = await supabase

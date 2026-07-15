@@ -303,18 +303,34 @@ export class PromotionEngine {
   }
 
   static processCycle(
-    cycleId: string,
-    logs: DutyLog[],
-    memberRanks: Record<string, string>
-  ) {
-    const validLogs = this.filterValidLogs(logs);
+  cycleId: string,
+  logs: DutyLog[],
+  memberRanks: Record<string, string>
+) {
+  console.log("========== PROMOTION ENGINE ==========");
+  console.log("Cycle:", cycleId);
+  console.log("Logs received:", logs.length);
+  console.log("MemberRanks:", Object.keys(memberRanks).length);
 
-    return this.buildLeaderboard(
-      validLogs,
-      memberRanks,
-      cycleId
-    );
-  }
+  const validLogs = this.filterValidLogs(logs);
+
+  console.log("Valid logs:", validLogs.length);
+
+  const grouped = this.groupLogsByMember(validLogs);
+
+  console.log("Grouped members:", grouped.size);
+
+  const results = this.buildLeaderboard(
+    validLogs,
+    memberRanks,
+    cycleId
+  );
+
+  console.log("Results:", results.length);
+  console.log(results);
+
+  return results;
+}
 
   static getTopPerformers(
     results: Omit<
