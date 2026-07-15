@@ -1,10 +1,10 @@
 import { createClient } from "@/lib/supabase/client";
 
-const supabase = createClient();
 import { Report } from "@/types";
 
 export const reportService = {
   async getAll(): Promise<Report[]> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("reports")
       .select("*")
@@ -16,6 +16,7 @@ export const reportService = {
   },
 
   async getById(id: string): Promise<Report | null> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("reports")
       .select("*")
@@ -42,6 +43,7 @@ export const reportService = {
       created_by: report.createdBy,
     };
 
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("reports")
       .insert(payload)
@@ -69,6 +71,7 @@ export const reportService = {
       created_by: updates.createdBy,
     };
 
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("reports")
       .update(payload)
@@ -82,6 +85,7 @@ export const reportService = {
   },
 
   async delete(id: string): Promise<void> {
+    const supabase = createClient();
     const { error } = await supabase
       .from("reports")
       .delete()

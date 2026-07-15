@@ -14,13 +14,17 @@ export async function GET(request: Request) {
 
   const supabase = await createClient();
 
+  // Exchange code for session, providing the correct redirect URI
   const { error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error) {
-    console.error("OAuth Error:", error.message);
+    console.error("OAuth Error:", error.message, error);
 
     return NextResponse.redirect(
-      new URL("/login", requestUrl.origin)
+      new URL(
+        `/login?error=server_error&error_description=${encodeURIComponent(error.message)}`,
+        requestUrl.origin
+      )
     );
   }
 

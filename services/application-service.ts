@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
 
-const supabase = createClient();
 import {
   RecruitmentApplication,
   RecruitmentApplicationInsert,
@@ -9,6 +8,7 @@ import {
 
 export const applicationService = {
   async getAll(): Promise<RecruitmentApplication[]> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("recruitment_applications")
       .select("*")
@@ -59,6 +59,7 @@ async reject(id: string): Promise<RecruitmentApplication> {
 },
 
   async getById(id: string): Promise<RecruitmentApplication | null> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("recruitment_applications")
       .select("*")
@@ -73,6 +74,7 @@ async reject(id: string): Promise<RecruitmentApplication> {
   async create(
     application: RecruitmentApplicationInsert
   ): Promise<RecruitmentApplication> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("recruitment_applications")
       .insert(application)
@@ -88,6 +90,7 @@ async reject(id: string): Promise<RecruitmentApplication> {
     id: string,
     updates: RecruitmentApplicationUpdate
   ): Promise<RecruitmentApplication> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("recruitment_applications")
       .update(updates)
@@ -101,6 +104,7 @@ async reject(id: string): Promise<RecruitmentApplication> {
   },
 
   async delete(id: string): Promise<void> {
+    const supabase = createClient();
     const { error } = await supabase
       .from("recruitment_applications")
       .delete()

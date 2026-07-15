@@ -1,11 +1,10 @@
 import { createClient } from "@/lib/supabase/client";
 
-const supabase = createClient();
-
 import { PromotionCycle } from "@/types";
 
 export const promotionCycleService = {
   async getCycles(): Promise<PromotionCycle[]> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("promotion_cycles")
       .select("*")
@@ -23,6 +22,7 @@ export const promotionCycleService = {
     start_date: string;
     end_date: string;
   }): Promise<PromotionCycle> {
+    const supabase = createClient();
     const { error: activeError } = await supabase
       .from("promotion_cycles")
       .update({
@@ -49,6 +49,7 @@ export const promotionCycleService = {
     id: string,
     updates: Partial<PromotionCycle>
   ): Promise<PromotionCycle> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("promotion_cycles")
       .update(updates)
@@ -62,6 +63,7 @@ export const promotionCycleService = {
   },
 
   async deleteCycle(id: string) {
+    const supabase = createClient();
     const { error } = await supabase
       .from("promotion_cycles")
       .delete()
@@ -71,6 +73,7 @@ export const promotionCycleService = {
   },
 
   async setActiveCycle(id: string) {
+    const supabase = createClient();
     await supabase
       .from("promotion_cycles")
       .update({

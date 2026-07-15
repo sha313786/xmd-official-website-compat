@@ -1,7 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
 
-const supabase = createClient();
-
 export interface ActiveDutyMember {
   id: string;
   member_id: string;
@@ -23,6 +21,7 @@ export class DashboardDutyService {
    * Members currently on duty
    */
   static async getActiveDutyMembers(): Promise<ActiveDutyMember[]> {
+    const supabase = createClient();
     const { data: dutyLogs, error } = await supabase
       .from("duty_logs")
       .select("id, member_id, duty_start")
@@ -66,6 +65,7 @@ export class DashboardDutyService {
  * Dashboard statistics
  */
 static async getDashboardStats(): Promise<DashboardDutyStats> {
+  const supabase = createClient();
   const now = new Date();
 
   const today = new Date();

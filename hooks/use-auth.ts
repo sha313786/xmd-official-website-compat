@@ -5,8 +5,6 @@ import { User, Session } from "@supabase/supabase-js";
 import { AuthService } from "@/services/auth-service";
 import { createClient } from "@/lib/supabase/client";
 
-const supabase = createClient();
-
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -14,6 +12,8 @@ export function useAuth() {
 
   useEffect(() => {
     let mounted = true;
+
+    const supabase = createClient();
 
     async function loadSession() {
       const {

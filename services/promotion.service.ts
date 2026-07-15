@@ -1,4 +1,4 @@
-import { supabaseAdmin as supabase } from "@/lib/supabase/admin";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 import {
   DutyLog,
@@ -10,6 +10,7 @@ import { PromotionEngine } from "./promotion-engine.service";
 
 export const promotionService = {
   async getCycles(): Promise<PromotionCycle[]> {
+    const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("promotion_cycles")
       .select("*")
@@ -20,6 +21,7 @@ export const promotionService = {
   },
 
   async getCycle(id: string): Promise<PromotionCycle | null> {
+    const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("promotion_cycles")
       .select("*")
@@ -31,6 +33,7 @@ export const promotionService = {
   },
 
   async getActiveCycle(): Promise<PromotionCycle | null> {
+    const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("promotion_cycles")
       .select("*")
@@ -42,6 +45,7 @@ export const promotionService = {
   },
 
   async getDutyLogs(cycleId: string): Promise<DutyLog[]> {
+    const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("duty_logs")
       .select("*")
@@ -53,6 +57,7 @@ export const promotionService = {
   },
 
   async getPromotionResults(cycleId: string): Promise<PromotionResult[]> {
+    const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("promotion_results")
       .select("*")
@@ -64,6 +69,7 @@ export const promotionService = {
   },
 
   async getMemberResult(cycleId: string, memberId: string): Promise<PromotionResult | null> {
+    const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("promotion_results")
       .select("*")
@@ -76,6 +82,7 @@ export const promotionService = {
   },
 
   async savePromotionResult(result: Omit<PromotionResult,"id"|"created_at"|"updated_at">) {
+    const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("promotion_results")
       .upsert(result, { onConflict: "cycle_id,member_id" })
@@ -87,6 +94,7 @@ export const promotionService = {
   },
 
   async deleteCycleResults(cycleId: string) {
+    const supabase = getSupabaseAdmin();
     const { error } = await supabase
       .from("promotion_results")
       .delete()
@@ -96,6 +104,7 @@ export const promotionService = {
   },
 
   async calculateCycleResults(cycleId: string) {
+    const supabase = getSupabaseAdmin();
     const logs = await this.getDutyLogs(cycleId);
 
     const { data: members, error } = await supabase

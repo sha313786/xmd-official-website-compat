@@ -1,7 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
 
-const supabase = createClient();
-
 export interface MemberDutyStats {
   dutyHours: number;
   dutyDays: number;
@@ -12,6 +10,8 @@ export class DutyService {
   static async getMemberDutyStats(
     memberId: string
   ): Promise<MemberDutyStats> {
+    const supabase = createClient();
+
     // Get active promotion cycle
     const { data: cycle, error: cycleError } = await supabase
       .from("promotion_cycles")

@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/admin";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export async function POST(req: Request) {
   try {
+    const supabase = getSupabaseAdmin();
     const body = await req.json();
 
     const badgeNumber = String(body.badgeNumber ?? "").trim();
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
     const {
       data: verification,
       error: verificationError,
-    } = await supabaseAdmin
+    } = await supabase
       .from("discord_verifications")
       .select("*")
       .eq("verification_code", verificationCode)
@@ -61,7 +62,7 @@ export async function POST(req: Request) {
     const {
       data: member,
       error: memberError,
-    } = await supabaseAdmin
+    } = await supabase
       .from("members")
       .select("*")
       .eq("badge_number", badgeNumber)
@@ -89,7 +90,7 @@ export async function POST(req: Request) {
 
     // Remove any previous verification for this Discord account
     const { error: resetVerificationError } =
-      await supabaseAdmin
+      await supabase
         .from("discord_verifications")
         .update({
           verified: false,
@@ -102,7 +103,7 @@ export async function POST(req: Request) {
     }
 
     // Remove Discord from any previously linked member
-    await supabaseAdmin
+    await supabase
       .from("members")
       .update({
         discord_id: null,
@@ -111,7 +112,7 @@ export async function POST(req: Request) {
 
     // Verify current record
     const { error: verifyError } =
-      await supabaseAdmin
+      await supabase
         .from("discord_verifications")
         .update({
           verified: true,
@@ -132,7 +133,7 @@ export async function POST(req: Request) {
 
     // Link member
     const { error: memberUpdateError } =
-      await supabaseAdmin
+      await supabase
         .from("members")
         .update({
           discord_id: verification.discord_id,

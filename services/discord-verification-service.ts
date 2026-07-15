@@ -1,7 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
 
-const supabase = createClient();
-
 export interface DiscordVerification {
   id: number;
   discord_id: string;
@@ -13,6 +11,7 @@ export interface DiscordVerification {
 
 export class DiscordVerificationService {
   static async verifyCode(code: string) {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("discord_verifications")
       .select("*")
@@ -47,6 +46,7 @@ export class DiscordVerificationService {
   }
 
   static async markVerified(id: number) {
+    const supabase = createClient();
     const { error } = await supabase
       .from("discord_verifications")
       .update({

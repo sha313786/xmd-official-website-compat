@@ -2,7 +2,6 @@ import { members } from "@/data";
 import { config } from "@/lib/config";
 import { createClient } from "@/lib/supabase/client";
 
-const supabase = createClient();
 import { Member } from "@/types/member";
 import { dutyService } from "@/services/duty-service";
 
@@ -13,6 +12,7 @@ export const memberService = {
     }
 
     try {
+      const supabase = createClient();
       const { data, error } = await supabase
         .from("members")
         .select("*");
@@ -60,6 +60,7 @@ export const memberService = {
       );
     }
 
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("members")
       .select("*")
@@ -103,6 +104,7 @@ export const memberService = {
       );
     }
 
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("members")
       .select("*")
@@ -145,6 +147,7 @@ export const memberService = {
       );
     }
 
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("members")
       .select("*")
@@ -186,6 +189,7 @@ export const memberService = {
     department: string;
     status?: string;
   }) {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("members")
       .insert({
@@ -218,6 +222,7 @@ export const memberService = {
       status?: string;
     }
   ) {
+    const supabase = createClient();
     const { error } = await supabase
       .from("members")
       .update({

@@ -3,8 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-const supabase = createClient();
-
 import {
   dashboardDutyService,
   ActiveDutyMember,
@@ -62,6 +60,7 @@ export function useDashboardDuty(): UseDashboardDutyReturn {
   }, []);
 
   useEffect(() => {
+    const supabase = createClient();
     loadDashboard();
 
     const channel = supabase

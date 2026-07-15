@@ -1,12 +1,12 @@
 import { createClient } from "@/lib/supabase/client";
 
-const supabase = createClient();
 import { Member } from "@/types/member";
 
 export class ProfileService {
   static async getProfile(
     memberId: string
   ): Promise<Member | null> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("members")
       .select("*")

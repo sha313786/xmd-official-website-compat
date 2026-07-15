@@ -1,7 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
 
-const supabase = createClient();
-
 const MANAGEMENT_RANKS = [
   "Assistant Chief",
   "Chief",
@@ -19,6 +17,8 @@ export interface DashboardUser {
 
 export class DashboardRoleService {
   static async getDashboardUser(): Promise<DashboardUser | null> {
+    const supabase = createClient();
+
     try {
       const {
         data: { user },
@@ -26,7 +26,11 @@ export class DashboardRoleService {
       } = await supabase.auth.getUser();
 
       if (error || !user) {
-        console.error("Auth:", error);
+        // AuthSessionMissingError is expected when user is not logged in
+        // Only log unexpected errors
+        if (error && !error.message?.includes("Auth session missing")) {
+          console.error("Auth:", error);
+        }
         return null;
       }
 

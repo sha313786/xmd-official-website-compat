@@ -5,11 +5,11 @@ import { createClient } from "@/lib/supabase/client";
 import { memberService } from "@/services/member.service";
 import type { Member } from "@/types/member";
 
-const supabase = createClient();
-
 export function useProfile() {
   const [profile, setProfile] = useState<Member | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const supabase = createClient();
 
   async function loadProfile() {
     try {
