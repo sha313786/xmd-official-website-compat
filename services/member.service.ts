@@ -1,6 +1,8 @@
 import { members } from "@/data";
 import { config } from "@/lib/config";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
+
+const supabase = createClient();
 import { Member } from "@/types/member";
 import { dutyService } from "@/services/duty-service";
 

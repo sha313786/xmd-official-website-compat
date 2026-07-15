@@ -1,4 +1,6 @@
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
+
+const supabase = createClient();
 import { Report } from "@/types";
 
 export const reportService = {

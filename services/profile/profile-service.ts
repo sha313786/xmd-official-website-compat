@@ -1,4 +1,6 @@
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
+
+const supabase = createClient();
 import { Member } from "@/types/member";
 
 export class ProfileService {
