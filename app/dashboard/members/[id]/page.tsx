@@ -1,18 +1,25 @@
+"use client";
+
+import { useMemo } from "react";
+import { useParams } from "next/navigation";
+
 import { MemberStatCard } from "@/components/members/member-stat-card";
-import { memberService } from "@/services";
+import { LoadingSpinner } from "@/components/shared/loading-spinner";
+import { useMembers } from "@/hooks/use-members";
 
-interface MemberProfilePageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
+export default function MemberProfilePage() {
+  const params = useParams<{ id: string }>();
 
-export default async function MemberProfilePage({
-  params,
-}: MemberProfilePageProps) {
-  const { id } = await params;
+  const { members, loading } = useMembers();
 
-  const member = await memberService.getById(id);
+  const member = useMemo(
+    () => members.find((m) => m.id === params.id),
+    [members, params.id]
+  );
+
+  if (loading) {
+    return <LoadingSpinner text="Loading member..." />;
+  }
 
   if (!member) {
     return (
@@ -26,7 +33,6 @@ export default async function MemberProfilePage({
 
   return (
     <div className="space-y-6">
-      {/* Profile Header */}
       <div className="rounded-xl border bg-card p-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center">
           <div className="flex h-24 w-24 items-center justify-center rounded-full bg-red-600 text-3xl font-bold text-white">
@@ -59,7 +65,6 @@ export default async function MemberProfilePage({
         </div>
       </div>
 
-      {/* Statistics */}
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <MemberStatCard
           label="Badge Number"

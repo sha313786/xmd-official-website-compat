@@ -4,7 +4,7 @@ import { CalendarDays } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { useActivePromotionCycle } from "@/hooks/usePromotion";
+import { useActivePromotionCycle } from "@/hooks/promotion/use-promotion-cycles"
 
 export function PromotionCycleCard() {
   const { cycle, loading } =

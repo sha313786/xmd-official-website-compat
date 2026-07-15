@@ -12,7 +12,7 @@ import { ShieldCheck } from "lucide-react";
 import {
   useActivePromotionCycle,
   usePromotionResults,
-} from "@/hooks/usePromotion";
+} from "@/hooks/promotion/use-promotion-cycles";
 
 export function ManagementRewardsTable() {
   const { cycle } = useActivePromotionCycle();

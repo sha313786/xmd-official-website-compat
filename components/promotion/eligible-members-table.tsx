@@ -12,7 +12,7 @@ import { BadgeCheck } from "lucide-react";
 import {
   useActivePromotionCycle,
   usePromotionResults,
-} from "@/hooks/usePromotion";
+} from "@/hooks/promotion/use-promotion-cycles";
 
 export function EligibleMembersTable() {
   const { cycle } = useActivePromotionCycle();

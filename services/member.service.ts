@@ -237,6 +237,7 @@ export const memberService = {
   },
 
   async delete(id: string) {
+    const supabase = await createClient();
     const { error } = await supabase
       .from("members")
       .delete()

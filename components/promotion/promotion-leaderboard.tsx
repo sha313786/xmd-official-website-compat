@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { useActivePromotionCycle, usePromotionResults } from "@/hooks/usePromotion";
+import { useActivePromotionCycle, usePromotionResults } from "@/hooks/promotion/use-promotion-cycles";
 
 export function PromotionLeaderboard() {
   const { cycle } = useActivePromotionCycle();
