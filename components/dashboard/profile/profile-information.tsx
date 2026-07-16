@@ -63,7 +63,7 @@ export default function ProfileInformation({
 
           <InfoItem
             label="Status"
-            value={member.status}
+             value="Active"
           />
         </div>
       </CardContent>
