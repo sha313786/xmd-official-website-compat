@@ -31,11 +31,15 @@ export default function MembersPage() {
 
     return members.filter((member) => {
       const matchesSearch =
-        !query ||
-        member.fullName.toLowerCase().includes(query) ||
-        member.rank.toLowerCase().includes(query) ||
-        member.department.toLowerCase().includes(query) ||
-        member.badgeNumber.toLowerCase().includes(query);
+  !query ||
+  (member.full_name ?? "")
+    .toLowerCase()
+    .includes(query) ||
+  member.rank.toLowerCase().includes(query) ||
+  member.department.toLowerCase().includes(query) ||
+  (member.badge_number ?? "")
+    .toLowerCase()
+    .includes(query);
 
       const matchesRank =
         rank === "All" || member.rank === rank;
