@@ -128,9 +128,9 @@ export function MemberForm({
           placeholder="Member name"
         />
 
-        {errors.full_Name && (
+        {errors.fullName && (
           <p className="text-sm text-red-600">
-            {errors.full_Name.message}
+            {errors.fullName.message}
           </p>
         )}
       </div>
