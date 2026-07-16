@@ -48,17 +48,17 @@ export default function ProfileInformation({
 
           <InfoItem
             label="Badge Number"
-            value={member.badge_number}
+            value={member.badgeNumber}
           />
 
           <InfoItem
             label="Discord ID"
-            value={member.discord_id}
+            value={member.discordId}
           />
 
           <InfoItem
             label="Join Date"
-            value={member.joined_at}
+            value={member.joinedAt}
           />
 
           <InfoItem
