@@ -17,13 +17,13 @@ export default function ProfileHeader({
             member.avatar ||
             "https://cdn.discordapp.com/embed/avatars/0.png"
          }
-         alt={member.fullName}
+         alt={member.full_Name}
          className="h-24 w-24 rounded-full border border-white/10 object-cover"
         />
 
         <div>
           <h1 className="text-3xl font-bold">
-            {member.fullName}
+            {member.full_Name}
           </h1>
 
           <p className="mt-2 text-slate-400">
@@ -31,7 +31,7 @@ export default function ProfileHeader({
           </p>
 
           <p className="text-slate-400">
-            Badge #{member.badgeNumber}
+            Badge #{member.badge_Number}
           </p>
         </div>
       </CardContent>

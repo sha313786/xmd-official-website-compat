@@ -39,8 +39,8 @@ export const memberService = {
             joinedAt: member.joined_at,
             status: member.status ?? "Active",
 
-            dutyHours: stats.dutyHours,
-            dutyDays: stats.dutyDays,
+            dutyHours: stats.duty_Hours,
+            dutyDays: stats.duty_Days,
             promotionProgress: stats.progress,
           };
         })
@@ -88,8 +88,8 @@ export const memberService = {
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
 
-      dutyHours: stats.dutyHours,
-      dutyDays: stats.dutyDays,
+      dutyHours: stats.duty_Hours,
+      dutyDays: stats.duty_Days,
       promotionProgress: stats.progress,
     };
   },
@@ -100,7 +100,7 @@ export const memberService = {
     if (config.useMockData) {
       return members.find(
         (member) =>
-          member.badgeNumber === badgeNumber
+          member.badge_Number === badgeNumber
       );
     }
 
@@ -132,8 +132,8 @@ export const memberService = {
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
 
-      dutyHours: stats.dutyHours,
-      dutyDays: stats.dutyDays,
+      dutyHours: stats.duty_Hours,
+      dutyDays: stats.duty_Days,
       promotionProgress: stats.progress,
     };
   },
@@ -175,8 +175,8 @@ export const memberService = {
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
 
-      dutyHours: stats.dutyHours,
-      dutyDays: stats.dutyDays,
+      dutyHours: stats.duty_Hours,
+      dutyDays: stats.duty_Days,
       promotionProgress: stats.progress,
     };
   },
@@ -193,8 +193,8 @@ export const memberService = {
     const { data, error } = await supabase
       .from("members")
       .insert({
-        full_name: member.fullName,
-        badge_number: member.badgeNumber,
+        full_name: member.full_Name,
+        badge_number: member.badge_Number,
         discord_id: member.discordId ?? null,
         rank: member.rank,
         department: member.department,
@@ -226,8 +226,8 @@ export const memberService = {
     const { error } = await supabase
       .from("members")
       .update({
-        full_name: member.fullName,
-        badge_number: member.badgeNumber,
+        full_name: member.full_Name,
+        badge_number: member.badge_Number,
         discord_id: member.discordId ?? null,
         rank: member.rank,
         department: member.department,
