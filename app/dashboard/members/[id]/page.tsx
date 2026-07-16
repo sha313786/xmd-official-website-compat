@@ -36,7 +36,7 @@ export default function MemberProfilePage() {
       <div className="rounded-xl border bg-card p-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center">
           <div className="flex h-24 w-24 items-center justify-center rounded-full bg-red-600 text-3xl font-bold text-white">
-            {member.fullName
+            {(member.full_name ?? "")
               .split(" ")
               .map((name) => name[0])
               .join("")
@@ -45,7 +45,7 @@ export default function MemberProfilePage() {
 
           <div className="flex-1">
             <h1 className="text-3xl font-bold">
-              {member.fullName}
+              {member.full_name}
             </h1>
 
             <p className="mt-1 text-muted-foreground">
@@ -58,7 +58,7 @@ export default function MemberProfilePage() {
               </span>
 
               <span className="rounded-full border px-3 py-1 text-sm">
-                {member.badgeNumber}
+                {member.badge_number}
               </span>
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function MemberProfilePage() {
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <MemberStatCard
           label="Badge Number"
-          value={member.badgeNumber}
+          value={member.badge_number}
         />
 
         <MemberStatCard
@@ -78,22 +78,22 @@ export default function MemberProfilePage() {
 
         <MemberStatCard
           label="Duty Hours"
-          value={member.dutyHours}
+          value={member.duty_hours}
         />
 
         <MemberStatCard
           label="Duty Days"
-          value={member.dutyDays}
+          value={member.duty_days}
         />
 
         <MemberStatCard
           label="Joined Date"
-          value={member.joinedAt}
+          value={member.joined_at}
         />
 
         <MemberStatCard
           label="Promotion Progress"
-          value={`${member.promotionProgress}%`}
+          value={`${member.promotion_progress}%`}
           valueClassName="text-red-600"
         />
       </div>
