@@ -93,7 +93,7 @@ export function EditMemberDialog({
             defaultValues={{
               fullName: member.full_name,
               badgeNumber: member.badge_number,
-              discordId: member.discord_Id,
+              discordId: member.discord_id,
               rank: member.rank,
               department: member.department,
               status: member.status,

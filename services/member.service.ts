@@ -143,7 +143,7 @@ export const memberService = {
     if (config.useMockData) {
       return members.find(
         (member) =>
-          member.discord_Id === discordId
+          member.discord_id === discordId
       );
     }
 
@@ -195,7 +195,7 @@ export const memberService = {
       .insert({
         full_name: member.full_name,
         badge_number: member.badge_number,
-        discord_id: member.discord_Id ?? null,
+        discord_id: member.discord_id ?? null,
         rank: member.rank,
         department: member.department,
         status: member.status ?? "Active",
@@ -228,7 +228,7 @@ export const memberService = {
       .update({
         full_name: member.full_name,
         badge_number: member.badge_number,
-        discord_id: member.discord_Id ?? null,
+        discord_id: member.discord_id ?? null,
         rank: member.rank,
         department: member.department,
         status: member.status ?? "Active",
