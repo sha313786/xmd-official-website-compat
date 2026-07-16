@@ -194,7 +194,7 @@ export const memberService = {
       .from("members")
       .insert({
         full_name: member.full_name,
-        badge_number: member.badge_Number,
+        badge_number: member.badge_number,
         discord_id: member.discordId ?? null,
         rank: member.rank,
         department: member.department,
@@ -227,7 +227,7 @@ export const memberService = {
       .from("members")
       .update({
         full_name: member.full_name,
-        badge_number: member.badge_Number,
+        badge_number: member.badge_number,
         discord_id: member.discordId ?? null,
         rank: member.rank,
         department: member.department,
