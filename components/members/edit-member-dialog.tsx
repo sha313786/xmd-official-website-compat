@@ -40,8 +40,8 @@ export function EditMemberDialog({
       setLoading(true);
 
       await memberService.update(member.id, {
-        fullName: values.fullname,
-        badgeNumber: values.badgenumber,
+        fullName: values.fullName,
+        badgeNumber: values.badgeNumber,
         discordId: values.discordId,
         rank: values.rank,
         department: values.department,
