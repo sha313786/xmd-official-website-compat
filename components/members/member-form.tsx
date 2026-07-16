@@ -145,11 +145,11 @@ export function MemberForm({
           placeholder="XMD-001"
         />
 
-        {errors.badge_number && (
+        {errors.badgeNumber && (
           <p className="text-sm text-red-600">
-            {errors.badge_number.message}
-          </p>
-        )}
+           {errors.badgeNumber.message}
+        </p>
+      )}
       </div>
 
       <div className="space-y-2">
