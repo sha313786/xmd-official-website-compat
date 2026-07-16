@@ -32,12 +32,12 @@ export default function MembersPage() {
     return members.filter((member) => {
       const matchesSearch =
   !query ||
-  (member.full_name ?? "")
+  (member.fullName ?? "")
     .toLowerCase()
     .includes(query) ||
   member.rank.toLowerCase().includes(query) ||
   member.department.toLowerCase().includes(query) ||
-  (member.badge_number ?? "")
+  (member.badgeNumber ?? "")
     .toLowerCase()
     .includes(query);
 
