@@ -39,7 +39,7 @@ export const memberService = {
             joinedAt: member.joined_at,
             status: member.status ?? "Active",
 
-            dutyHours: stats.duty_Hours,
+            dutyHours: stats.duty_hours,
             dutyDays: stats.duty_Days,
             promotionProgress: stats.progress,
           };
@@ -88,7 +88,7 @@ export const memberService = {
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
 
-      dutyHours: stats.duty_Hours,
+      dutyHours: stats.duty_hours,
       dutyDays: stats.duty_Days,
       promotionProgress: stats.progress,
     };
@@ -132,7 +132,7 @@ export const memberService = {
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
 
-      dutyHours: stats.duty_Hours,
+      dutyHours: stats.duty_hours,
       dutyDays: stats.duty_Days,
       promotionProgress: stats.progress,
     };
@@ -175,7 +175,7 @@ export const memberService = {
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
 
-      dutyHours: stats.duty_Hours,
+      dutyHours: stats.duty_hours,
       dutyDays: stats.duty_Days,
       promotionProgress: stats.progress,
     };

@@ -53,12 +53,12 @@ export default function ProfileInformation({
 
           <InfoItem
             label="Discord ID"
-            value={member.discord_Id}
+            value={member.discord_id}
           />
 
           <InfoItem
             label="Join Date"
-            value={member.joined_At}
+            value={member.joined_at}
           />
 
           <InfoItem

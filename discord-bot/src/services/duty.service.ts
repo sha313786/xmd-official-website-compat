@@ -69,7 +69,7 @@ export class DutyService {
 
     if (error) {
       throw error;
-    },
+    }
 
     const session = sessions?.[0];
 
