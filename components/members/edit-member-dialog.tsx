@@ -91,13 +91,13 @@ export function EditMemberDialog({
           <MemberForm
             loading={loading}
             defaultValues={{
-              fullName: member.full_name,
-              badgeNumber: member.badge_number,
-              discordId: member.discord_id,
-              rank: member.rank,
-              department: member.department,
-              status: member.status,
-            }}
+  fullName: member.fullName,
+  badgeNumber: member.badgeNumber,
+  discordId: member.discordId,
+  rank: member.rank,
+  department: member.department,
+  status: member.status,
+}}
             onSubmit={handleSubmit}
           />
         </DialogContent>
