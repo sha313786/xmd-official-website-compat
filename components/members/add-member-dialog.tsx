@@ -38,7 +38,7 @@ export function AddMemberDialog({
       await memberService.create({
         fullName: values.full_Name,
         badgeNumber: values.badge_number,
-        discordId: values.discordId || null,
+        discordId: values.discord_Id || null,
         rank: values.rank,
         department: values.department,
         status: values.status,

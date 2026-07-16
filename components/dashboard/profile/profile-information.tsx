@@ -53,7 +53,7 @@ export default function ProfileInformation({
 
           <InfoItem
             label="Discord ID"
-            value={member.discordId}
+            value={member.discord_Id}
           />
 
           <InfoItem

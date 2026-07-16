@@ -6,7 +6,7 @@ export async function POST(req: Request) {
     const supabase = getSupabaseAdmin();
     const body = await req.json();
 
-    const badgeNumber = String(body.badgeNumber ?? "").trim();
+    const badgeNumber = String(body.badge_number ?? "").trim();
     const verificationCode = String(body.verificationCode ?? "").trim();
 
     if (!badgeNumber || !verificationCode) {
