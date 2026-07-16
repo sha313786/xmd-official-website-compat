@@ -36,7 +36,7 @@ export default function MemberProfilePage() {
       <div className="rounded-xl border bg-card p-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center">
           <div className="flex h-24 w-24 items-center justify-center rounded-full bg-red-600 text-3xl font-bold text-white">
-            {(member.fullname ?? "")
+            {(member.fullName ?? "")
               .split(" ")
               .map((name) => name[0])
               .join("")
@@ -45,7 +45,7 @@ export default function MemberProfilePage() {
 
           <div className="flex-1">
             <h1 className="text-3xl font-bold">
-              {member.fullname}
+              {member.fullName}
             </h1>
 
             <p className="mt-1 text-muted-foreground">
@@ -58,7 +58,7 @@ export default function MemberProfilePage() {
               </span>
 
               <span className="rounded-full border px-3 py-1 text-sm">
-                {member.badgenumber}
+                {member.badgeNumber}
               </span>
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function MemberProfilePage() {
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <MemberStatCard
           label="Badge Number"
-          value={member.badgenumber}
+          value={member.badgeNumber}
         />
 
         <MemberStatCard
@@ -78,17 +78,17 @@ export default function MemberProfilePage() {
 
         <MemberStatCard
           label="Duty Hours"
-          value={member.dutyhours}
+          value={member.dutyHours}
         />
 
         <MemberStatCard
           label="Duty Days"
-          value={member.dutydays}
+          value={member.dutyDays}
         />
 
         <MemberStatCard
           label="Joined Date"
-          value={member.joinedat}
+          value={member.joinedAt}
         />
 
         <MemberStatCard
