@@ -193,7 +193,7 @@ export const memberService = {
     const { data, error } = await supabase
       .from("members")
       .insert({
-        full_name: member.full_Name,
+        full_name: member.full_name,
         badge_number: member.badge_Number,
         discord_id: member.discordId ?? null,
         rank: member.rank,
@@ -226,7 +226,7 @@ export const memberService = {
     const { error } = await supabase
       .from("members")
       .update({
-        full_name: member.full_Name,
+        full_name: member.full_name,
         badge_number: member.badge_Number,
         discord_id: member.discordId ?? null,
         rank: member.rank,
