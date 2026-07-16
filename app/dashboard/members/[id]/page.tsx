@@ -93,7 +93,7 @@ export default function MemberProfilePage() {
 
         <MemberStatCard
           label="Promotion Progress"
-          value={`${member.promotion_progress}%`}
+          value="Coming Soon"
           valueClassName="text-red-600"
         />
       </div>
