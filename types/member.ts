@@ -1,22 +1,31 @@
+export type MemberStatus =
+  | "Active"
+  | "Inactive"
+  | "Suspended"
+  | "Retired";
+
 export interface Member {
   id: string;
-  discord_id: string | null;
 
-  badge_number: string;
-  full_name: string;
+  fullName: string;
+  badgeNumber: string;
+
+  discordId: string | null;
 
   rank: string;
   department: string;
 
-  status: "Active" | "Inactive" | "Suspended" | "Retired";
+  status: MemberStatus;
 
   avatar: string | null;
 
-  joined_at: string | null;
+  joinedAt: string | null;
 
-  duty_hours: number;
-  duty_days: number;
+  dutyHours: number;
+  dutyDays: number;
 
-  created_at?: string;
-  updated_at?: string;
+  promotionProgress?: number;
+
+  createdAt?: string;
+  updatedAt?: string;
 }
