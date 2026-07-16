@@ -48,7 +48,7 @@ export default function ProfileInformation({
 
           <InfoItem
             label="Badge Number"
-            value={member.badge_Number}
+            value={member.badge_number}
           />
 
           <InfoItem

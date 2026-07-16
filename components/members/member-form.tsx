@@ -128,9 +128,9 @@ export function MemberForm({
           placeholder="Member name"
         />
 
-        {errors.fullName && (
+        {errors.full_Name && (
           <p className="text-sm text-red-600">
-            {errors.fullName.message}
+            {errors.full_Name.message}
           </p>
         )}
       </div>
@@ -145,9 +145,9 @@ export function MemberForm({
           placeholder="XMD-001"
         />
 
-        {errors.badgeNumber && (
+        {errors.badge_number && (
           <p className="text-sm text-red-600">
-            {errors.badgeNumber.message}
+            {errors.badge_number.message}
           </p>
         )}
       </div>

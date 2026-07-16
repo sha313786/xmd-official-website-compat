@@ -40,8 +40,8 @@ export function EditMemberDialog({
       setLoading(true);
 
       await memberService.update(member.id, {
-        fullName: values.full_Name,
-        badgeNumber: values.badge_Number,
+        fullName: values.full_name,
+        badgeNumber: values.badge_number,
         discordId: values.discord_Id,
         rank: values.rank,
         department: values.department,
@@ -91,8 +91,8 @@ export function EditMemberDialog({
           <MemberForm
             loading={loading}
             defaultValues={{
-              fullName: member.full_Name,
-              badgeNumber: member.badge_Number,
+              fullName: member.full_name,
+              badgeNumber: member.badge_number,
               discordId: member.discord_Id,
               rank: member.rank,
               department: member.department,
