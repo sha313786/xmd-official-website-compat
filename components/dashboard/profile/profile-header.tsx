@@ -17,13 +17,13 @@ export default function ProfileHeader({
             member.avatar ||
             "https://cdn.discordapp.com/embed/avatars/0.png"
          }
-         alt={member.full_Name}
+         alt={member.full_name}
          className="h-24 w-24 rounded-full border border-white/10 object-cover"
         />
 
         <div>
           <h1 className="text-3xl font-bold">
-            {member.full_Name}
+            {member.full_name}
           </h1>
 
           <p className="mt-2 text-slate-400">
