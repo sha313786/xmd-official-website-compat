@@ -31,7 +31,7 @@ export default function ProfileHeader({
           </p>
 
           <p className="text-slate-400">
-            Badge #{member.badge_Number}
+            Badge #{member.badge_number}
           </p>
         </div>
       </CardContent>
