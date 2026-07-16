@@ -51,11 +51,14 @@ export const promotionCycleService = {
   ): Promise<PromotionCycle> {
     const supabase = createClient();
     const { data, error } = await supabase
-      .from("promotion_cycles")
-      .update(updates)
-      .eq("id", id)
-      .select()
-      .single();
+  .from("promotion_cycles")
+  .update(updates)
+  .eq("id", id)
+  .select();
+
+console.log("UPDATE ID:", id);
+console.log("UPDATE DATA:", data);
+console.log("UPDATE ERROR:", error);
 
     if (error) throw error;
 

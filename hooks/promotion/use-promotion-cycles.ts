@@ -2,169 +2,194 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { promotionService } from "@/services";
 import { promotionCycleService } from "@/services/promotion-cycle.service";
 
 import {
-DutyLog,
-PromotionCycle,
-PromotionResult,
+  DutyLog,
+  PromotionCycle,
+  PromotionResult,
 } from "@/types";
 
 export function usePromotionCycles() {
-const [cycles, setCycles] = useState<PromotionCycle[]>([]);
-const [loading, setLoading] = useState(true);
-const [error, setError] = useState<string | null>(null);
+  const [cycles, setCycles] = useState<PromotionCycle[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-const refresh = useCallback(async () => {
-setLoading(true);
-setError(null);
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-try {
-  const data = await promotionCycleService.getCycles();
-  setCycles(data);
-} catch (err) {
-  console.error(err);
-  setError("Failed to load promotion cycles.");
-} finally {
-  setLoading(false);
-}
+    try {
+      const data = await promotionCycleService.getCycles();
+      setCycles(data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load promotion cycles.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-}, []);
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
 
-useEffect(() => {
-refresh();
-}, [refresh]);
+  async function createCycle(data: {
+    name: string;
+    start_date: string;
+    end_date: string;
+  }) {
+    await promotionCycleService.createCycle(data);
+    await refresh();
+  }
 
-async function createCycle(data: {
-name: string;
-start_date: string;
-end_date: string;
-}) {
-await promotionCycleService.createCycle(data);
-await refresh();
-}
+  async function updateCycle(
+    id: string,
+    data: {
+      name: string;
+      start_date: string;
+      end_date: string;
+    }
+  ) {
+    await promotionCycleService.updateCycle(id, data);
+    await refresh();
+  }
 
-async function updateCycle(
-id: string,
-data: {
-name: string;
-start_date: string;
-end_date: string;
-}
-) {
-await promotionCycleService.updateCycle(id, data);
-await refresh();
-}
+  async function deleteCycle(id: string) {
+    await promotionCycleService.deleteCycle(id);
+    await refresh();
+  }
 
-async function deleteCycle(id: string) {
-await promotionCycleService.deleteCycle(id);
-await refresh();
-}
+  async function activateCycle(id: string) {
+    await promotionCycleService.setActiveCycle(id);
+    await refresh();
+  }
 
-async function activateCycle(id: string) {
-await promotionCycleService.setActiveCycle(id);
-await refresh();
-}
-
-return {
-cycles,
-loading,
-error,
-refresh,
-createCycle,
-updateCycle,
-deleteCycle,
-activateCycle,
-};
+  return {
+    cycles,
+    loading,
+    error,
+    refresh,
+    createCycle,
+    updateCycle,
+    deleteCycle,
+    activateCycle,
+  };
 }
 
 export function useActivePromotionCycle() {
-const [cycle, setCycle] = useState<PromotionCycle | null>(null);
-const [loading, setLoading] = useState(true);
+  const [cycle, setCycle] = useState<PromotionCycle | null>(null);
+  const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-async function loadCycle() {
-try {
-const data = await promotionService.getActiveCycle();
-setCycle(data);
-} finally {
-setLoading(false);
-}
-}
+  useEffect(() => {
+    async function loadCycle() {
+      try {
+        const response = await fetch("/api/promotion/active-cycle");
+        const result = await response.json();
 
-loadCycle();
+        if (result.success) {
+          setCycle(result.data);
+        } else {
+          setCycle(null);
+        }
+      } catch (error) {
+        console.error(error);
+        setCycle(null);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-}, []);
+    loadCycle();
+  }, []);
 
-return {
-cycle,
-loading,
-};
+  return {
+    cycle,
+    loading,
+  };
 }
 
 export function useDutyLogs(cycleId?: string) {
-const [logs, setLogs] = useState<DutyLog[]>([]);
-const [loading, setLoading] = useState(true);
+  const [logs, setLogs] = useState<DutyLog[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const refresh = useCallback(async () => {
-if (!cycleId) {
-setLogs([]);
-setLoading(false);
-return;
-}
+  const refresh = useCallback(async () => {
+    if (!cycleId) {
+      setLogs([]);
+      setLoading(false);
+      return;
+    }
 
-setLoading(true);
+    setLoading(true);
 
-try {
-  const data = await promotionService.getDutyLogs(cycleId);
-  setLogs(data);
-} finally {
-  setLoading(false);
-}
+    try {
+      const response = await fetch(`/api/promotion/duty-logs/${cycleId}`);
+      const result = await response.json();
 
-}, [cycleId]);
+      if (result.success) {
+        setLogs(result.data);
+      } else {
+        setLogs([]);
+      }
+    } catch (error) {
+      console.error(error);
+      setLogs([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [cycleId]);
 
-useEffect(() => {
-refresh();
-}, [refresh]);
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
 
-return {
-logs,
-loading,
-refresh,
-};
+  return {
+    logs,
+    loading,
+    refresh,
+  };
 }
 
 export function usePromotionResults(cycleId?: string) {
-const [results, setResults] = useState<PromotionResult[]>([]);
-const [loading, setLoading] = useState(true);
+  const [results, setResults] = useState<PromotionResult[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const refresh = useCallback(async () => {
-if (!cycleId) {
-setResults([]);
-setLoading(false);
-return;
-}
+  const refresh = useCallback(async () => {
+    if (!cycleId) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
 
-setLoading(true);
+    setLoading(true);
 
-try {
-  const data = await promotionService.getPromotionResults(cycleId);
-  setResults(data);
-} finally {
-  setLoading(false);
-}
+    try {
+      const response = await fetch(
+        `/api/promotion/results/${cycleId}`
+      );
 
-}, [cycleId]);
+      const result = await response.json();
 
-useEffect(() => {
-refresh();
-}, [refresh]);
+      if (result.success) {
+        setResults(result.data);
+      } else {
+        setResults([]);
+      }
+    } catch (error) {
+      console.error(error);
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [cycleId]);
 
-return {
-results,
-loading,
-refresh,
-};
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  return {
+    results,
+    loading,
+    refresh,
+  };
 }

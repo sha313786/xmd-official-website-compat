@@ -1,12 +1,9 @@
 "use client";
 
 import { useState } from "react";
-
 import { RefreshCw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-
-import { promotionService } from "@/services";
 
 export function PromotionRefreshButton() {
   const [loading, setLoading] = useState(false);
@@ -15,13 +12,27 @@ export function PromotionRefreshButton() {
     try {
       setLoading(true);
 
-      await promotionService.refreshActiveCycle();
+      const response = await fetch("/api/promotion/refresh", {
+        method: "POST",
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.error ?? "Failed to refresh promotion results."
+        );
+      }
 
       window.location.reload();
     } catch (error) {
       console.error(error);
 
-      alert("Failed to refresh promotion results.");
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to refresh promotion results."
+      );
     } finally {
       setLoading(false);
     }

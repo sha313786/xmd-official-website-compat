@@ -9,6 +9,8 @@ import {
 
 import { BadgeCheck } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
+
 import {
   useActivePromotionCycle,
   usePromotionResults,
@@ -24,6 +26,31 @@ export function EligibleMembersTable() {
   const eligible = results.filter(
     (member) => member.eligible
   );
+
+  function getBadge(type: string) {
+    switch (type) {
+      case "DOUBLE":
+        return (
+          <Badge className="bg-yellow-500 hover:bg-yellow-500 text-black">
+            🏆 DOUBLE PROMOTION
+          </Badge>
+        );
+
+      case "SINGLE":
+        return (
+          <Badge className="bg-green-600 hover:bg-green-600">
+            SINGLE PROMOTION
+          </Badge>
+        );
+
+      default:
+        return (
+          <Badge variant="secondary">
+            ELIGIBLE
+          </Badge>
+        );
+    }
+  }
 
   return (
     <Card>
@@ -49,13 +76,13 @@ export function EligibleMembersTable() {
                 className="flex items-center justify-between rounded-lg border p-4"
               >
                 <div>
-                  <p className="font-medium">
-                    Member ID: {member.member_id}
+                  <p className="font-semibold">
+                    {member.full_name ?? "Unknown Member"}
                   </p>
 
-                  <p className="text-sm text-muted-foreground">
-                    {member.current_rank}
-                  </p>
+                  <div className="mt-2">
+                    {getBadge(member.promotion_type)}
+                  </div>
                 </div>
 
                 <div className="text-right">
@@ -63,8 +90,8 @@ export function EligibleMembersTable() {
                     {member.total_hours.toFixed(2)} hrs
                   </p>
 
-                  <p className="text-sm text-green-600 font-medium">
-                    {member.promotion_type}
+                  <p className="text-sm text-muted-foreground">
+                    {member.duty_days} Duty Days
                   </p>
                 </div>
               </div>

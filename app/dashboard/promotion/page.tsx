@@ -1,11 +1,16 @@
 "use client";
 
+import Link from "next/link";
+
 import {
   Award,
   ShieldCheck,
   Trophy,
   Users,
+  Settings2,
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 import { ManagementRouteGuard } from "@/components/shared/management-route-guard";
 
@@ -31,7 +36,19 @@ export default function PromotionDashboardPage() {
             </p>
           </div>
 
-          <PromotionRefreshButton />
+          <div className="flex items-center gap-2">
+            <Link href="/dashboard/promotion-cycles">
+              <Button
+                variant="outline"
+                className="gap-2"
+              >
+                <Settings2 className="h-4 w-4" />
+                Manage Promotion Cycles
+              </Button>
+            </Link>
+
+            <PromotionRefreshButton />
+          </div>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">

@@ -34,11 +34,17 @@ export const promotionService = {
 
   async getActiveCycle(): Promise<PromotionCycle | null> {
     const supabase = getSupabaseAdmin();
+
     const { data, error } = await supabase
       .from("promotion_cycles")
       .select("*")
       .eq("is_active", true)
       .single();
+
+    console.log("=== ACTIVE CYCLE DEBUG ===");
+    console.log("DATA:", data);
+    console.log("ERROR:", error);
+    console.log("==========================");
 
     if (error) return null;
     return data;
@@ -68,7 +74,10 @@ export const promotionService = {
     return data ?? [];
   },
 
-  async getMemberResult(cycleId: string, memberId: string): Promise<PromotionResult | null> {
+  async getMemberResult(
+    cycleId: string,
+    memberId: string
+  ): Promise<PromotionResult | null> {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("promotion_results")
@@ -81,7 +90,9 @@ export const promotionService = {
     return data;
   },
 
-  async savePromotionResult(result: Omit<PromotionResult,"id"|"created_at"|"updated_at">) {
+  async savePromotionResult(
+    result: Omit<PromotionResult, "id" | "created_at" | "updated_at">
+  ) {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("promotion_results")
@@ -114,6 +125,7 @@ export const promotionService = {
     if (error) throw error;
 
     const memberRanks: Record<string, string> = {};
+
     (members as Pick<Member, "id" | "rank">[]).forEach((member) => {
       memberRanks[member.id] = member.rank;
     });

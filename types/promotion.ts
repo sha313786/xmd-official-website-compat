@@ -43,6 +43,9 @@ export interface PromotionResult {
   cycle_id: string;
   member_id: string;
 
+  // NEW
+  full_name?: string;
+
   current_rank: string;
   new_rank: string | null;
 

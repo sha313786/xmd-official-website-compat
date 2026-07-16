@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 
 import { ShieldCheck } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 import {
   useActivePromotionCycle,
@@ -23,8 +24,7 @@ export function ManagementRewardsTable() {
 
   const rewards = results.filter(
     (member) =>
-      member.promotion_type ===
-      "MANAGEMENT_REWARD"
+      member.promotion_type === "MANAGEMENT_REWARD"
   );
 
   return (
@@ -51,13 +51,15 @@ export function ManagementRewardsTable() {
                 className="flex items-center justify-between rounded-lg border p-4"
               >
                 <div>
-                  <p className="font-medium">
-                    Member ID: {member.member_id}
+                  <p className="font-semibold">
+                    {member.full_name ?? "Unknown Member"}
                   </p>
 
-                  <p className="text-sm text-muted-foreground">
-                    {member.current_rank}
-                  </p>
+                  <div className="mt-2">
+                    <Badge className="bg-blue-600 hover:bg-blue-600">
+                      MANAGEMENT REWARD
+                    </Badge>
+                  </div>
                 </div>
 
                 <div className="text-right">
@@ -65,8 +67,8 @@ export function ManagementRewardsTable() {
                     {member.total_hours.toFixed(2)} hrs
                   </p>
 
-                  <p className="text-sm text-blue-600 font-medium">
-                    Reward
+                  <p className="text-sm text-muted-foreground">
+                    {member.duty_days} Duty Days
                   </p>
                 </div>
               </div>
