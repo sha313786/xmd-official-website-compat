@@ -1,6 +1,5 @@
 export interface Member {
   id: string;
-
   discord_id: string | null;
 
   badge_number: string;
@@ -8,6 +7,8 @@ export interface Member {
 
   rank: string;
   department: string;
+
+  status: "Active" | "Inactive" | "Suspended" | "Retired";
 
   avatar: string | null;
 
