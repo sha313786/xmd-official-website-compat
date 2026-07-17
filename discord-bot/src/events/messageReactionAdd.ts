@@ -63,9 +63,13 @@ export default {
     // Target member
     const target = await guild.members.fetch(author.id);
 
-    const rpName = NicknameService.normalize(
-      message.content
-    );
+    const content = message.content;
+
+if (!content) {
+  return;
+}
+
+const rpName = NicknameService.normalize(content);
 
     const emoji = reaction.emoji.name;
 
