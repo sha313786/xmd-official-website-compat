@@ -14,7 +14,7 @@ const command: SlashCommand = {
   async execute(interaction: ChatInputCommandInteraction) {
     try {
       const code = await AuthService.createVerification(
-        interaction.user.id
+        interaction.user
       );
 
       await interaction.reply({
