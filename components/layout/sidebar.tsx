@@ -35,7 +35,6 @@ export default function Sidebar() {
     ]
   : [
       { name: "Dashboard", href: "/dashboard" },
-      { name: "My Profile", href: "/dashboard/profile" },
       { name: "My Promotion", href: "/dashboard/my-promotion" },
     ];
 
