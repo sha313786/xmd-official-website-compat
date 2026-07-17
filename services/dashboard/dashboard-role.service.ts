@@ -9,12 +9,13 @@ const MANAGEMENT_RANKS = [
 export interface DashboardUser {
   id: string;
   discordId: string;
+  discordUsername: string;
+  discordAvatar: string;
   badgeNumber: string;
   fullName: string;
   rank: string;
   dashboard: "member" | "management";
 }
-
 export class DashboardRoleService {
   static async getDashboardUser(): Promise<DashboardUser | null> {
     const supabase = createClient();
@@ -59,15 +60,17 @@ export class DashboardRoleService {
       }
 
       return {
-        id: member.id,
-        discordId: member.discord_id ?? "",
-        badgeNumber: member.badge_number,
-        fullName: member.full_name,
-        rank: member.rank,
-        dashboard: MANAGEMENT_RANKS.includes(member.rank)
-          ? "management"
-          : "member",
-      };
+  id: member.id,
+  discordId: member.discord_id ?? "",
+  discordUsername: member.discord_username ?? "",
+  discordAvatar: member.discord_avatar ?? "",
+  badgeNumber: member.badge_number,
+  fullName: member.full_name,
+  rank: member.rank,
+  dashboard: MANAGEMENT_RANKS.includes(member.rank)
+    ? "management"
+    : "member",
+};
     } catch (err) {
       console.error("DashboardRoleService:", err);
       return null;

@@ -9,7 +9,7 @@ export class VerificationService {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        badgeNumber,
+        badgeNumber: badgeNumber,
         verificationCode,
       }),
     });

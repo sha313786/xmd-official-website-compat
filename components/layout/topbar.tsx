@@ -1,10 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+
 import { AuthService } from "@/services/auth-service";
+import { NotificationButton } from "@/components/notifications/notification-button";
+import { useDashboardRole } from "@/hooks/dashboard/use-dashboard-role";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getDiscordAvatarUrl } from "@/utils/discord-avatar";
+import { getInitials } from "@/utils/get-initials";
 
 export default function Topbar() {
   const router = useRouter();
+
+  const { dashboardUser } = useDashboardRole();
 
   async function handleLogout() {
     try {
@@ -29,13 +37,25 @@ export default function Topbar() {
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="rounded-xl bg-red-600 px-5 py-2 text-white">
-          Notifications
-        </button>
+        {dashboardUser && (
+          <NotificationButton memberId={dashboardUser.id} />
+        )}
 
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-600 font-bold text-white">
-          FF
-        </div>
+        <Avatar className="h-12 w-12">
+  <AvatarImage
+    src={
+      getDiscordAvatarUrl(
+        dashboardUser?.discordId,
+        dashboardUser?.discordAvatar
+      ) ?? undefined
+    }
+    alt={dashboardUser?.fullName}
+  />
+
+  <AvatarFallback className="bg-red-600 font-bold">
+    {getInitials(dashboardUser?.fullName)}
+  </AvatarFallback>
+</Avatar>
 
         <button
           onClick={handleLogout}

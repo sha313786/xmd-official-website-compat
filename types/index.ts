@@ -8,3 +8,4 @@ export * from "./promotion";
 export * from "./stat";
 export * from "./application";
 export * from "./report";
+export * from "./notification";

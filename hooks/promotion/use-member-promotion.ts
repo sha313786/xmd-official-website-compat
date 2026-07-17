@@ -7,7 +7,7 @@ import {
   PromotionResult,
 } from "@/types/promotion";
 
-import { promotionService } from "@/services/promotion.service";
+import { memberPromotionService } from "@/services/member-promotion.service";
 import {
   DashboardRoleService,
 } from "@/services/dashboard/dashboard-role.service";
@@ -42,7 +42,7 @@ export function useMemberPromotion() {
     console.log("Step 2");
 
     const activeCycle =
-      await promotionService.getActiveCycle();
+      await memberPromotionService.getActiveCycle();
 
     console.log("Active Cycle:", activeCycle);
 
@@ -54,10 +54,10 @@ export function useMemberPromotion() {
     console.log("Step 3");
 
     const memberResult =
-      await promotionService.getMemberResult(
-        activeCycle.id,
-        dashboardUser.id
-      );
+  await memberPromotionService.getMemberResult(
+    activeCycle.id,
+    dashboardUser.id
+  );
 
     console.log("Member Result:", memberResult);
 
