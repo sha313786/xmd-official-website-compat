@@ -116,7 +116,7 @@ export class DutyService {
     }
 
     return updatedSession;
-  },
+  }
 }
 
 export const dutyService = DutyService;
