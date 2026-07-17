@@ -23,11 +23,11 @@ export function MemberCard({
     <Card className="transition-all duration-200 hover:border-red-500 hover:shadow-lg">
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
-          <MemberAvatar fullName={member.full_name} />
+          <MemberAvatar fullName={member.fullName} />
 
           <div className="flex-1 space-y-2">
             <h3 className="text-lg font-semibold">
-              {member.full_name}
+              {member.fullName}
             </h3>
 
             <RankBadge rank={member.rank} />
@@ -38,7 +38,7 @@ export function MemberCard({
               </span>
 
               <span className="rounded-full border px-3 py-1 text-xs">
-                {member.badge_number}
+                {member.badgeNumber}
               </span>
             </div>
           </div>
@@ -63,7 +63,7 @@ export function MemberCard({
 
               <DeleteMemberDialog
                 memberId={member.id}
-                memberName={member.full_name}
+                memberName={member.fullName}
                 onSuccess={onRefresh}
               />
             </>

@@ -52,7 +52,7 @@ export function ManagementRewardsTable() {
               >
                 <div>
                   <p className="font-semibold">
-                    {member.full_name ?? "Unknown Member"}
+                    {member.fullName ?? "Unknown Member"}
                   </p>
 
                   <div className="mt-2">

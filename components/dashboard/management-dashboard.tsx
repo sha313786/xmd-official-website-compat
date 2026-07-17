@@ -99,7 +99,7 @@ export default function ManagementDashboard() {
   </td>
 
   <td className="p-4 font-medium">
-    {member.full_name}
+    {member.fullName}
   </td>
 
   <td className="p-4">
