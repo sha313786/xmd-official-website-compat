@@ -67,7 +67,13 @@ export default {
       message.content
     );
 
-    switch (reaction.emoji.name) {
+    const emoji = reaction.emoji.name;
+
+if (!emoji) {
+  return;
+}
+
+switch (emoji) {
       case "✅": {
         processed.add(message.id);
 
