@@ -39,8 +39,8 @@ export const memberService = {
             joinedAt: member.joined_at,
             status: member.status ?? "Active",
 
-            dutyHours: stats.duty_hours,
-            dutyDays: stats.duty_Days,
+            dutyHours: stats.dutyHours,
+            dutyDays: stats.dutyDays,
             promotionProgress: stats.progress,
           };
         })
@@ -88,8 +88,8 @@ export const memberService = {
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
 
-      dutyHours: stats.duty_hours,
-      dutyDays: stats.duty_Days,
+      dutyHours: stats.dutyHours,
+      dutyDays: stats.dutyDays,
       promotionProgress: stats.progress,
     };
   },
@@ -100,7 +100,7 @@ export const memberService = {
     if (config.useMockData) {
       return members.find(
         (member) =>
-          member.badge_Number === badgeNumber
+          member.badgeNumber === badgeNumber
       );
     }
 
@@ -132,8 +132,8 @@ export const memberService = {
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
 
-      dutyHours: stats.duty_hours,
-      dutyDays: stats.duty_Days,
+      dutyHours: stats.dutyHours,
+      dutyDays: stats.dutyDays,
       promotionProgress: stats.progress,
     };
   },
@@ -143,7 +143,7 @@ export const memberService = {
     if (config.useMockData) {
       return members.find(
         (member) =>
-          member.discord_id === discordId
+          member.discordId === discordId
       );
     }
 
@@ -175,8 +175,8 @@ export const memberService = {
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
 
-      dutyHours: stats.duty_hours,
-      dutyDays: stats.duty_Days,
+      dutyHours: stats.dutyHours,
+      dutyDays: stats.dutyDays,
       promotionProgress: stats.progress,
     };
   },
@@ -193,9 +193,9 @@ export const memberService = {
     const { data, error } = await supabase
       .from("members")
       .insert({
-        full_name: member.full_name,
-        badge_number: member.badge_number,
-        discord_id: member.discord_id ?? null,
+        full_name: member.fullName,
+        badge_number: member.badgeNumber,
+        discord_id: member.discordId ?? null,
         rank: member.rank,
         department: member.department,
         status: member.status ?? "Active",
@@ -226,9 +226,9 @@ export const memberService = {
     const { error } = await supabase
       .from("members")
       .update({
-        full_name: member.full_name,
-        badge_number: member.badge_number,
-        discord_id: member.discord_id ?? null,
+        full_name: member.fullName,
+        badge_number: member.badgeNumber,
+        discord_id: member.discordId ?? null,
         rank: member.rank,
         department: member.department,
         status: member.status ?? "Active",
