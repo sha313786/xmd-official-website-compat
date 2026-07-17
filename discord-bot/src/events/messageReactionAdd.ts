@@ -44,14 +44,18 @@ export default {
     )
       return;
 
-    // Target member
-    const target = await guild.members.fetch(
-      message.author.id
-    );
+    // Message author can be null
+const authorId = message.author?.id;
 
+if (!authorId) {
+  return;
+}
+
+// Target member
+const target = await guild.members.fetch(authorId);
+  message.author.id
+);
     const rpName = NicknameService.normalize(
-      message.content
-    );
 
     switch (reaction.emoji.name) {
 
