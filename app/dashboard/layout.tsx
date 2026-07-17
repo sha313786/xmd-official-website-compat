@@ -12,12 +12,13 @@ export default async function Layout({
   const supabase = await createClient();
 
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  data: { user },
+  error,
+} = await supabase.auth.getUser();
 
-  if (!session) {
-    redirect("/login");
-  }
+if (error || !user) {
+  redirect("/login");
+}
 
   return (
     <DashboardLayout>

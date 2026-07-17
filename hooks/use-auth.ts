@@ -16,16 +16,19 @@ export function useAuth() {
     const supabase = createClient();
 
     async function loadSession() {
-      const {
-        data: { session },
-      } = await AuthService.getSession();
+  const {
+    data: { session },
+  } = await AuthService.getSession();
 
-      if (!mounted) return;
+  console.log("CLIENT SESSION:", session);
 
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    }
+  if (!mounted) return;
+
+  setSession(session);
+  setUser(session?.user ?? null);
+  setLoading(false);
+}
+    
 
     loadSession();
 
