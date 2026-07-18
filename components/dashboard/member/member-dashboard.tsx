@@ -3,16 +3,15 @@
 import {
   Card,
   CardContent,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 
 import { useMemberDashboard } from "@/hooks/member/use-member-dashboard";
 
-import LiveDutySummary from "./live-duty-summary";
 import MemberInformation from "./member-information";
-import MemberQuickActions from "./member-quick-actions";
 import MemberStatCard from "./member-stat-card";
-import PromotionProgressCard from "./promotion-progress-card";
-import PromotionTimelineCard from "./promotion-timeline-card";
+import PromotionOverviewCard from "./promotion-overview-card";
 import RecentActivity from "./recent-activity";
 
 interface MemberDashboardProps {
@@ -29,7 +28,6 @@ export default function MemberDashboard({
     activities,
     loading,
     error,
-    refresh,
   } = useMemberDashboard(memberId);
 
   if (loading) {
@@ -62,11 +60,33 @@ export default function MemberDashboard({
 
   return (
     <div className="space-y-6">
-      <MemberInformation
-        profile={profile}
-      />
+      {/* Top Row */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <MemberInformation
+          profile={profile}
+        />
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <PromotionOverviewCard
+          cycleName={statistics.cycleName}
+          currentRank={statistics.currentRank}
+          nextRank={statistics.nextRank}
+          dutyHours={statistics.totalDutyHours}
+          dutyDays={statistics.totalDutyDays}
+          remainingHours={statistics.remainingHours}
+          remainingDays={statistics.remainingDays}
+          progress={statistics.promotionProgress}
+          leaderboardPosition={
+            statistics.leaderboardPosition
+          }
+          promotionType={
+            statistics.promotionType
+          }
+          eligible={statistics.eligible}
+        />
+      </div>
+
+      {/* Statistics */}
+      <div className="grid gap-4 grid-cols-2 xl:grid-cols-4">
         <MemberStatCard
           title="Duty Hours"
           value={statistics.totalDutyHours}
@@ -78,100 +98,43 @@ export default function MemberDashboard({
         />
 
         <MemberStatCard
-          title="Attendance"
-          value={`${statistics.attendancePercentage}%`}
+          title="Progress"
+          value={`${statistics.promotionProgress}%`}
         />
 
         <MemberStatCard
-          title="Promotion"
-          value={`${statistics.promotionProgress}%`}
+          title="Current Rank"
+          value={statistics.currentRank}
         />
       </div>
 
-      <LiveDutySummary
-        dutyHours={statistics.totalDutyHours}
-        dutyDays={statistics.totalDutyDays}
-        remainingHours={
-          statistics.remainingHours
-        }
-        remainingDays={
-          statistics.remainingDays
-        }
-        progress={
-          statistics.promotionProgress
-        }
-        lastDuty={
-          statistics.lastDuty
-        }
-        isOnDuty={
-          statistics.isOnDuty
-        }
-        cycleName={
-          statistics.cycleName
-        }
-        eligible={
-          statistics.eligible
-        }
-      />
+      {/* Bottom Row */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <RecentActivity
+          activities={activities}
+        />
 
-      <PromotionProgressCard
-        dutyHours={
-          statistics.totalDutyHours
-        }
-        dutyDays={
-          statistics.totalDutyDays
-        }
-        remainingHours={
-          statistics.remainingHours
-        }
-        remainingDays={
-          statistics.remainingDays
-        }
-        progress={
-          statistics.promotionProgress
-        }
-        cycleName={
-          statistics.cycleName
-        }
-        eligible={
-          statistics.eligible
-        }
-      />
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              Achievements
+            </CardTitle>
+          </CardHeader>
 
-      <PromotionTimelineCard
-        currentRank={
-          statistics.currentRank
-        }
-        nextRank={
-          statistics.nextRank
-        }
-        promotionType={
-          statistics.promotionType
-        }
-        leaderboardPosition={
-          statistics.leaderboardPosition
-        }
-        progress={
-          statistics.promotionProgress
-        }
-        remainingHours={
-          statistics.remainingHours
-        }
-        remainingDays={
-          statistics.remainingDays
-        }
-        eligible={
-          statistics.eligible
-        }
-      />
+          <CardContent className="flex h-56 items-center justify-center">
+            <div className="text-center">
+              <h3 className="text-lg font-semibold">
+                Coming Soon
+              </h3>
 
-      <MemberQuickActions
-        onRefresh={refresh}
-      />
-
-      <RecentActivity
-        activities={activities}
-      />
+              <p className="mt-2 text-sm text-muted-foreground">
+                Achievements, awards and milestones
+                will appear here.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
