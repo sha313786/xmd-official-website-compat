@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { memberService } from "@/services/member.service";
+import { memberService } from "@/services/members/member.service";
 import type { Member } from "@/types/member";
 
 export function useProfile() {
