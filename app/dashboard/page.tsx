@@ -1,7 +1,8 @@
 "use client";
 
-import MemberDashboard from "@/components/dashboard/member-dashboard";
+import MemberDashboard from "@/components/dashboard/member/member-dashboard";
 import ManagementDashboard from "@/components/dashboard/management-dashboard";
+
 import { useDashboardRole } from "@/hooks/dashboard/use-dashboard-role";
 
 export default function DashboardPage() {
@@ -9,7 +10,6 @@ export default function DashboardPage() {
     dashboardUser,
     loading,
     isManagement,
-    isMember,
   } = useDashboardRole();
 
   if (loading) {
@@ -28,7 +28,13 @@ export default function DashboardPage() {
     );
   }
 
-  if (isManagement) return <ManagementDashboard />;
+  if (isManagement) {
+    return <ManagementDashboard />;
+  }
 
-  return <MemberDashboard />;
+  return (
+    <MemberDashboard
+      memberId={dashboardUser.id}
+    />
+  );
 }
