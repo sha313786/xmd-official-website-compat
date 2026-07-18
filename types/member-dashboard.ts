@@ -1,20 +1,22 @@
+import type { MemberStatus } from "@/types/member";
+
 export interface MemberProfile {
   id: string;
   memberId: string;
-  discordId: string;
-
+  discordId: string | null;
   name: string;
   callsign: string;
-
   rank: string;
   department: string;
 
-  avatarUrl: string | null;
+  avatar: string;
 
-  status: "ACTIVE" | "INACTIVE" | "SUSPENDED";
+  joinedAt: string | null;
 
-  joinedAt: string;
+  status: MemberStatus;
 }
+
+  // ..
 
 export type MemberPromotionType =
   | "NONE"
@@ -36,6 +38,12 @@ export interface MemberStatistics {
 
   isOnDuty: boolean;
 
+  /**
+   * Live duty duration.
+   * Null when the member is currently off duty.
+   */
+  currentDutyDuration: string | null;
+
   cycleName: string;
 
   eligible: boolean;
@@ -51,7 +59,6 @@ export interface MemberStatistics {
 
   leaderboardPosition: number | null;
 }
-
 export interface MemberActivity {
   id: string;
 

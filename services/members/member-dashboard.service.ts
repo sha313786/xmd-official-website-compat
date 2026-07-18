@@ -70,86 +70,68 @@ export const memberDashboardService = {
 
       return {
         profile: {
-          id: member.id,
-
-          memberId:
-            member.badgeNumber,
-
-          discordId:
-            member.discordId,
-
-          name:
-            member.fullName,
-
-          callsign:
-            member.badgeNumber,
-
-          rank:
-            member.rank,
-
-          department:
-            member.department,
-
-          avatarUrl:
-            member.avatar,
-
-          status:
-            member.status.toUpperCase() as
-              | "ACTIVE"
-              | "INACTIVE"
-              | "SUSPENDED",
-
-          joinedAt:
-            member.joinedAt,
-        },
+  id: member.id,
+  memberId: member.badgeNumber,
+  discordId: member.discordId,
+  name: member.fullName,
+  callsign: member.badgeNumber,
+  rank: member.rank,
+  department: member.department,
+  avatar: member.avatar,
+  joinedAt: member.joinedAt,
+  status: member.status,
+},
 
         statistics: {
-          totalDutyHours:
-            dutyStats.dutyHours,
+  totalDutyHours:
+    dutyStats.dutyHours,
 
-          totalDutyDays:
-            dutyStats.dutyDays,
+  totalDutyDays:
+    dutyStats.dutyDays,
 
-          attendancePercentage: 100,
+  attendancePercentage: 100,
 
-          promotionProgress:
-            dutyStats.progress,
+  promotionProgress:
+    dutyStats.progress,
 
-          remainingHours:
-            dutyStats.remainingHours,
+  remainingHours:
+    dutyStats.remainingHours,
 
-          remainingDays:
-            dutyStats.remainingDays,
+  remainingDays:
+    dutyStats.remainingDays,
 
-          lastDuty:
-            dutyStats.lastDuty,
+  lastDuty:
+    dutyStats.lastDuty,
 
-          isOnDuty:
-            dutyStats.isOnDuty,
+  isOnDuty:
+    dutyStats.isOnDuty,
 
-          cycleName:
-            dutyStats.cycleName,
+  currentDutyDuration:
+    dutyStats.currentDutyDuration ??
+    null,
 
-          eligible:
-            dutyStats.eligible,
+  cycleName:
+    dutyStats.cycleName,
 
-          currentRank:
-            promotionResult?.current_rank ??
-            member.rank,
+  eligible:
+    dutyStats.eligible,
 
-          nextRank:
-            promotionResult?.new_rank ??
-            null,
+  currentRank:
+    promotionResult?.current_rank ??
+    member.rank,
 
-          promotionType:
-            (promotionResult?.promotion_type as MemberPromotionType) ??
-            "NONE",
+  nextRank:
+    promotionResult?.new_rank ??
+    null,
 
-          leaderboardPosition:
-            promotionResult?.position ??
-            null,
-        },
+  promotionType:
+    (promotionResult?.promotion_type as MemberPromotionType) ??
+    "NONE",
 
+  leaderboardPosition:
+    promotionResult?.position ??
+    null,
+},
         activities,
       };
     } catch (error) {

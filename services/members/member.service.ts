@@ -5,6 +5,15 @@ import { createClient } from "@/lib/supabase/client";
 import { Member } from "@/types/member";
 import { dutyService } from "@/services/duty-service";
 
+
+const buildAvatarUrl = (record: any): string => {
+  if (record?.discord_id && record?.discord_avatar) {
+    const ext = String(record.discord_avatar).startsWith("a_") ? "gif" : "png";
+    return `https://cdn.discordapp.com/avatars/${record.discord_id}/${record.discord_avatar}.${ext}?size=256`;
+  }
+  return record?.avatar ?? "";
+};
+
 export const memberService = {
   async getAll(): Promise<Member[]> {
     if (config.useMockData) {
@@ -35,7 +44,7 @@ export const memberService = {
             fullName: member.full_name,
             rank: member.rank,
             department: member.department,
-            avatar: member.avatar ?? "",
+            avatar: buildAvatarUrl(member),
             joinedAt: member.joined_at,
             status: member.status ?? "Active",
 
@@ -84,7 +93,7 @@ export const memberService = {
       fullName: data.full_name,
       rank: data.rank,
       department: data.department,
-      avatar: data.avatar ?? "",
+      avatar: buildAvatarUrl(data),
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
 
@@ -128,7 +137,7 @@ export const memberService = {
       fullName: data.full_name,
       rank: data.rank,
       department: data.department,
-      avatar: data.avatar ?? "",
+      avatar: buildAvatarUrl(data),
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
 
@@ -171,7 +180,7 @@ export const memberService = {
       fullName: data.full_name,
       rank: data.rank,
       department: data.department,
-      avatar: data.avatar ?? "",
+      avatar: buildAvatarUrl(data),
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
 

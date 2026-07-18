@@ -17,7 +17,22 @@ export interface Member {
 
   status: MemberStatus;
 
-  avatar: string | null;
+  /**
+   * Final avatar URL used by the UI.
+   * This will be the Discord CDN URL if available,
+   * otherwise it falls back to the manually uploaded avatar.
+   */
+  avatar: string;
+
+  /**
+   * Raw Discord avatar hash stored in the database.
+   */
+  discordAvatar?: string | null;
+
+  /**
+   * Discord username.
+   */
+  discordUsername?: string | null;
 
   joinedAt: string | null;
 

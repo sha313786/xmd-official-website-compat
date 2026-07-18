@@ -9,14 +9,21 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 
-import { MemberProfile } from "@/types/member-dashboard";
+import {
+  MemberProfile,
+  MemberStatistics,
+} from "@/types/member-dashboard";
+
+import DutyStatusCard from "./duty-status-card";
 
 interface MemberInformationProps {
   profile: MemberProfile;
+  statistics: MemberStatistics;
 }
 
 export default function MemberInformation({
   profile,
+  statistics,
 }: MemberInformationProps) {
   return (
     <Card>
@@ -24,10 +31,7 @@ export default function MemberInformation({
         <div className="flex flex-col gap-6 md:flex-row md:items-center">
           <div className="flex justify-center md:justify-start">
             <Image
-              src={
-                profile.avatarUrl ||
-                "/images/default-avatar.png"
-              }
+              src={profile.avatar || "/images/default-avatar.png"}
               alt={profile.name}
               width={96}
               height={96}
@@ -52,7 +56,6 @@ export default function MemberInformation({
                 <p className="text-sm text-muted-foreground">
                   Callsign
                 </p>
-
                 <p className="font-medium">
                   {profile.callsign}
                 </p>
@@ -62,7 +65,6 @@ export default function MemberInformation({
                 <p className="text-sm text-muted-foreground">
                   Department
                 </p>
-
                 <p className="font-medium">
                   {profile.department}
                 </p>
@@ -72,9 +74,8 @@ export default function MemberInformation({
                 <p className="text-sm text-muted-foreground">
                   Discord ID
                 </p>
-
                 <p className="font-medium">
-                  {profile.discordId}
+                  {profile.discordId ?? "Not Linked"}
                 </p>
               </div>
 
@@ -82,11 +83,10 @@ export default function MemberInformation({
                 <p className="text-sm text-muted-foreground">
                   Joined
                 </p>
-
                 <p className="font-medium">
-                  {new Date(
-                    profile.joinedAt
-                  ).toLocaleDateString()}
+                  {profile.joinedAt
+                    ? new Date(profile.joinedAt).toLocaleDateString()
+                    : "N/A"}
                 </p>
               </div>
 
@@ -97,7 +97,7 @@ export default function MemberInformation({
 
                 <Badge
                   variant={
-                    profile.status === "ACTIVE"
+                    profile.status === "Active"
                       ? "default"
                       : "secondary"
                   }
@@ -106,6 +106,12 @@ export default function MemberInformation({
                 </Badge>
               </div>
             </div>
+
+            <DutyStatusCard
+              isOnDuty={statistics.isOnDuty}
+              lastDuty={statistics.lastDuty}
+              currentDutyDuration={statistics.currentDutyDuration}
+            />
           </div>
         </div>
       </CardContent>

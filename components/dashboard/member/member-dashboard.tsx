@@ -64,6 +64,7 @@ export default function MemberDashboard({
       <div className="grid gap-6 lg:grid-cols-2">
         <MemberInformation
           profile={profile}
+          statistics={statistics}
         />
 
         <PromotionOverviewCard
@@ -82,29 +83,6 @@ export default function MemberDashboard({
             statistics.promotionType
           }
           eligible={statistics.eligible}
-        />
-      </div>
-
-      {/* Statistics */}
-      <div className="grid gap-4 grid-cols-2 xl:grid-cols-4">
-        <MemberStatCard
-          title="Duty Hours"
-          value={statistics.totalDutyHours}
-        />
-
-        <MemberStatCard
-          title="Duty Days"
-          value={statistics.totalDutyDays}
-        />
-
-        <MemberStatCard
-          title="Progress"
-          value={`${statistics.promotionProgress}%`}
-        />
-
-        <MemberStatCard
-          title="Current Rank"
-          value={statistics.currentRank}
         />
       </div>
 
