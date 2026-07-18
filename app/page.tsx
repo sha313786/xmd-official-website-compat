@@ -3,12 +3,13 @@ import { createClient } from "@/lib/supabase/server";
 
 import Navbar from "@/components/layout/navbar";
 import Hero from "@/components/home/hero";
-import Stats from "@/components/home/stats";
-import Services from "@/components/home/services";
-import Departments from "@/components/home/departments";
 import Recruitment from "@/components/home/recruitment";
 import News from "@/components/home/news";
-import { DutyHoursChart } from "@/components/dashboard/duty-hours-chart";
+import Footer from "@/components/home/footer";
+import Impact from "@/components/home/impact";
+import MedicalServices from "@/components/home/medical-services";
+import Departments from "@/components/home/departments";
+import CTA from "@/components/home/cta";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -25,12 +26,13 @@ export default async function Home() {
     <>
       <Navbar />
       <Hero />
-      <Stats />
-      <Services />
+      <Impact />
+      <MedicalServices />
       <Departments />
       <Recruitment />
       <News />
-      <DutyHoursChart />
+      <CTA />
+      <Footer />
     </>
   );
 }

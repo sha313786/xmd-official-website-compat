@@ -1,20 +1,128 @@
-import Link from "next/link";
-import Image from "next/image";
-import { siteConfig } from "@/lib/constants";
+"use client";
 
-export function CTA() {
+import Link from "next/link";
+import { ArrowRight, HeartPulse } from "lucide-react";
+
+import CTAStat from "@/components/home/cta-stat";
+import Reveal from "@/components/ui/reveal";
+import Stagger from "@/components/ui/stagger";
+
+import {
+  ctaContent,
+  ctaStats,
+} from "@/data/home/cta";
+
+export default function CTA() {
   return (
-    <section className="px-4 py-24">
-      <div className="mx-auto grid max-w-6xl items-center gap-8 rounded-3xl bg-slate-950 p-8 text-white shadow-soft md:grid-cols-[1fr_auto] md:p-12">
+    <section
+      id="cta"
+      className="relative overflow-hidden bg-black py-24"
+    >
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-950/20 via-black to-black" />
+
+      <div className="absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-red-600/10 blur-[180px]" />
+
+      <div className="container relative mx-auto px-4">
+  <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl">
+    <div className="grid gap-12 p-8 lg:grid-cols-[1.2fr_0.8fr] lg:p-16">
+
+      {/* Left */}
+      <Reveal>
         <div>
-          <Image src={siteConfig.logo} alt="XMD logo" width={180} height={120} className="mb-6 h-auto w-36" />
-          <h2 className="font-heading text-3xl font-bold md:text-5xl">Ready to serve with XMD?</h2>
-          <p className="mt-4 max-w-2xl text-slate-300">Join a disciplined medical department built around training, teamwork, and high-quality roleplay.</p>
+          <span className="inline-flex rounded-full border border-red-500/20 bg-red-500/10 px-4 py-1 text-sm font-medium text-red-400">
+            {ctaContent.badge}
+          </span>
+
+          <div className="mt-8 flex items-center gap-5">
+            <div className="relative">
+              <span className="absolute inset-0 animate-ping rounded-full bg-red-600/30" />
+
+              <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-red-600">
+                <HeartPulse className="h-8 w-8 text-white" />
+              </div>
+            </div>
+
+            <h2 className="text-4xl font-black leading-tight text-white md:text-5xl">
+              {ctaContent.title}
+            </h2>
+          </div>
+
+          <p className="mt-8 max-w-2xl text-lg leading-8 text-slate-400">
+            {ctaContent.description}
+          </p>
+
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <Link
+              href={ctaContent.primaryButton.href}
+              className="
+                inline-flex
+                items-center
+                justify-center
+                gap-2
+                rounded-xl
+                bg-red-600
+                px-8
+                py-4
+                font-semibold
+                text-white
+                transition-all
+                duration-300
+                hover:bg-red-700
+                hover:shadow-xl
+                hover:shadow-red-600/30
+              "
+            >
+              {ctaContent.primaryButton.label}
+
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+
+            <Link
+              href={ctaContent.secondaryButton.href}
+              className="
+                inline-flex
+                items-center
+                justify-center
+                rounded-xl
+                border
+                border-white/10
+                bg-white/5
+                px-8
+                py-4
+                font-semibold
+                text-white
+                backdrop-blur-xl
+                transition-all
+                duration-300
+                hover:border-red-500/40
+                hover:bg-red-500/10
+              "
+            >
+              {ctaContent.secondaryButton.label}
+            </Link>
+          </div>
         </div>
-        <Link href="/recruitment" className="inline-flex justify-center rounded-full bg-primary px-7 py-3 font-bold text-white">
-          Apply Now
-        </Link>
-      </div>
-    </section>
+      </Reveal>
+
+      {/* Right */}
+      <Stagger
+        className="grid grid-cols-2 gap-5"
+        staggerDelay={100}
+      >
+        {ctaStats.map((stat) => (
+          <CTAStat
+            key={stat.id}
+            icon={stat.icon}
+            value={stat.value}
+            label={stat.label}
+          />
+        ))}
+      </Stagger>
+
+    </div>
+  </div>
+</div>
+</section>
   );
 }

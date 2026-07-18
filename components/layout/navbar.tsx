@@ -48,13 +48,6 @@ export default function Navbar() {
             Recruitment
           </a>
 
-          <a
-            href="#"
-            className="text-red-500 border-b-2 border-red-500 pb-1"
-          >
-            Home
-          </a>
-
           <a href="#" className="hover:text-red-500 transition">
             Contact
           </a>

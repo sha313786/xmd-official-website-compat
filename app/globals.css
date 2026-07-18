@@ -121,10 +121,27 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Homepage UX Polish                                                         */
+/* -------------------------------------------------------------------------- */
+
+::selection {
+  background: rgb(220 38 38);
+  color: white;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(239 68 68);
+  outline-offset: 2px;
 }
