@@ -106,9 +106,7 @@ export const memberDashboardService = {
   isOnDuty:
     dutyStats.isOnDuty,
 
-  currentDutyDuration:
-    dutyStats.currentDutyDuration ??
-    null,
+  currentDutyDuration: null,
 
   cycleName:
     dutyStats.cycleName,
