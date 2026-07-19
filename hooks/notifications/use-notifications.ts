@@ -33,8 +33,12 @@ export function useNotifications(memberId?: string) {
   }, [memberId]);
 
   useEffect(() => {
-    loadNotifications();
-  }, [loadNotifications]);
+  const id = requestAnimationFrame(() => {
+    void loadNotifications();
+  });
+
+  return () => cancelAnimationFrame(id);
+}, [loadNotifications]);
 
   useEffect(() => {
     if (!memberId) return;

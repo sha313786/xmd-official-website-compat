@@ -5,7 +5,7 @@ import { Client } from "discord.js";
 
 import { Logger } from "../config/logger";
 
-export function registerEvents(client: Client) {
+export async function registerEvents(client: Client) {
   const eventsPath = path.join(__dirname, "../events");
 
   if (!fs.existsSync(eventsPath)) {
@@ -18,7 +18,9 @@ export function registerEvents(client: Client) {
     .filter(file => file.endsWith(".ts") || file.endsWith(".js"));
 
   for (const file of files) {
-    const event = require(path.join(eventsPath, file)).default;
+    const { default: event } = await import(
+  path.join(eventsPath, file)
+);
 
     if (!event) continue;
 

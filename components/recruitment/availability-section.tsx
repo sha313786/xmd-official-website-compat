@@ -35,8 +35,8 @@ export function AvailabilitySection({
         <CardTitle>Availability</CardTitle>
 
         <CardDescription>
-          Tell us when you're usually available for duty.
-        </CardDescription>
+  Tell us when you&#39;re usually available for duty.
+</CardDescription>
       </CardHeader>
 
       <CardContent className="grid gap-6 md:grid-cols-2">
@@ -49,7 +49,7 @@ export function AvailabilitySection({
 
               <FormControl>
                 <Input
-                  placeholder="Morning / Afternoon / Evening / Night"
+                  placeholder="Example 9pm to 11pm "
                   {...field}
                 />
               </FormControl>

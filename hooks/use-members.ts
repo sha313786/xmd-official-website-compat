@@ -10,8 +10,6 @@ export function useMembers() {
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
-    setLoading(true);
-
     try {
       const data = await memberService.getAll();
       setMembers(data);
@@ -21,8 +19,12 @@ export function useMembers() {
   }, []);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+  const id = requestAnimationFrame(() => {
+    void refresh();
+  });
+
+  return () => cancelAnimationFrame(id);
+}, [refresh]);
 
   return {
     members,

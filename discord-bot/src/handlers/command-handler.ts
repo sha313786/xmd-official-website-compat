@@ -12,7 +12,7 @@ declare module "discord.js" {
   }
 }
 
-export function registerCommands(client: Client) {
+export async function registerCommands(client: Client) {
   client.commands = new Collection();
 
   const commandsPath = path.join(__dirname, "../commands");
@@ -32,7 +32,9 @@ export function registerCommands(client: Client) {
       .filter(file => file.endsWith(".ts") || file.endsWith(".js"));
 
     for (const file of files) {
-      const command = require(path.join(categoryPath, file)).default;
+      const { default: command } = await import(
+  path.join(categoryPath, file)
+);
 
       if (!command) continue;
 

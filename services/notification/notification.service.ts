@@ -4,6 +4,17 @@ import {
   NotificationInsert,
 } from "@/types/notification";
 
+type NotificationRow = {
+  id: string;
+  member_id: string;
+  title: string;
+  message: string;
+  type: Notification["type"];
+  is_read: boolean;
+  action_url: string | null;
+  created_at: string;
+};
+
 export const notificationService = {
   async getNotifications(
     memberId: string
@@ -20,7 +31,11 @@ export const notificationService = {
 
     if (error) throw error;
 
-    return (data ?? []).map(this.mapNotification);
+    return (data ?? []).map((notification) =>
+      this.mapNotification(
+        notification as NotificationRow
+      )
+    );
   },
 
   async getUnreadCount(
@@ -86,7 +101,9 @@ export const notificationService = {
 
     if (error) throw error;
 
-    return this.mapNotification(data);
+    return this.mapNotification(
+      data as NotificationRow
+    );
   },
 
   async delete(
@@ -102,7 +119,9 @@ export const notificationService = {
     if (error) throw error;
   },
 
-  mapNotification(data: any): Notification {
+  mapNotification(
+    data: NotificationRow
+  ): Notification {
     return {
       id: data.id,
       memberId: data.member_id,

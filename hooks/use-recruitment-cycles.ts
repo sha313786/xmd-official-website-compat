@@ -51,8 +51,12 @@ export function useRecruitmentCycles() {
   }, []);
 
   useEffect(() => {
-    loadCycles();
-  }, [loadCycles]);
+  const id = requestAnimationFrame(() => {
+    void loadCycles();
+  });
+
+  return () => cancelAnimationFrame(id);
+}, [loadCycles]);
 
   const createCycle = async (
     cycle: CreateCycleData

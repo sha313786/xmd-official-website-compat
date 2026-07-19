@@ -19,8 +19,18 @@ export default function LiveDuration({
     return () => clearInterval(interval);
   }, []);
 
-  const start = new Date(dutyStart).getTime();
-  const diff = Date.now() - start;
+  const [now, setNow] = useState(() => Date.now());
+
+useEffect(() => {
+  const id = setInterval(() => {
+    setNow(Date.now());
+  }, 60000);
+
+  return () => clearInterval(id);
+}, []);
+
+const start = new Date(dutyStart).getTime();
+const diff = now - start;
 
   const hours = Math.floor(diff / 3600000);
   const minutes = Math.floor((diff % 3600000) / 60000);

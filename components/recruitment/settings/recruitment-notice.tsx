@@ -26,10 +26,14 @@ export function RecruitmentNotice() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (settings) {
-      setNotice(settings.recruitment_notice ?? "");
-    }
-  }, [settings]);
+  if (!settings) return;
+
+  const id = requestAnimationFrame(() => {
+    setNotice(settings.recruitment_notice ?? "");
+  });
+
+  return () => cancelAnimationFrame(id);
+}, [settings]);
 
   async function handleSave() {
     try {

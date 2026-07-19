@@ -1,4 +1,4 @@
-import { Events } from "discord.js";
+import { Client, Events } from "discord.js";
 
 import { Logger } from "../config/logger";
 import { dutyPanelService } from "../services/duty-panel.service";
@@ -7,7 +7,7 @@ export default {
   name: Events.ClientReady,
   once: true,
 
-  async execute(client: any) {
+  async execute(client: Client<true>) {
     Logger.success(
       `Ready event initialized as ${client.user.tag}`
     );

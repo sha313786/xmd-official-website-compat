@@ -39,8 +39,12 @@ export function useRecruitmentSettings() {
   }, []);
 
   useEffect(() => {
-    loadSettings();
-  }, [loadSettings]);
+  const id = requestAnimationFrame(() => {
+    void loadSettings();
+  });
+
+  return () => cancelAnimationFrame(id);
+}, [loadSettings]);
 
   const toggleRecruitment = async () => {
     try {

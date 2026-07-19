@@ -59,9 +59,12 @@ export function useDashboardDuty(): UseDashboardDutyReturn {
     }
   }, []);
 
-  useEffect(() => {
+    useEffect(() => {
     const supabase = createClient();
-    loadDashboard();
+
+    const frame = requestAnimationFrame(() => {
+      void loadDashboard();
+    });
 
     const channel = supabase
       .channel("dashboard-duty-live")
@@ -73,18 +76,19 @@ export function useDashboardDuty(): UseDashboardDutyReturn {
           table: "duty_logs",
         },
         () => {
-          loadDashboard();
+          void loadDashboard();
         }
       )
       .subscribe();
 
     const interval = setInterval(() => {
-      loadDashboard();
+      void loadDashboard();
     }, 30000);
 
     return () => {
+      cancelAnimationFrame(frame);
       clearInterval(interval);
-      supabase.removeChannel(channel);
+      void supabase.removeChannel(channel);
     };
   }, [loadDashboard]);
 

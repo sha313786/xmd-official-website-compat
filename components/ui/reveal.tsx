@@ -38,9 +38,12 @@ export default function Reveal({
     ).matches;
 
     if (prefersReducedMotion) {
-      setIsVisible(true);
-      return;
-    }
+  const id = requestAnimationFrame(() => {
+    setIsVisible(true);
+  });
+
+  return () => cancelAnimationFrame(id);
+}
 
     const observer = new IntersectionObserver(
       ([entry]) => {

@@ -31,8 +31,12 @@ export function usePromotionCycles() {
   }, []);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+  const id = requestAnimationFrame(() => {
+    void refresh();
+  });
+
+  return () => cancelAnimationFrame(id);
+}, [refresh]);
 
   async function createCycle(data: {
     name: string;
@@ -140,8 +144,12 @@ export function useDutyLogs(cycleId?: string) {
   }, [cycleId]);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+  const id = requestAnimationFrame(() => {
+    void refresh();
+  });
+
+  return () => cancelAnimationFrame(id);
+}, [refresh]);
 
   return {
     logs,
@@ -184,8 +192,12 @@ export function usePromotionResults(cycleId?: string) {
   }, [cycleId]);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+  const id = requestAnimationFrame(() => {
+    void refresh();
+  });
+
+  return () => cancelAnimationFrame(id);
+}, [refresh]);
 
   return {
     results,

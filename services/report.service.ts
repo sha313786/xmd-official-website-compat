@@ -2,9 +2,25 @@ import { createClient } from "@/lib/supabase/client";
 
 import { Report } from "@/types";
 
+type ReportRow = {
+  id: string;
+  title: string;
+  description: string;
+  member_name: string;
+  member_id: string;
+  report_type: Report["reportType"];
+  priority: Report["priority"];
+  status: Report["status"];
+  assigned_to: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+};
+
 export const reportService = {
   async getAll(): Promise<Report[]> {
     const supabase = createClient();
+
     const { data, error } = await supabase
       .from("reports")
       .select("*")
@@ -12,11 +28,14 @@ export const reportService = {
 
     if (error) throw error;
 
-    return (data ?? []).map(this.mapReport);
+    return (data ?? []).map((report) =>
+      this.mapReport(report as ReportRow)
+    );
   },
 
   async getById(id: string): Promise<Report | null> {
     const supabase = createClient();
+
     const { data, error } = await supabase
       .from("reports")
       .select("*")
@@ -25,11 +44,16 @@ export const reportService = {
 
     if (error) throw error;
 
-    return data ? this.mapReport(data) : null;
+    return data
+      ? this.mapReport(data as ReportRow)
+      : null;
   },
 
   async create(
-    report: Omit<Report, "id" | "createdAt" | "updatedAt">
+    report: Omit<
+      Report,
+      "id" | "createdAt" | "updatedAt"
+    >
   ): Promise<Report> {
     const payload = {
       title: report.title,
@@ -44,6 +68,7 @@ export const reportService = {
     };
 
     const supabase = createClient();
+
     const { data, error } = await supabase
       .from("reports")
       .insert(payload)
@@ -52,7 +77,7 @@ export const reportService = {
 
     if (error) throw error;
 
-    return this.mapReport(data);
+    return this.mapReport(data as ReportRow);
   },
 
   async update(
@@ -72,6 +97,7 @@ export const reportService = {
     };
 
     const supabase = createClient();
+
     const { data, error } = await supabase
       .from("reports")
       .update(payload)
@@ -81,11 +107,12 @@ export const reportService = {
 
     if (error) throw error;
 
-    return this.mapReport(data);
+    return this.mapReport(data as ReportRow);
   },
 
   async delete(id: string): Promise<void> {
     const supabase = createClient();
+
     const { error } = await supabase
       .from("reports")
       .delete()
@@ -94,7 +121,7 @@ export const reportService = {
     if (error) throw error;
   },
 
-  mapReport(data: any): Report {
+  mapReport(data: ReportRow): Report {
     return {
       id: data.id,
       title: data.title,

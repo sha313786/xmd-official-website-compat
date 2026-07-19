@@ -6,7 +6,22 @@ import { Member } from "@/types/member";
 import { dutyService } from "@/services/duty-service";
 
 
-const buildAvatarUrl = (record: any): string => {
+type MemberRecord = {
+  id: string;
+  discord_id: string | null;
+  discord_avatar: string | null;
+  avatar: string | null;
+  badge_number: string;
+  full_name: string;
+  rank: string;
+  department: string;
+  joined_at: string;
+  status: string | null;
+};
+
+const buildAvatarUrl = (
+  record: MemberRecord
+): string => {
   if (record?.discord_id && record?.discord_avatar) {
     const ext = String(record.discord_avatar).startsWith("a_") ? "gif" : "png";
     return `https://cdn.discordapp.com/avatars/${record.discord_id}/${record.discord_avatar}.${ext}?size=256`;
@@ -31,7 +46,7 @@ export const memberService = {
       }
 
       return await Promise.all(
-        (data ?? []).map(async (member: any) => {
+        (data ?? []).map(async (member: MemberRecord) => {
           const stats =
             await dutyService.getMemberDutyStats(
               member.id

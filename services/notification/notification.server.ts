@@ -4,6 +4,17 @@ import {
   NotificationInsert,
 } from "@/types";
 
+type NotificationRow = {
+  id: string;
+  member_id: string;
+  title: string;
+  message: string;
+  type: Notification["type"];
+  is_read: boolean;
+  action_url: string | null;
+  created_at: string;
+};
+
 export const notificationServerService = {
   async create(
     notification: NotificationInsert
@@ -18,7 +29,9 @@ export const notificationServerService = {
 
     if (error) throw error;
 
-    return this.mapNotification(data);
+    return this.mapNotification(
+      data as NotificationRow
+    );
   },
 
   async delete(id: string): Promise<void> {
@@ -45,7 +58,9 @@ export const notificationServerService = {
     if (error) throw error;
   },
 
-  mapNotification(data: any): Notification {
+  mapNotification(
+    data: NotificationRow
+  ): Notification {
     return {
       id: data.id,
       memberId: data.member_id,

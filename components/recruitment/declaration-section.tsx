@@ -63,7 +63,12 @@ export function DeclarationSection({
                   misleading, or incomplete information may result in
                   the rejection of my application or the termination
                   of my membership if appointed.
+                  
                 </FormLabel>
+
+               <FormItem className="flex items-start   p-4">
+                </FormItem>   
+                * Please review your answers before submitting.
 
                 <FormMessage />
               </div>
@@ -76,6 +81,7 @@ export function DeclarationSection({
           className="w-full"
           disabled={submitting}
         >
+          
           {submitting
             ? "Submitting Application..."
             : "Submit Application"}

@@ -44,9 +44,9 @@ export default {
     // Buttons
     if (interaction.isButton()) {
       try {
-        const button = require(
-          `../buttons/${interaction.customId}`
-        ).default;
+        const { default: button } = await import(
+  `../buttons/${interaction.customId}`
+);
 
         if (!button) return;
 

@@ -22,7 +22,6 @@ export function useApplications() {
 
   const loadApplications = useCallback(async () => {
     try {
-      setLoading(true);
       setError(null);
 
       const data = await applicationService.getAll();
@@ -37,8 +36,12 @@ export function useApplications() {
   }, []);
 
   useEffect(() => {
-    loadApplications();
-  }, [loadApplications]);
+  const id = requestAnimationFrame(() => {
+    void loadApplications();
+  });
+
+  return () => cancelAnimationFrame(id);
+}, [loadApplications]);
 
   const createApplication = async (
     application: RecruitmentApplicationInsert

@@ -64,8 +64,12 @@ export function useMemberDashboard(
     }, [memberId]);
 
   useEffect(() => {
-    loadDashboard();
-  }, [loadDashboard]);
+  const id = requestAnimationFrame(() => {
+    void loadDashboard();
+  });
+
+  return () => cancelAnimationFrame(id);
+}, [loadDashboard]);
 
   return {
     dashboard,

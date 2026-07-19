@@ -11,5 +11,6 @@ export default function AboutPage() {
       <MissionVision />
       <Management />
     </>
+    
   );
 }

@@ -45,12 +45,16 @@ export function EditPromotionCycleDialog({
 
   const [endDate, setEndDate] = useState("");
     useEffect(() => {
-    if (!cycle) return;
+  if (!cycle) return;
 
+  const id = requestAnimationFrame(() => {
     setName(cycle.name);
     setStartDate(cycle.start_date.slice(0, 10));
     setEndDate(cycle.end_date.slice(0, 10));
-  }, [cycle]);
+  });
+
+  return () => cancelAnimationFrame(id);
+}, [cycle]);
 
   async function handleSave() {
     if (!cycle) return;

@@ -31,7 +31,7 @@ export default function RecruitmentApply() {
         className="absolute inset-0 opacity-10"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(255,255,255,.15) 1px, transparent 1px),
+            linear-gradient(rgba(201, 23, 23, 0.64) 1px, transparent 1px),
             linear-gradient(90deg, rgba(255,255,255,.15) 1px, transparent 1px)
           `,
           backgroundSize: "40px 40px",
@@ -40,7 +40,7 @@ export default function RecruitmentApply() {
 
       <div className="container relative mx-auto max-w-4xl px-6">
         <Reveal>
-          <div className="rounded-3xl border border-white/10 bg-black/20 p-10 text-center backdrop-blur-md shadow-2xl">
+          <div className="rounded-3xl border border-white/10 bg-black/20 p-12 text-center backdrop-blur-md shadow-2xl">
 
             <Badge className="mb-6 bg-green-600 hover:bg-green-600 text-white px-4 py-1">
               🟢 Recruitment Open
@@ -58,13 +58,14 @@ export default function RecruitmentApply() {
 
             {/* Checklist */}
 
-            <div className="mx-auto mt-10 grid max-w-2xl gap-4 md:grid-cols-2">
+            <div className="mx-auto mt-12 grid max-w-2xl gap-4 md:grid-cols-2">
+              Before You Apply
               {checklist.map((item) => (
                 <div
                   key={item}
                   className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 text-left"
                 >
-                  <CheckCircle2 className="h-5 w-5 shrink-0 text-green-400" />
+                  <CheckCircle2 className="h-6 w-6 shrink-0 text-green-400" />
 
                   <span className="text-sm text-zinc-200">
                     {item}
@@ -75,14 +76,14 @@ export default function RecruitmentApply() {
 
             {/* Buttons */}
 
-            <div className="mt-10 flex flex-wrap justify-center gap-5">
+            <div className="mt-12 flex flex-wrap justify-center gap-5">
 
   <Link href="/recruitment/apply">
   <Button
-    className="h-14 rounded-xl px-10 text-base font-semibold shadow-lg"
+    className="h-14 rounded-xl px-10 text-base font-bold shadow-lg"
   >
     Apply Now
-    <ArrowRight className="ml-2 h-5 w-5" />
+    
   </Button>
 </Link>
 

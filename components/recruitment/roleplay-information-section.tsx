@@ -54,7 +54,7 @@ export function RoleplayInformationSection({
 
               <FormControl>
                 <Textarea
-                  rows={5}
+                  rows={6}
                   placeholder="Describe your previous EMS / Medical RP experience..."
                   {...field}
                 />
@@ -91,7 +91,7 @@ export function RoleplayInformationSection({
           control={form.control}
           name="gang_member"
           render={({ field }) => (
-            <FormItem className="flex items-center justify-between rounded-lg border p-4">
+            <FormItem className="flex items-center justify-between rounded-lg border p-5">
               <div className="space-y-1">
                 <FormLabel>
                   Are you currently a member of any X-Gang or X-Club?

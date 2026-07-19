@@ -60,14 +60,19 @@ export function useDashboardDuty(): UseDashboardDutyReturn {
   }, []);
 
   useEffect(() => {
-    loadDashboard();
+  const frame = requestAnimationFrame(() => {
+    void loadDashboard();
+  });
 
-    const interval = setInterval(() => {
-      loadDashboard();
-    }, 30000);
+  const interval = setInterval(() => {
+    void loadDashboard();
+  }, 30000);
 
-    return () => clearInterval(interval);
-  }, [loadDashboard]);
+  return () => {
+    cancelAnimationFrame(frame);
+    clearInterval(interval);
+  };
+}, [loadDashboard]);
 
   return {
     activeDutyMembers,

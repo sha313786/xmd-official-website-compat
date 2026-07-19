@@ -11,11 +11,12 @@ export default {
         content: "✅ You are now **On Duty**.",
         flags: MessageFlags.Ephemeral,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       await interaction.reply({
         content:
-          error?.message ??
-          "Failed to start your duty.",
+          error instanceof Error
+          ? error.message
+          : "Failed to start your duty.",
         flags: MessageFlags.Ephemeral,
       });
     }

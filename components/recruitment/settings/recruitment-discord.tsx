@@ -27,11 +27,14 @@ export function RecruitmentDiscord() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (settings) {
-      setInvite(settings.discord_invite ?? "");
-    }
-  }, [settings]);
+  if (!settings) return;
 
+  const id = requestAnimationFrame(() => {
+    setInvite(settings.discord_invite ?? "");
+  });
+
+  return () => cancelAnimationFrame(id);
+}, [settings]);
   async function handleSave() {
     try {
       setSaving(true);
@@ -79,20 +82,26 @@ export function RecruitmentDiscord() {
         />
 
         <div className="flex flex-wrap gap-3 justify-end">
-          <a
-  href={invite}
-  target="_blank"
-  rel="noopener noreferrer"
->
+          {invite ? (
+  <a
+    href={invite}
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Button variant="outline">
+      <ExternalLink className="mr-2 h-4 w-4" />
+      Open Invite
+    </Button>
+  </a>
+) : (
   <Button
     variant="outline"
-    disabled={!invite}
+    disabled
   >
     <ExternalLink className="mr-2 h-4 w-4" />
     Open Invite
   </Button>
-</a>
-
+)}
           <Button
             onClick={handleSave}
             disabled={saving}

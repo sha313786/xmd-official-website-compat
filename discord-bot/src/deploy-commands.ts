@@ -10,24 +10,29 @@ const commands: object[] = [];
 
 const commandsPath = path.join(__dirname, "commands");
 
-function loadCommands(folder: string) {
+async function loadCommands(folder: string): Promise<void> {
   if (!fs.existsSync(folder)) return;
 
-  const entries = fs.readdirSync(folder, { withFileTypes: true });
+  const entries = fs.readdirSync(folder, {
+    withFileTypes: true,
+  });
 
   for (const entry of entries) {
     const fullPath = path.join(folder, entry.name);
 
     if (entry.isDirectory()) {
-      loadCommands(fullPath);
+      await loadCommands(fullPath);
       continue;
     }
 
-    if (!entry.name.endsWith(".ts") && !entry.name.endsWith(".js")) {
+    if (
+      !entry.name.endsWith(".ts") &&
+      !entry.name.endsWith(".js")
+    ) {
       continue;
     }
 
-    const command = require(fullPath).default;
+    const { default: command } = await import(fullPath);
 
     if (command?.data) {
       commands.push(command.data.toJSON());
@@ -36,13 +41,17 @@ function loadCommands(folder: string) {
   }
 }
 
-loadCommands(commandsPath);
-
-const rest = new REST({ version: "10" }).setToken(env.DISCORD_TOKEN);
+const rest = new REST({ version: "10" }).setToken(
+  env.DISCORD_TOKEN
+);
 
 (async () => {
   try {
-    Logger.info(`Registering ${commands.length} slash command(s)...`);
+    await loadCommands(commandsPath);
+
+    Logger.info(
+      `Registering ${commands.length} slash command(s)...`
+    );
 
     await rest.put(
       Routes.applicationGuildCommands(
