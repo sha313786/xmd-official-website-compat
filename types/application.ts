@@ -1,23 +1,36 @@
-export interface Application {
+export type RecruitmentStatus =
+  | "pending"
+  | "approved"
+  | "rejected";
+
+export interface RecruitmentApplication {
   id: string;
 
-  fullName: string;
-  discordUsername: string;
-  discordId?: string;
+  full_name: string;
+  discord_username: string;
+  discord_id: string;
 
   age: number;
-
   country: string;
-  timezone?: string;
+  timezone: string;
 
-  experience?: string;
+  experience: string;
   reason: string;
 
-  status: "Pending" | "Accepted" | "Rejected";
+  status: RecruitmentStatus;
 
-  reviewedBy?: string;
-  reviewNotes?: string;
+  reviewed_by: string | null;
+  review_notes: string | null;
 
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
+
+export type RecruitmentApplicationInsert = Omit<
+  RecruitmentApplication,
+  "id" | "created_at" | "updated_at"
+>;
+
+export type RecruitmentApplicationUpdate = Partial<
+  RecruitmentApplicationInsert
+>;

@@ -1,0 +1,3 @@
+discord-bot/dist/**
+.next/**
+node_modules/**

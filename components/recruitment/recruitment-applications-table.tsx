@@ -27,7 +27,9 @@ import {
   ApplicationDetailsDialog,
 } from "@/components/recruitment/application-details-dialog";
 
-import { RecruitmentApplication } from "@/types/recruitment";
+import {
+  RecruitmentApplication,
+} from "@/types/recruitment";
 
 type StatusFilter =
   | "all"
@@ -58,9 +60,6 @@ export function RecruitmentApplicationsTable() {
   const [sortBy, setSortBy] =
     useState<SortOption>("newest");
 
-  const [selectedIds, setSelectedIds] =
-    useState<string[]>([]);
-
   const [
     selectedApplication,
     setSelectedApplication,
@@ -76,13 +75,16 @@ export function RecruitmentApplicationsTable() {
     useMemo(() => {
       const filtered = applications.filter(
         (application) => {
+          const keyword =
+            search.toLowerCase();
+
           const matchesSearch =
             application.full_name
               .toLowerCase()
-              .includes(search.toLowerCase()) ||
-            application.discord_username
+              .includes(keyword) ||
+            application.character_name
               .toLowerCase()
-              .includes(search.toLowerCase());
+              .includes(keyword);
 
           const matchesStatus =
             statusFilter === "all"
@@ -146,79 +148,46 @@ export function RecruitmentApplicationsTable() {
       sortBy,
     ]);
 
-  const toggleSelection = (
-    id: string
-  ) => {
-    setSelectedIds((current) =>
-      current.includes(id)
-        ? current.filter(
-            (item) => item !== id
-          )
-        : [...current, id]
-    );
-  };
-
-  const toggleSelectAll = () => {
-    if (
-      selectedIds.length ===
-      filteredApplications.length
-    ) {
-      setSelectedIds([]);
-      return;
-    }
-
-    setSelectedIds(
-      filteredApplications.map(
-        (application) =>
-          application.id
-      )
-    );
-  };
-  const handleBulkApprove = async () => {
-  for (const id of selectedIds) {
-    await approveApplication(id);
-  }
-
-  setSelectedIds([]);
-};
-
-const handleBulkReject = async () => {
-  for (const id of selectedIds) {
-    await rejectApplication(id);
-  }
-
-  setSelectedIds([]);
-};
-    if (loading) {
+  if (loading) {
     return (
       <Card>
         <CardContent className="py-10 text-center">
-          Loading applications...
+          Loading recruitment applications...
         </CardContent>
       </Card>
     );
   }
-
-  return (
+    return (
     <>
       <Card>
 
-        <CardHeader>
-          <CardTitle>
-            Recruitment Applications
-          </CardTitle>
-        </CardHeader>
+        <CardHeader className="space-y-4">
 
-        <CardContent className="space-y-6">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
 
-          <div className="flex flex-col gap-4 rounded-xl border bg-card p-4 shadow-sm md:flex-row md:items-center md:justify-between">
+            <div>
 
-            <div className="relative w-full md:max-w-md">
+              <CardTitle>
+                Recruitment Applications
+              </CardTitle>
+
+              <p className="mt-1 text-sm text-muted-foreground">
+                {filteredApplications.length} application
+                {filteredApplications.length !== 1 && "s"} found
+              </p>
+
+            </div>
+
+          </div>
+
+          <div className="flex flex-col gap-4 rounded-xl border bg-card p-4 shadow-sm lg:flex-row lg:items-center lg:justify-between">
+
+            <div className="relative w-full lg:max-w-md">
 
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
               <Input
-                placeholder="Search applicants..."
+                placeholder="Search by name or Discord username..."
                 value={search}
                 onChange={(e) =>
                   setSearch(e.target.value)
@@ -235,13 +204,13 @@ const handleBulkReject = async () => {
                 <Filter className="h-4 w-4 text-muted-foreground" />
 
                 <select
-                  className="h-10 rounded-lg border bg-background px-4 text-sm shadow-sm"
                   value={statusFilter}
                   onChange={(e) =>
                     setStatusFilter(
                       e.target.value as StatusFilter
                     )
                   }
+                  className="h-10 rounded-lg border bg-background px-4 text-sm"
                 >
                   <option value="all">
                     All Status
@@ -264,13 +233,13 @@ const handleBulkReject = async () => {
               </div>
 
               <select
-                className="h-10 rounded-lg border bg-background px-4 text-sm shadow-sm"
                 value={sortBy}
                 onChange={(e) =>
                   setSortBy(
                     e.target.value as SortOption
                   )
                 }
+                className="h-10 rounded-lg border bg-background px-4 text-sm"
               >
                 <option value="newest">
                   Newest First
@@ -294,27 +263,17 @@ const handleBulkReject = async () => {
 
           </div>
 
-          <div className="overflow-x-auto">
+        </CardHeader>
 
-            <table className="w-full border-separate border-spacing-0 text-sm">
+        <CardContent>
+
+          <div className="overflow-x-auto rounded-xl border">
+
+            <table className="w-full border-collapse text-sm">
 
               <thead>
 
-                <tr className="bg-muted/50">
-
-                  <th className="w-12 rounded-l-lg px-4 py-3">
-
-                    <input
-                      type="checkbox"
-                      checked={
-                        filteredApplications.length > 0 &&
-                        selectedIds.length ===
-                          filteredApplications.length
-                      }
-                      onChange={toggleSelectAll}
-                    />
-
-                  </th>
+                <tr className="border-b bg-muted/40">
 
                   <th className="px-4 py-3 text-left font-semibold">
                     Name
@@ -329,10 +288,18 @@ const handleBulkReject = async () => {
                   </th>
 
                   <th className="px-4 py-3 text-left font-semibold">
+                    Country
+                  </th>
+
+                  <th className="px-4 py-3 text-left font-semibold">
                     Status
                   </th>
 
-                  <th className="rounded-r-lg px-4 py-3 text-right font-semibold">
+                  <th className="px-4 py-3 text-left font-semibold">
+                    Applied
+                  </th>
+
+                  <th className="px-4 py-3 text-right font-semibold">
                     Actions
                   </th>
 
@@ -341,40 +308,24 @@ const handleBulkReject = async () => {
               </thead>
 
               <tbody>
-
-                             {filteredApplications.map((application) => (
-
+                              {filteredApplications.map((application) => (
                 <tr
                   key={application.id}
-                  className="transition-colors hover:bg-muted/40"
+                  className="border-b transition-colors hover:bg-muted/40"
                 >
-
-                  <td className="border-b px-4 py-4">
-
-                    <input
-                      type="checkbox"
-                      checked={selectedIds.includes(application.id)}
-                      onChange={() =>
-                        toggleSelection(application.id)
-                      }
-                    />
-
-                  </td>
-
-                  <td className="border-b px-4 py-4 font-medium">
+                  <td className="px-4 py-4 font-medium">
                     {application.full_name}
                   </td>
 
-                  <td className="border-b px-4 py-4">
-                    {application.discord_username}
+                  <td className="px-4 py-4">
+                    {application.character_name}
                   </td>
 
-                  <td className="border-b px-4 py-4">
-                    {application.age}
+                  <td className="px-4 py-4">
+                    {application.real_age}
                   </td>
 
-                  <td className="border-b px-4 py-4">
-
+                  <td className="px-4 py-4">
                     <Badge
                       variant={
                         application.status === "approved"
@@ -383,15 +334,19 @@ const handleBulkReject = async () => {
                           ? "destructive"
                           : "secondary"
                       }
-                      className="capitalize"
                     >
-                      {application.status}
+                      {application.status.charAt(0).toUpperCase() +
+                        application.status.slice(1)}
                     </Badge>
-
                   </td>
 
-                  <td className="border-b px-4 py-4">
+                  <td className="px-4 py-4 whitespace-nowrap">
+                    {new Date(
+                      application.created_at
+                    ).toLocaleDateString()}
+                  </td>
 
+                  <td className="px-4 py-4">
                     <div className="flex justify-end gap-2">
 
                       <Button
@@ -399,7 +354,9 @@ const handleBulkReject = async () => {
                         variant="outline"
                         className="gap-2"
                         onClick={() => {
-                          setSelectedApplication(application);
+                          setSelectedApplication(
+                            application
+                          );
                           setDialogOpen(true);
                         }}
                       >
@@ -410,11 +367,14 @@ const handleBulkReject = async () => {
                       <Button
                         size="sm"
                         className="gap-2"
-                        onClick={() =>
-                          approveApplication(application.id)
-                        }
                         disabled={
-                          application.status === "approved"
+                          application.status ===
+                          "approved"
+                        }
+                        onClick={() =>
+                          approveApplication(
+                            application.id
+                          )
                         }
                       >
                         <Check className="h-4 w-4" />
@@ -425,11 +385,14 @@ const handleBulkReject = async () => {
                         size="sm"
                         variant="destructive"
                         className="gap-2"
-                        onClick={() =>
-                          rejectApplication(application.id)
-                        }
                         disabled={
-                          application.status === "rejected"
+                          application.status ===
+                          "rejected"
+                        }
+                        onClick={() =>
+                          rejectApplication(
+                            application.id
+                          )
                         }
                       >
                         <X className="h-4 w-4" />
@@ -437,26 +400,31 @@ const handleBulkReject = async () => {
                       </Button>
 
                     </div>
-
                   </td>
-
                 </tr>
-
               ))}
 
               {filteredApplications.length === 0 && (
-
                 <tr>
-
                   <td
-                    colSpan={6}
-                    className="py-10 text-center text-muted-foreground"
+                    colSpan={7}
+                    className="px-4 py-12 text-center"
                   >
-                    No recruitment applications found.
+                    <div className="space-y-2">
+
+                      <p className="text-lg font-medium">
+                        No recruitment applications found
+                      </p>
+
+                      <p className="text-sm text-muted-foreground">
+                        Try changing the search or filter,
+                        or wait for new applications to
+                        arrive.
+                      </p>
+
+                    </div>
                   </td>
-
                 </tr>
-
               )}
 
               </tbody>
@@ -477,4 +445,4 @@ const handleBulkReject = async () => {
 
     </>
   );
-} 
+}

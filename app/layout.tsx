@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://xmdofficial.com"), // Replace with your final domain
+  metadataBase: new URL("https://xmdofficial.com"),
 
   title: {
     default: "XMD Management Portal",
@@ -100,7 +101,16 @@ export default function RootLayout({
       className="dark"
       suppressHydrationWarning
     >
-      <body>{children}</body>
+      <body>
+        {children}
+
+        <Toaster
+          position="top-right"
+          richColors
+          closeButton
+          duration={3000}
+        />
+      </body>
     </html>
   );
 }

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -10,73 +12,92 @@ import {
 } from "@/lib/validations/recruitment";
 
 import { useApplications } from "@/hooks/use-applications";
+
 import { RecruitmentApplicationInsert } from "@/types/recruitment";
 
-import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  PersonalInformationSection,
+  RoleplayInformationSection,
+  AvailabilitySection,
+  ApplicationQuestionsSection,
+  DeclarationSection,
+} from "@/components/recruitment";
 
 export function RecruitmentApplicationForm() {
+  const router = useRouter();
+
   const { createApplication } = useApplications();
 
   const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<RecruitmentApplicationFormValues>({
-    resolver: zodResolver(recruitmentApplicationSchema),
-    defaultValues: {
-      full_name: "",
-      discord_username: "",
-      discord_id: "",
-      age: 18,
-      country: "",
-      timezone: "",
-      experience: "",
-      reason: "",
-    },
-  });
+  resolver: zodResolver(recruitmentApplicationSchema),
+
+  defaultValues: {
+    full_name: "",
+    character_name: "",
+    real_age: 0,
+
+    medical_experience: "",
+    current_occupation: "",
+
+    gang_member: false,
+    gang_name: "",
+
+    preferred_shift: "",
+    hours_per_day: 2,
+
+    why_join: "",
+    why_choose_you: "",
+    strengths: "",
+    weaknesses: "",
+    patient_scenario: "",
+
+    declaration: false,
+  },
+});
 
   async function onSubmit(
-    values: RecruitmentApplicationFormValues
-  ) {
+  values: RecruitmentApplicationFormValues
+)  {
     try {
       setSubmitting(true);
 
       const application: RecruitmentApplicationInsert = {
         full_name: values.full_name,
-        discord_username: values.discord_username,
-        discord_id: values.discord_id,
-        age: values.age,
-        country: values.country,
-        timezone: values.timezone,
-        experience: values.experience,
-        reason: values.reason,
-        status: "pending",
-        reviewed_by: null,
-        review_notes: null,
+        character_name: values.character_name,
+        real_age: values.real_age,
+
+        medical_experience: values.medical_experience,
+        current_occupation:
+          values.current_occupation || null,
+
+        gang_member: values.gang_member,
+        gang_name: values.gang_member
+          ? values.gang_name || null
+          : null,
+
+        preferred_shift: values.preferred_shift,
+        hours_per_day: values.hours_per_day,
+
+        why_join: values.why_join,
+        why_choose_you: values.why_choose_you,
+        strengths: values.strengths,
+        weaknesses: values.weaknesses,
+        patient_scenario: values.patient_scenario,
+
+        declaration: values.declaration,
+
+        
       };
 
       await createApplication(application);
 
       form.reset();
 
-      alert("Application submitted successfully.");
+      router.push("/recruitment/success");
     } catch (error) {
       console.error(error);
       alert("Failed to submit application.");
@@ -86,208 +107,24 @@ export function RecruitmentApplicationForm() {
   }
 
   return (
-    <Card className="mx-auto max-w-4xl">
-      <CardHeader>
-        <CardTitle>
-          XMD Recruitment Application
-        </CardTitle>
-      </CardHeader>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="mx-auto max-w-5xl space-y-8"
+      >
+        <PersonalInformationSection form={form} />
 
-      <CardContent>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6"
-          >
-            <div className="grid gap-4 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="full_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Full Name
-                    </FormLabel>
+        <RoleplayInformationSection form={form} />
 
-                    <FormControl>
-                      <Input
-                        placeholder="John Doe"
-                        {...field}
-                      />
-                    </FormControl>
+        <AvailabilitySection form={form} />
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        <ApplicationQuestionsSection form={form} />
 
-              <FormField
-                control={form.control}
-                name="discord_username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Discord Username
-                    </FormLabel>
-
-                    <FormControl>
-                      <Input
-                        placeholder="username"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="discord_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Discord ID
-                    </FormLabel>
-
-                    <FormControl>
-                      <Input
-                        placeholder="123456789012345678"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="age"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Age
-                    </FormLabel>
-
-                    <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value}
-                        onChange={(e) =>
-                          field.onChange(
-                            Number(e.target.value)
-                          )
-                        }
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="country"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Country
-                    </FormLabel>
-
-                    <FormControl>
-                      <Input
-                        placeholder="India"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="timezone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Timezone
-                    </FormLabel>
-
-                    <FormControl>
-                      <Input
-                        placeholder="IST (UTC +05:30)"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="experience"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Medical RP Experience
-                  </FormLabel>
-
-                  <FormControl>
-                    <Textarea
-                      rows={4}
-                      placeholder="Tell us about your EMS / Medical RP experience..."
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="reason"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Why do you want to join XMD?
-                  </FormLabel>
-
-                  <FormControl>
-                    <Textarea
-                      rows={5}
-                      placeholder="Why do you want to join XMD?"
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button
-              type="submit"
-              disabled={submitting}
-              className="w-full"
-            >
-              {submitting
-                ? "Submitting..."
-                : "Submit Application"}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+        <DeclarationSection
+          form={form}
+          submitting={submitting}
+        />
+      </form>
+    </Form>
   );
 }

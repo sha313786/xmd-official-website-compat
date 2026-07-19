@@ -6,19 +6,34 @@ export type RecruitmentStatus =
 export interface RecruitmentApplication {
   id: string;
 
+  // Personal Information
   full_name: string;
-  discord_username: string;
-  discord_id: string;
+  character_name: string;
+  real_age: number;
 
-  age: number;
-  country: string;
-  timezone: string;
+  // Roleplay Information
+  medical_experience: string;
+  current_occupation: string | null;
 
-  experience: string;
-  reason: string;
+  gang_member: boolean;
+  gang_name: string | null;
 
+  // Availability
+  preferred_shift: string;
+  hours_per_day: number;
+
+  // Questions
+  why_join: string;
+  why_choose_you: string;
+  strengths: string;
+  weaknesses: string;
+  patient_scenario: string;
+
+  // Declaration
+  declaration: boolean;
+
+  // Review
   status: RecruitmentStatus;
-
   reviewed_by: string | null;
   review_notes: string | null;
 
@@ -28,9 +43,18 @@ export interface RecruitmentApplication {
 
 export type RecruitmentApplicationInsert = Omit<
   RecruitmentApplication,
-  "id" | "created_at" | "updated_at"
+  | "id"
+  | "status"
+  | "reviewed_by"
+  | "review_notes"
+  | "created_at"
+  | "updated_at"
 >;
 
 export type RecruitmentApplicationUpdate = Partial<
   RecruitmentApplicationInsert
->;
+> & {
+  status?: RecruitmentStatus;
+  reviewed_by?: string | null;
+  review_notes?: string | null;
+};

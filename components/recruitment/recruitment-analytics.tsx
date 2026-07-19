@@ -33,34 +33,16 @@ export function RecruitmentAnalytics() {
       (a) => a.status === "rejected"
     ).length;
 
-    const approvalRate =
-      total === 0
-        ? 0
-        : Math.round((approved / total) * 100);
-
-    const averageAge =
-      total === 0
-        ? 0
-        : Math.round(
-            applications.reduce(
-              (sum, application) =>
-                sum + application.age,
-              0
-            ) / total
-          );
-
     return {
       total,
       pending,
       approved,
       rejected,
-      approvalRate,
-      averageAge,
     };
   }, [applications]);
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6">
+  <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
 
       <RecruitmentStatCard
         title="Total Applications"
@@ -89,21 +71,7 @@ export function RecruitmentAnalytics() {
         icon={XCircle}
         color="bg-red-500"
       />
-
-      <RecruitmentStatCard
-        title="Approval Rate %"
-        value={analytics.approvalRate}
-        icon={Percent}
-        color="bg-violet-500"
-      />
-
-      <RecruitmentStatCard
-        title="Average Age"
-        value={analytics.averageAge}
-        icon={Cake}
-        color="bg-orange-500"
-      />
-
+  
     </div>
   );
 }

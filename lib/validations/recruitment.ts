@@ -1,39 +1,87 @@
 import { z } from "zod";
 
 export const recruitmentApplicationSchema = z.object({
+  // Personal Information
   full_name: z
     .string()
-    .min(3, "Full name must be at least 3 characters"),
+    .min(3, "Full Name is required.")
+    .max(100),
 
-  discord_username: z
+  character_name: z
     .string()
-    .min(2, "Discord username is required"),
+    .min(3, "Character Name is required.")
+    .max(100),
 
-  discord_id: z
+  real_age: z
+  .number()
+  .min(16, "Minimum age is 16.")
+  .max(100, "Invalid age."),
+
+  // Roleplay Information
+  medical_experience: z
     .string()
-    .min(17, "Invalid Discord ID")
-    .max(20, "Invalid Discord ID"),
+    .min(10, "Please describe your medical roleplay experience.")
+    .max(3000),
 
-  age: z
-    .number()
-    .min(16, "Minimum age is 16")
-    .max(80, "Maximum age is 80"),
-
-  country: z
+  current_occupation: z
     .string()
-    .min(2, "Country is required"),
+    .max(100)
+    .optional()
+    .or(z.literal("")),
 
-  timezone: z
-    .string()
-    .min(2, "Timezone is required"),
+  gang_member: z.boolean(),
 
-  experience: z
+  gang_name: z
     .string()
-    .min(20, "Please provide more details about your experience"),
+    .max(100)
+    .optional()
+    .or(z.literal("")),
 
-  reason: z
+  // Availability
+  preferred_shift: z
     .string()
-    .min(30, "Please explain why you want to join XMD"),
+    .min(2, "Preferred shift is required.")
+    .max(100),
+
+  hours_per_day: z
+  .number()
+  .min(1, "Minimum 1 hour.")
+  .max(24, "Maximum 24 hours."),
+
+  // Application Questions
+  why_join: z
+    .string()
+    .min(20, "Please explain why you want to join XMD.")
+    .max(3000),
+
+  why_choose_you: z
+    .string()
+    .min(20, "Please explain why we should choose you.")
+    .max(3000),
+
+  strengths: z
+    .string()
+    .min(10, "Please describe your strengths.")
+    .max(1500),
+
+  weaknesses: z
+    .string()
+    .min(10, "Please describe your weaknesses.")
+    .max(1500),
+
+  patient_scenario: z
+    .string()
+    .min(30, "Please answer the scenario question.")
+    .max(5000),
+
+  // Declaration
+  declaration: z
+  .boolean()
+  .refine(
+    (value) => value,
+    "You must confirm the declaration before submitting."
+  ),
+
 });
 
 export type RecruitmentApplicationFormValues =

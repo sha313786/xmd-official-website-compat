@@ -28,30 +28,30 @@ export default function Navbar() {
 
         {/* Navigation */}
         <nav className="hidden gap-8 text-sm text-slate-300 lg:flex">
-          <a href="#" className="hover:text-red-500 transition">
-            Home
-          </a>
+  <Link href="/" className="transition hover:text-red-500">
+    Home
+  </Link>
 
-          <a href="#" className="hover:text-red-500 transition">
-            About
-          </a>
+  <Link href="/about" className="transition hover:text-red-500">
+    About
+  </Link>
 
-          <a href="#" className="hover:text-red-500 transition">
-            Services
-          </a>
+  <Link href="/services" className="transition hover:text-red-500">
+    Services
+  </Link>
 
-          <a href="#" className="hover:text-red-500 transition">
-            Departments
-          </a>
+  <Link href="/departments" className="transition hover:text-red-500">
+    Departments
+  </Link>
 
-          <a href="#" className="hover:text-red-500 transition">
-            Recruitment
-          </a>
+  <Link href="/recruitment" className="transition hover:text-red-500">
+    Recruitment
+  </Link>
 
-          <a href="#" className="hover:text-red-500 transition">
-            Contact
-          </a>
-        </nav>
+  <Link href="/contact" className="transition hover:text-red-500">
+    Contact
+  </Link>
+</nav>
 
         {/* Join Button */}
         <Link

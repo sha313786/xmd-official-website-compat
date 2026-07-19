@@ -4,8 +4,7 @@ import { useDashboardRole } from "@/hooks/dashboard/use-dashboard-role";
 
 import { RecruitmentAnalytics } from "@/components/recruitment/recruitment-analytics";
 import { RecruitmentApplicationsTable } from "@/components/recruitment/recruitment-applications-table";
-import { RecruitmentMonthlyChart } from "@/components/recruitment/recruitment-monthly-chart";
-import { RecruitmentStatusChart } from "@/components/recruitment/recruitment-status-chart";
+import { RecruitmentControl } from "@/components/recruitment/recruitment-control";
 
 export default function RecruitmentPage() {
   const {
@@ -53,8 +52,7 @@ export default function RecruitmentPage() {
       <RecruitmentAnalytics />
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <RecruitmentStatusChart />
-        <RecruitmentMonthlyChart />
+        <RecruitmentControl />
       </div>
 
       <RecruitmentApplicationsTable />

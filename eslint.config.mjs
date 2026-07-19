@@ -7,12 +7,19 @@ const eslintConfig = defineConfig([
   ...nextTs,
   // Override default ignores of eslint-config-next.
   globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
+  // Next.js defaults
+  ".next/**",
+  "out/**",
+  "build/**",
+  "next-env.d.ts",
+
+  // Ignore compiled Discord bot output
+  "discord-bot/dist/**",
+
+  // Optional
+  "node_modules/**",
+  "coverage/**",
+]),
 ]);
 
 export default eslintConfig;

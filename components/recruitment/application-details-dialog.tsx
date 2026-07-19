@@ -49,7 +49,7 @@ export function ApplicationDetailsDialog({
               </h2>
 
               <p className="text-muted-foreground">
-                {application.discord_username}
+                {application.character_name}
               </p>
             </div>
 
@@ -71,7 +71,7 @@ export function ApplicationDetailsDialog({
                   </p>
 
                   <p className="font-medium">
-                    {application.age}
+                    {application.real_age}
                   </p>
                 </div>
               </div>
@@ -101,7 +101,7 @@ export function ApplicationDetailsDialog({
                   </p>
 
                   <p className="font-medium">
-                    {application.discord_username}
+                    {application.character_name}
                   </p>
                 </div>
               </div>
@@ -133,7 +133,7 @@ export function ApplicationDetailsDialog({
               </h3>
 
               <p className="whitespace-pre-wrap text-sm text-muted-foreground">
-                {application.experience}
+                {application.medical_experience}
               </p>
             </div>
 
@@ -143,7 +143,7 @@ export function ApplicationDetailsDialog({
               </h3>
 
               <p className="whitespace-pre-wrap text-sm text-muted-foreground">
-                {application.reason}
+                {application.why_join}
               </p>
             </div>
 
