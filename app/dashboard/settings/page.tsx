@@ -1,5 +1,6 @@
-import SettingsPage from "@/components/settings/page";
+import SettingsTabs from "@/components/settings/settings-tabs";
 
 export default function Page() {
-  return <SettingsPage />;
+  return <SettingsTabs />;
+
 }

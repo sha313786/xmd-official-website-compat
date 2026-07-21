@@ -10,14 +10,18 @@ import type {
   SettingsCategory,
 } from "@/types/settings";
 
-type SettingRecord = {
+interface SettingsRow<T = unknown> {
   id: string;
-  key: string;
-  value: unknown;
   category: SettingsCategory;
+  data: T;
+  updated_by: string | null;
   created_at: string;
   updated_at: string;
-};
+}
+interface SettingsMetadata {
+  updatedAt: string | null;
+  updatedBy: string | null;
+}
 
 export const settingsService = {
   async getCategory<T>(
@@ -33,163 +37,176 @@ export const settingsService = {
     const { data, error } = await supabase
       .from("settings")
       .select("*")
-      .eq("category", category);
+      .eq("category", category)
+      .single();
 
     if (error) {
       console.error(error);
       return defaults;
     }
 
-    const result = { ...defaults };
+    if (!data?.data) {
+      return defaults;
+    }
 
-    (data as SettingRecord[]).forEach((setting) => {
-      (result as Record<string, unknown>)[setting.key] =
-        setting.value;
-    });
-
-    return result;
+    return {
+      ...defaults,
+      ...(data.data as T),
+    };
   },
 
   async saveCategory<T>(
     category: SettingsCategory,
-    values: T
+    values: T,
+    updatedBy?: string
   ): Promise<void> {
     if (config.useMockData) {
-      console.log("MOCK SETTINGS SAVE", values);
+      console.log("MOCK SETTINGS SAVE", category, values);
       return;
     }
 
     const supabase = createClient();
 
-    const entries = Object.entries(
-      values as Record<string, unknown>
-    );
+    const { error } = await supabase
+      .from("settings")
+      .update({
+        data: values,
+        updated_by: updatedBy ?? null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("category", category);
 
-    for (const [key, value] of entries) {
-      const { error } = await supabase
-        .from("settings")
-        .upsert({
-          category,
-          key,
-          value,
-        });
-
-      if (error) {
-        console.error(error);
-        throw error;
-      }
+    if (error) {
+      console.error(error);
+      throw error;
     }
+  },
+    async getMetadata(
+    category: SettingsCategory
+  ): Promise<SettingsMetadata> {
+    if (config.useMockData) {
+      return {
+        updatedAt: null,
+        updatedBy: null,
+      };
+    }
+
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+      .from("settings")
+      .select("updated_at, updated_by")
+      .eq("category", category)
+      .maybeSingle()
+      console.log("Metadata Query:", {
+  category,
+  data,
+  error,
+});
+
+    if (error) {
+      console.error(error);
+
+      return {
+        updatedAt: null,
+        updatedBy: null,
+      };
+    }
+
+    return {
+      updatedAt: data?.updated_at ?? null,
+      updatedBy: data?.updated_by ?? null,
+    };
   },
 
   async getGeneral(): Promise<GeneralSettings> {
-    return settingsService.getCategory<GeneralSettings>(
-      "general",
-      {
-        organizationName: "XMD",
-        websiteName: "XMD Official",
-        timezone: "Asia/Kolkata",
-        dateFormat: "DD/MM/YYYY",
-        maintenanceMode: false,
-      }
-    );
+    return this.getCategory("general", {
+      organizationName: "XMD",
+      websiteName: "XMD Official",
+      timezone: "Asia/Kolkata",
+      dateFormat: "DD/MM/YYYY",
+      maintenanceMode: false,
+    });
   },
 
-  async saveGeneral(
-    values: GeneralSettings
-  ): Promise<void> {
-    return settingsService.saveCategory(
-      "general",
-      values
-    );
+  async saveGeneral(values: GeneralSettings) {
+    return this.saveCategory("general", values);
   },
 
   async getRecruitment(): Promise<RecruitmentSettings> {
-    return settingsService.getCategory<RecruitmentSettings>(
-      "recruitment",
-      {
-        recruitmentOpen: true,
-        publicRecruitmentEnabled: true,
-        autoAcceptApplications: false,
-        autoRejectAfterDays: 30,
-        maxApplicationsPerUser: 1,
-        recruitmentMessage:
-          "Applications are currently open.",
-      }
-    );
+    return this.getCategory("recruitment", {
+      recruitmentOpen: true,
+      publicRecruitment: true,
+      autoAccept: false,
+      autoRejectDays: 30,
+      maxApplications: 100,
+      recruitmentMessage: "Applications are currently open.",
+    });
   },
 
-  async saveRecruitment(
-    values: RecruitmentSettings
-  ): Promise<void> {
-    return settingsService.saveCategory(
-      "recruitment",
-      values
-    );
+  async saveRecruitment(values: RecruitmentSettings) {
+    return this.saveCategory("recruitment", values);
   },
 
   async getDiscord(): Promise<DiscordSettings> {
-    return settingsService.getCategory<DiscordSettings>(
-      "discord",
-      {
-        guildId: "",
-        botEnabled: true,
-        dutyPanelChannelId: "",
-        dutyLogsChannelId: "",
-        verificationChannelId: "",
-        verificationRoleId: "",
-      }
-    );
+    return this.getCategory("discord", {
+      botEnabled: true,
+      guildId: "",
+      verificationRoleId: "",
+      verificationChannelId: "",
+      dutyPanelChannelId: "",
+      dutyLogsChannelId: "",
+    });
   },
 
-  async saveDiscord(
-    values: DiscordSettings
-  ): Promise<void> {
-    return settingsService.saveCategory(
-      "discord",
-      values
-    );
+  async saveDiscord(values: DiscordSettings) {
+    return this.saveCategory("discord", values);
   },
 
   async getWebsite(): Promise<WebsiteSettings> {
-    return settingsService.getCategory<WebsiteSettings>(
-      "website",
-      {
-        heroTitle: "XMD Official",
-        heroSubtitle: "Advancing Through X-pertise",
-        footerText: "© XMD Official",
-        contactEmail: "",
-        discordInvite: "",
-        youtubeUrl: "",
-      }
-    );
+    return this.getCategory("website", {
+      heroTitle: "Welcome to XMD",
+      heroSubtitle: "Advancing Through X-pertise",
+      footerText: "© XMD Official",
+      contactEmail: "",
+      discordInvite: "",
+      youtubeUrl: "",
+    });
   },
 
-  async saveWebsite(
-    values: WebsiteSettings
-  ): Promise<void> {
-    return settingsService.saveCategory(
-      "website",
-      values
-    );
+  async saveWebsite(values: WebsiteSettings) {
+    return this.saveCategory("website", values);
   },
 
   async getSecurity(): Promise<SecuritySettings> {
-    return settingsService.getCategory<SecuritySettings>(
-      "security",
-      {
-        discordLoginOnly: true,
-        sessionTimeoutMinutes: 60,
-        auditLogging: true,
-      }
-    );
+    return this.getCategory("security", {
+      discordLoginOnly: true,
+      sessionTimeoutMinutes: 60,
+      auditLogging: true,
+    });
   },
 
-  async saveSecurity(
-    values: SecuritySettings
-  ): Promise<void> {
-    return settingsService.saveCategory(
-      "security",
-      values
-    );
+  async saveSecurity(values: SecuritySettings) {
+    return this.saveCategory("security", values);
+  },
+
+  async getAll() {
+    if (config.useMockData) {
+      return [];
+    }
+
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+      .from("settings")
+      .select("*")
+      .order("category");
+
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+
+    return data as SettingsRow[];
   },
 };

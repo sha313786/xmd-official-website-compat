@@ -12,6 +12,11 @@ import type {
   SecuritySettings,
 } from "@/types/settings";
 
+interface SettingsMetadata {
+  updatedAt: string | null;
+  updatedBy: string | null;
+}
+
 export function useSettings() {
   const [general, setGeneral] =
     useState<GeneralSettings | null>(null);
@@ -28,6 +33,21 @@ export function useSettings() {
   const [security, setSecurity] =
     useState<SecuritySettings | null>(null);
 
+  const [generalMetadata, setGeneralMetadata] =
+    useState<SettingsMetadata | null>(null);
+
+  const [recruitmentMetadata, setRecruitmentMetadata] =
+    useState<SettingsMetadata | null>(null);
+
+  const [discordMetadata, setDiscordMetadata] =
+    useState<SettingsMetadata | null>(null);
+
+  const [websiteMetadata, setWebsiteMetadata] =
+    useState<SettingsMetadata | null>(null);
+
+  const [securityMetadata, setSecurityMetadata] =
+    useState<SettingsMetadata | null>(null);
+
   const [loading, setLoading] =
     useState(true);
 
@@ -36,24 +56,41 @@ export function useSettings() {
       setLoading(true);
 
       const [
-        generalData,
-        recruitmentData,
-        discordData,
-        websiteData,
-        securityData,
-      ] = await Promise.all([
-        settingsService.getGeneral(),
-        settingsService.getRecruitment(),
-        settingsService.getDiscord(),
-        settingsService.getWebsite(),
-        settingsService.getSecurity(),
-      ]);
+  generalData,
+  recruitmentData,
+  discordData,
+  websiteData,
+  securityData,
+
+  generalMeta,
+  recruitmentMeta,
+  discordMeta,
+  websiteMeta,
+  securityMeta,
+] = await Promise.all([
+  settingsService.getGeneral(),
+  settingsService.getRecruitment(),
+  settingsService.getDiscord(),
+  settingsService.getWebsite(),
+  settingsService.getSecurity(),
+
+  settingsService.getMetadata("general"),
+  settingsService.getMetadata("recruitment"),
+  settingsService.getMetadata("discord"),
+  settingsService.getMetadata("website"),
+  settingsService.getMetadata("security"),
+]);
 
       setGeneral(generalData);
       setRecruitment(recruitmentData);
       setDiscord(discordData);
       setWebsite(websiteData);
       setSecurity(securityData);
+      setGeneralMetadata(generalMeta);
+      setRecruitmentMetadata(recruitmentMeta);
+      setDiscordMetadata(discordMeta);
+      setWebsiteMetadata(websiteMeta);
+      setSecurityMetadata(securityMeta);
     } finally {
       setLoading(false);
     }
@@ -64,39 +101,64 @@ export function useSettings() {
   }, [refresh]);
 
   const saveGeneral = async (
-    values: GeneralSettings
-  ) => {
-    await settingsService.saveGeneral(values);
-    setGeneral(values);
-  };
+  values: GeneralSettings
+) => {
+  await settingsService.saveGeneral(values);
+  setGeneral(values);
+
+  const metadata =
+    await settingsService.getMetadata("general");
+
+  setGeneralMetadata(metadata);
+};
 
   const saveRecruitment = async (
-    values: RecruitmentSettings
-  ) => {
-    await settingsService.saveRecruitment(values);
-    setRecruitment(values);
-  };
+  values: RecruitmentSettings
+) => {
+  await settingsService.saveRecruitment(values);
+  setRecruitment(values);
+
+  const metadata =
+    await settingsService.getMetadata("recruitment");
+
+  setRecruitmentMetadata(metadata);
+};
 
   const saveDiscord = async (
-    values: DiscordSettings
-  ) => {
-    await settingsService.saveDiscord(values);
-    setDiscord(values);
-  };
+  values: DiscordSettings
+) => {
+  await settingsService.saveDiscord(values);
+  setDiscord(values);
+
+  const metadata =
+    await settingsService.getMetadata("discord");
+
+  setDiscordMetadata(metadata);
+};
 
   const saveWebsite = async (
-    values: WebsiteSettings
-  ) => {
-    await settingsService.saveWebsite(values);
-    setWebsite(values);
-  };
+  values: WebsiteSettings
+) => {
+  await settingsService.saveWebsite(values);
+  setWebsite(values);
+
+  const metadata =
+    await settingsService.getMetadata("website");
+
+  setWebsiteMetadata(metadata);
+};
 
   const saveSecurity = async (
-    values: SecuritySettings
-  ) => {
-    await settingsService.saveSecurity(values);
-    setSecurity(values);
-  };
+  values: SecuritySettings
+) => {
+  await settingsService.saveSecurity(values);
+  setSecurity(values);
+
+  const metadata =
+    await settingsService.getMetadata("security");
+
+  setSecurityMetadata(metadata);
+};
 
   return {
     loading,
@@ -106,6 +168,11 @@ export function useSettings() {
     discord,
     website,
     security,
+    generalMetadata,
+    recruitmentMetadata,
+    discordMetadata,
+    websiteMetadata,
+    securityMetadata,
 
     refresh,
 
