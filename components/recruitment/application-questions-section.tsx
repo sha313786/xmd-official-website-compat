@@ -2,7 +2,7 @@
 
 import { UseFormReturn } from "react-hook-form";
 
-import { RecruitmentApplicationFormValues } from "@/lib/validations/recruitment";
+import type { RecruitmentApplicationFormValues } from "@/lib/validation/recruitment";
 
 import { Textarea } from "@/components/ui/textarea";
 

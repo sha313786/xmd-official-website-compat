@@ -2,7 +2,7 @@
 
 import { UseFormReturn } from "react-hook-form";
 
-import { RecruitmentApplicationFormValues } from "@/lib/validations/recruitment";
+import type { RecruitmentApplicationFormValues } from "@/lib/validation/recruitment";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";

@@ -12,11 +12,10 @@ import {
 
 import { useSettings } from "@/hooks/settings/use-settings";
 
-import SettingsCard from "./settings-card";
-import SaveButton from "./save-button";
+import SettingsCard from "@/components/settings/settings-card";
 
-import { Button } from "@/components/ui/button";
-import SettingsFooter from "./settings-footer";
+import SettingsFooter from "@/components/settings/settings-footer";
+import { useUnsavedChanges } from "@/hooks/use-unsaved-changes";
 
 import {
   Form,

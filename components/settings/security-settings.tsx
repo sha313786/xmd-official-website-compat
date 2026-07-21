@@ -14,9 +14,9 @@ import { saveSettings } from "@/lib/utils/save-settings";
 
 import { useSettings } from "@/hooks/settings/use-settings";
 
-import SettingsCard from "./settings-card";
+import SettingsCard from "@/components/settings/settings-card";
 import SettingsSkeleton from "./settings-skeleton";
-
+import SettingsFooter from "@/components/settings/settings-footer";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 

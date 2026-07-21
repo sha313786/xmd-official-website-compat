@@ -14,13 +14,13 @@ import { saveSettings } from "@/lib/utils/save-settings";
 
 import { useSettings } from "@/hooks/settings/use-settings";
 
-import SettingsCard from "./settings-card";
+import SettingsCard from "@/components/settings/settings-card";
 import SettingsSkeleton from "./settings-skeleton";
 
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import SettingsFooter from "./settings-footer";
+import SettingsFooter from "@/components/settings/settings-footer";
 
 import {
   Form,
@@ -44,10 +44,10 @@ export default function RecruitmentSettings() {
     resolver: zodResolver(recruitmentSettingsSchema),
     defaultValues: {
       recruitmentOpen: false,
-      publicRecruitment: false,
-      autoAccept: false,
-      autoRejectDays: 30,
-      maxApplications: 100,
+      publicRecruitmentEnabled: false,
+      autoAcceptApplications: false,
+      autoRejectAfterDays: 30,
+      maxApplicationsPerUser: 100,
       recruitmentMessage: "",
     },
   });
@@ -105,7 +105,7 @@ export default function RecruitmentSettings() {
 
           <FormField
             control={form.control}
-            name="publicRecruitment"
+            name="publicRecruitmentEnabled"
             render={({ field }) => (
               <FormItem className="flex items-center justify-between rounded-lg border p-4">
                 <div>
@@ -127,7 +127,7 @@ export default function RecruitmentSettings() {
 
           <FormField
             control={form.control}
-            name="autoAccept"
+            name="autoAcceptApplications"
             render={({ field }) => (
               <FormItem className="flex items-center justify-between rounded-lg border p-4">
                 <div>
@@ -150,7 +150,7 @@ export default function RecruitmentSettings() {
           <div className="grid gap-6 md:grid-cols-2">
             <FormField
               control={form.control}
-              name="autoRejectDays"
+              name="autoRejectAfterDays"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Auto Reject Days</FormLabel>
@@ -172,7 +172,7 @@ export default function RecruitmentSettings() {
 
             <FormField
               control={form.control}
-              name="maxApplications"
+              name="maxApplicationsPerUser"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Maximum Applications</FormLabel>

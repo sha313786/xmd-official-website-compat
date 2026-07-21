@@ -22,16 +22,16 @@ export type GeneralSettingsForm = z.infer<
 export const recruitmentSettingsSchema = z.object({
   recruitmentOpen: z.boolean(),
 
-  publicRecruitment: z.boolean(),
+  publicRecruitmentEnabled: z.boolean(),
 
-  autoAccept: z.boolean(),
+  autoAcceptApplications: z.boolean(),
 
-  autoRejectDays: z
+  autoRejectAfterDays: z
     .number()
     .min(1, "Must be at least 1 day")
     .max(365),
 
-  maxApplications: z
+  maxApplicationsPerUser: z
     .number()
     .min(1)
     .max(10000),
@@ -51,13 +51,13 @@ export type RecruitmentSettingsForm =
     .min(17, "Invalid Guild ID")
     .max(20),
 
-  verificationRoleId: z.string().optional(),
+  verificationRoleId: z.string(),
 
-  verificationChannelId: z.string().optional(),
+verificationChannelId: z.string(),
 
-  dutyPanelChannelId: z.string().optional(),
+dutyPanelChannelId: z.string(),
 
-  dutyLogsChannelId: z.string().optional(),
+dutyLogsChannelId: z.string(),
 });
 
 export type DiscordSettingsForm = z.infer<
