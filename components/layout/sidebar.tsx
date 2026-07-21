@@ -1,13 +1,22 @@
 "use client";
 
 import Link from "next/link";
+
 import { useDashboardRole } from "@/hooks/dashboard/use-dashboard-role";
+import { useProfile } from "@/hooks/profile/use-profile";
 
 export default function Sidebar() {
   const {
-    loading,
+    loading: roleLoading,
     isManagement,
   } = useDashboardRole();
+
+  const {
+    profile,
+    loading: profileLoading,
+  } = useProfile();
+
+  const loading = roleLoading || profileLoading;
 
   if (loading) {
     return (
@@ -26,17 +35,29 @@ export default function Sidebar() {
   }
 
   const menu = isManagement
-  ? [
-      { name: "Dashboard", href: "/dashboard" },
-      { name: "Members", href: "/dashboard/members" },
-      { name: "Promotion", href: "/dashboard/promotion" },
-      { name: "Recruitment", href: "/dashboard/recruitment" },
-      { name: "Reports", href: "/dashboard/reports" },
-    ]
-  : [
-      { name: "Dashboard", href: "/dashboard" },
-      { name: "My Promotion", href: "/dashboard/my-promotion" },
-    ];
+    ? [
+        { name: "Dashboard", href: "/dashboard" },
+        { name: "Members", href: "/dashboard/members" },
+        { name: "Promotion", href: "/dashboard/promotion" },
+        { name: "Recruitment", href: "/dashboard/recruitment" },
+        { name: "Reports", href: "/dashboard/reports" },
+
+        ...(profile?.isSuperAdmin
+          ? [
+              {
+                name: "Settings",
+                href: "/dashboard/settings",
+              },
+            ]
+          : []),
+      ]
+    : [
+        { name: "Dashboard", href: "/dashboard" },
+        {
+          name: "My Promotion",
+          href: "/dashboard/my-promotion",
+        },
+      ];
 
   return (
     <aside className="flex h-screen w-72 flex-col border-r border-white/10 bg-slate-950">
