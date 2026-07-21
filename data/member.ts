@@ -14,6 +14,7 @@ export const members: Member[] = [
     dutyHours: 186,
     dutyDays: 22,
     promotionProgress: 100,
+    isSuperAdmin: false,
   },
   {
     id: "2",
@@ -28,6 +29,7 @@ export const members: Member[] = [
     dutyHours: 142,
     dutyDays: 18,
     promotionProgress: 82,
+    isSuperAdmin: false,
   },
   {
     id: "3",
@@ -42,5 +44,6 @@ export const members: Member[] = [
     dutyHours: 96,
     dutyDays: 14,
     promotionProgress: 58,
+    isSuperAdmin: false,
   },
 ];

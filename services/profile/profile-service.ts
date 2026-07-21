@@ -39,6 +39,7 @@ export class ProfileService {
         dutyDays: data.duty_days,
 
         promotionProgress: data.promotion_progress,
+        isSuperAdmin: data.is_super_admin ?? false,
     };
   }
 }

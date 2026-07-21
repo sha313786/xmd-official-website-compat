@@ -17,6 +17,7 @@ type MemberRecord = {
   department: string;
   joined_at: string;
   status: string | null;
+  is_super_admin: boolean;
 };
 
 const buildAvatarUrl = (
@@ -59,6 +60,7 @@ export const memberService = {
             fullName: member.full_name,
             rank: member.rank,
             department: member.department,
+            isSuperAdmin: member.is_super_admin ?? false,
             avatar: buildAvatarUrl(member),
             joinedAt: member.joined_at,
             status: member.status ?? "Active",
@@ -94,6 +96,7 @@ export const memberService = {
     if (error || !data) {
       console.error(error);
       return undefined;
+      
     }
 
     const stats =
@@ -108,6 +111,7 @@ export const memberService = {
       fullName: data.full_name,
       rank: data.rank,
       department: data.department,
+      isSuperAdmin: data.is_super_admin ?? false,
       avatar: buildAvatarUrl(data),
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
@@ -152,6 +156,7 @@ export const memberService = {
       fullName: data.full_name,
       rank: data.rank,
       department: data.department,
+      isSuperAdmin: data.is_super_admin ?? false,
       avatar: buildAvatarUrl(data),
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
@@ -195,6 +200,7 @@ export const memberService = {
       fullName: data.full_name,
       rank: data.rank,
       department: data.department,
+      isSuperAdmin: data.is_super_admin ?? false,
       avatar: buildAvatarUrl(data),
       joinedAt: data.joined_at,
       status: data.status ?? "Active",
@@ -223,6 +229,7 @@ export const memberService = {
         rank: member.rank,
         department: member.department,
         status: member.status ?? "Active",
+        is_super_admin: false,
       })
       .select()
       .single();

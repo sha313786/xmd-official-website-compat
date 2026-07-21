@@ -32,15 +32,16 @@ export default function RecruitmentSchedule() {
 
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    if (!settings) return;
+ // eslint-disable-next-line react-hooks/set-state-in-effect
+useEffect(() => {
+  if (!settings) return;
 
-    setApplicationStart(settings.application_start ?? "");
-    setApplicationEnd(settings.application_end ?? "");
-    setInterviewStart(settings.interview_start ?? "");
-    setInterviewEnd(settings.interview_end ?? "");
-    setResultDate(settings.result_date ?? "");
-  }, [settings]);
+  setApplicationStart(settings.application_start ?? "");
+  setApplicationEnd(settings.application_end ?? "");
+  setInterviewStart(settings.interview_start ?? "");
+  setInterviewEnd(settings.interview_end ?? "");
+  setResultDate(settings.result_date ?? "");
+}, [settings]);
 
   async function handleSave() {
     try {

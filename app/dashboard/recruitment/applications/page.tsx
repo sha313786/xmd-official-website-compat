@@ -2,11 +2,9 @@
 
 import { useDashboardRole } from "@/hooks/dashboard/use-dashboard-role";
 
-import { RecruitmentAnalytics } from "@/components/recruitment/recruitment-analytics";
-import { RecruitmentControl } from "@/components/recruitment/recruitment-control";
-import { RecruitmentQuickActions } from "@/components/recruitment/recruitment-quick-actions";
+import { RecruitmentApplicationsTable } from "@/components/recruitment/recruitment-applications-table";
 
-export default function RecruitmentPage() {
+export default function RecruitmentApplicationsPage() {
   const {
     loading,
     isManagement,
@@ -15,7 +13,7 @@ export default function RecruitmentPage() {
   if (loading) {
     return (
       <div className="flex h-[70vh] items-center justify-center">
-        Loading recruitment dashboard...
+        Loading recruitment applications...
       </div>
     );
   }
@@ -29,7 +27,7 @@ export default function RecruitmentPage() {
           </h2>
 
           <p className="text-muted-foreground">
-            You do not have permission to access the Recruitment Dashboard.
+            You do not have permission to access Recruitment Applications.
           </p>
         </div>
       </div>
@@ -40,21 +38,15 @@ export default function RecruitmentPage() {
     <div className="space-y-8 p-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">
-          Recruitment Dashboard
+          Recruitment Applications
         </h1>
 
         <p className="mt-2 text-muted-foreground">
-          Manage recruitment applications, review candidates,
-          and monitor recruitment progress.
+          Review, approve and manage recruitment applications.
         </p>
       </div>
 
-      <RecruitmentAnalytics />
-
-      <div className="grid gap-6 lg:grid-cols-2">
-  <RecruitmentControl />
-  <RecruitmentQuickActions />
-</div>
+      <RecruitmentApplicationsTable />
     </div>
   );
 }

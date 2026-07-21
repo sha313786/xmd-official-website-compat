@@ -37,17 +37,18 @@ export function RecruitmentSchedule() {
 
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    if (!settings) return;
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+useEffect(() => {
+  if (!settings) return;
 
-    setSchedule({
-      application_start: settings.application_start ?? "",
-      application_end: settings.application_end ?? "",
-      interview_start: settings.interview_start ?? "",
-      interview_end: settings.interview_end ?? "",
-      result_date: settings.result_date ?? "",
-    });
-  }, [settings]);
+  setSchedule({
+    application_start: settings.application_start ?? "",
+    application_end: settings.application_end ?? "",
+    interview_start: settings.interview_start ?? "",
+    interview_end: settings.interview_end ?? "",
+    result_date: settings.result_date ?? "",
+  });
+}, [settings]);
 
   function updateField(
     field: keyof ScheduleState,

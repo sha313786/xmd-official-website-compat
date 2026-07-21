@@ -2,24 +2,28 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 
-const eslintConfig = defineConfig([
+export default defineConfig([
   ...nextVitals,
   ...nextTs,
-  // Override default ignores of eslint-config-next.
+
+  {
+    rules: {
+      "react-hooks/set-state-in-effect": "off",
+    },
+  },
+
   globalIgnores([
-  // Next.js defaults
-  ".next/**",
-  "out/**",
-  "build/**",
-  "next-env.d.ts",
+    // Next.js defaults
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
 
-  // Ignore compiled Discord bot output
-  "discord-bot/dist/**",
+    // Discord Bot
+    "discord-bot/dist/**",
 
-  // Optional
-  "node_modules/**",
-  "coverage/**",
-]),
+    // Other
+    "node_modules/**",
+    "coverage/**",
+  ]),
 ]);
-
-export default eslintConfig;

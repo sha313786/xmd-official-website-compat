@@ -18,6 +18,13 @@ export interface Member {
   status: MemberStatus;
 
   /**
+   * Determines whether the member has
+   * access to the Settings module and
+   * other system administration features.
+   */
+  isSuperAdmin: boolean;
+
+  /**
    * Final avatar URL used by the UI.
    * This will be the Discord CDN URL if available,
    * otherwise it falls back to the manually uploaded avatar.

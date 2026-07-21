@@ -1,13 +1,6 @@
 "use client";
-
-import Link from "next/link";
-
 import {
-  CalendarDays,
-  FileText,
-  Globe,
   Power,
-  Settings,
 } from "lucide-react";
 
 import {
@@ -18,7 +11,6 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 
 import { useRecruitmentSettings } from "@/hooks/use-recruitment-settings";
 
@@ -179,74 +171,6 @@ export function RecruitmentControl() {
     ? "Close Recruitment"
     : "Open Recruitment"}
 </Button>
-
-        <Separator className="my-1" />
-
-<div className="space-y-3">
-
-  <div>
-
-    <h3 className="text-sm font-semibold">
-      Quick Actions
-    </h3>
-
-    <p className="text-xs text-muted-foreground">
-      Navigate to frequently used recruitment tools.
-    </p>
-
-  </div>
-
-  <div className="grid gap-3">
-            
-          <Link href="/recruitment">
-  <Button
-  variant="outline"
-  className="h-11 w-full justify-start rounded-lg transition-colors"
->
-    <Globe className="mr-2 h-4 w-4" />
-    View Public Recruitment
-  </Button>
-</Link>
-
-          <Link href="/dashboard/recruitment">
-  <Button
-  variant="outline"
-  className="h-11 w-full justify-start rounded-lg transition-colors"
->
-    <FileText className="mr-2 h-4 w-4" />
-    View Applications
-  </Button>
-</Link>
-
-<Link href="/dashboard/recruitment/interviews">
-  <Button
-  variant="outline"
-  className="h-11 w-full justify-start rounded-lg transition-colors"
->
-    <CalendarDays className="mr-2 h-4 w-4" />
-    Manage Interviews
-  </Button>
-</Link>
-
-<Link href="/dashboard/recruitment/settings">
-  <Button
-  variant="outline"
-  className="h-11 w-full justify-start rounded-lg transition-colors"
->
-    <Settings className="mr-2 h-4 w-4" />
-    Recruitment Settings
-  </Button>
-</Link>
- </div>
-        </div>
-        <Separator className="my-1" />
-
-<div className="text-xs text-muted-foreground">
-  Last updated •{" "}
-  {settings.updated_at
-    ? new Date(settings.updated_at).toLocaleString()
-    : "Never"}
-</div>
       </CardContent>
     </Card>
   );

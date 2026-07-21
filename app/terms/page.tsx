@@ -33,14 +33,14 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3">3. Acceptable Use</h2>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Do not misuse or abuse the bot.</li>
-            <li>Do not attempt unauthorized access.</li>
-            <li>Follow Discord's Terms of Service.</li>
-            <li>Comply with server rules.</li>
-          </ul>
-        </section>
+  <h2 className="text-2xl font-semibold mb-3">3. Acceptable Use</h2>
+  <ul className="list-disc pl-6 space-y-2">
+    <li>Do not misuse or abuse the bot.</li>
+    <li>Do not attempt unauthorized access.</li>
+    <li>Follow Discord&apos;s Terms of Service.</li>
+    <li>Comply with server rules.</li>
+  </ul>
+</section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-3">4. Availability</h2>
