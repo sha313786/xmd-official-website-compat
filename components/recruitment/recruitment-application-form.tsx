@@ -8,8 +8,8 @@ import { useForm } from "react-hook-form";
 
 import {
   recruitmentApplicationSchema,
-  RecruitmentApplicationFormValues,
-} from "@/lib/validations/recruitment";
+  type RecruitmentApplicationFormValues,
+} from "@/lib/validation/recruitment";
 
 import { useApplications } from "@/hooks/use-applications";
 
