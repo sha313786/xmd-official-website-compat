@@ -11,7 +11,8 @@ export function useRecruitmentSettings() {
   const [settings, setSettings] =
     useState<RecruitmentSettings | null>(null);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] =
+    useState(true);
 
   const [error, setError] =
     useState<string | null>(null);
@@ -39,108 +40,56 @@ export function useRecruitmentSettings() {
   }, []);
 
   useEffect(() => {
-  const id = requestAnimationFrame(() => {
     void loadSettings();
-  });
-
-  return () => cancelAnimationFrame(id);
-}, [loadSettings]);
-
-  const toggleRecruitment = async () => {
-    try {
-      const updated =
-        await recruitmentSettingsService.toggleRecruitment();
-
-      setSettings(updated);
-
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  };
-
-  const updateSettings = async (
-    updates: Partial<RecruitmentSettings>
-  ) => {
-    try {
-      const updated =
-        await recruitmentSettingsService.updateSettings(
-          updates
-        );
-
-      setSettings(updated);
-
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  };
-
-  const updateNotice = async (
-    notice: string
-  ) => {
-    try {
-      const updated =
-        await recruitmentSettingsService.updateNotice(
-          notice
-        );
-
-      setSettings(updated);
-
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  };
-
-  const updateDiscordInvite = async (
-    invite: string
-  ) => {
-    try {
-      const updated =
-        await recruitmentSettingsService.updateDiscordInvite(
-          invite
-        );
-
-      setSettings(updated);
-
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  };
-
-  const updateCurrentCycle = async (
-    cycleId: string | null
-  ) => {
-    try {
-      const updated =
-        await recruitmentSettingsService.updateCurrentCycle(
-          cycleId
-        );
-
-      setSettings(updated);
-
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  };
+  }, [loadSettings]);
 
   return {
     settings,
     loading,
     error,
     refresh: loadSettings,
-    toggleRecruitment,
-    updateSettings,
-    updateNotice,
-    updateDiscordInvite,
-    updateCurrentCycle,
+
+    toggleRecruitment: async () => {
+      const updated =
+        await recruitmentSettingsService.toggleRecruitment();
+      setSettings(updated);
+      return updated;
+    },
+
+    updateNotice: async (notice: string) => {
+      const updated =
+        await recruitmentSettingsService.updateNotice(notice);
+      setSettings(updated);
+      return updated;
+    },
+
+    updateDiscordInvite: async (invite: string) => {
+      const updated =
+        await recruitmentSettingsService.updateDiscordInvite(invite);
+      setSettings(updated);
+      return updated;
+    },
+
+    updateSchedule: async (schedule: {
+      application_start: string | null;
+      application_end: string | null;
+      interview_start: string | null;
+      interview_end: string | null;
+      result_date: string | null;
+    }) => {
+      const updated =
+        await recruitmentSettingsService.updateSchedule(schedule);
+      setSettings(updated);
+      return updated;
+    },
+
+    updateSettings: async (
+      updates: Partial<RecruitmentSettings>
+    ) => {
+      const updated =
+        await recruitmentSettingsService.updateSettings(updates);
+      setSettings(updated);
+      return updated;
+    },
   };
 }

@@ -27,57 +27,25 @@ export default function RecruitmentSchedule() {
   const schedule = [
     {
       title: "Applications Open",
-      date: settings.application_start
-        ? new Date(settings.application_start).toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-          })
-        : "To Be Announced",
+      date: settings.application_start ?? "To Be Announced",
       description: "Online applications become available.",
     },
     {
       title: "Applications Close",
-      date: settings.application_end
-        ? new Date(settings.application_end).toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-          })
-        : "To Be Announced",
+      date: settings.application_end ?? "To Be Announced",
       description: "Last date for submitting applications.",
     },
     {
       title: "Interview Phase",
       date:
         settings.interview_start && settings.interview_end
-          ? `${new Date(settings.interview_start).toLocaleDateString(
-              "en-GB",
-              {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              }
-            )} → ${new Date(settings.interview_end).toLocaleDateString(
-              "en-GB",
-              {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              }
-            )}`
+          ? `${settings.interview_start} → ${settings.interview_end}`
           : "To Be Announced",
       description: "Eligible applicants will be interviewed.",
     },
     {
       title: "Final Results",
-      date: settings.result_date
-        ? new Date(settings.result_date).toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-          })
-        : "To Be Announced",
+      date: settings.result_date ?? "To Be Announced",
       description: "Selected candidates will be announced.",
     },
   ];
@@ -99,10 +67,7 @@ export default function RecruitmentSchedule() {
 
         <div className="relative ml-5 border-l border-red-500/30">
           {schedule.map((item, index) => (
-            <Reveal
-              key={item.title}
-              delay={index * 0.1}
-            >
+            <Reveal key={item.title} delay={index * 0.1}>
               <div className="relative mb-10 pl-10">
                 <div className="absolute -left-[13px] top-2 flex h-6 w-6 items-center justify-center rounded-full border-2 border-red-500 bg-background">
                   <CheckCircle2 className="h-3.5 w-3.5 text-red-500" />
@@ -112,10 +77,7 @@ export default function RecruitmentSchedule() {
                   <CardContent className="p-6">
                     <div className="mb-3 flex items-center gap-2 text-red-500">
                       <CalendarDays className="h-5 w-5" />
-
-                      <span className="font-medium">
-                        {item.date}
-                      </span>
+                      <span className="font-medium">{item.date}</span>
                     </div>
 
                     <h3 className="mb-2 text-xl font-semibold">

@@ -5,7 +5,11 @@ const supabase = createClient();
 export interface RecruitmentSettings {
   id: string;
   is_open: boolean;
-  current_cycle_id: string | null;
+  application_start: string | null;
+  application_end: string | null;
+  interview_start: string | null;
+  interview_end: string | null;
+  result_date: string | null;
   discord_invite: string | null;
   recruitment_notice: string | null;
   updated_at: string | null;
@@ -19,10 +23,7 @@ class RecruitmentSettingsService {
       .select("*")
       .single();
 
-    if (error) {
-      throw error;
-    }
-
+    if (error) throw error;
     return data;
   }
 
@@ -45,9 +46,7 @@ class RecruitmentSettingsService {
       .select()
       .single();
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     return data;
   }
@@ -80,12 +79,14 @@ class RecruitmentSettingsService {
     });
   }
 
-  async updateCurrentCycle(
-    cycleId: string | null
-  ): Promise<RecruitmentSettings> {
-    return this.updateSettings({
-      current_cycle_id: cycleId,
-    });
+  async updateSchedule(schedule: {
+    application_start: string | null;
+    application_end: string | null;
+    interview_start: string | null;
+    interview_end: string | null;
+    result_date: string | null;
+  }): Promise<RecruitmentSettings> {
+    return this.updateSettings(schedule);
   }
 }
 

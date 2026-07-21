@@ -1,28 +1,60 @@
 "use client";
 
+import { format } from "date-fns";
+
 import Reveal from "@/components/shared/reveal";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
-import { recruitmentStatus } from "@/data/recruitment/status";
-
-const statusConfig = {
-  open: {
-    label: "OPEN",
-    badgeClass: "bg-green-500/10 text-green-400 border-green-500/30",
-  },
-  closed: {
-    label: "CLOSED",
-    badgeClass: "bg-red-500/10 text-red-400 border-red-500/30",
-  },
-  "coming-soon": {
-    label: "COMING SOON",
-    badgeClass: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
-  },
-};
+import { useRecruitmentSettings } from "@/hooks/use-recruitment-settings";
 
 export default function RecruitmentStatus() {
-  const current = statusConfig[recruitmentStatus.status];
+  const {
+    settings,
+    loading,
+  } = useRecruitmentSettings();
+
+  if (loading) {
+    return (
+      <section className="py-24">
+        <div className="container mx-auto max-w-5xl px-6">
+          <Card className="border-red-500/20 bg-card/60 backdrop-blur">
+            <CardContent className="flex justify-center p-10">
+              Loading recruitment status...
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+    );
+  }
+
+  if (!settings) {
+    return null;
+  }
+
+  const isOpen = settings.is_open;
+
+  const badgeClass = isOpen
+    ? "bg-green-500/10 text-green-400 border-green-500/30"
+    : "bg-red-500/10 text-red-400 border-red-500/30";
+
+  const applicationPeriod =
+    settings.application_start && settings.application_end
+      ? `${format(
+          new Date(settings.application_start),
+          "dd MMM yyyy"
+        )} - ${format(
+          new Date(settings.application_end),
+          "dd MMM yyyy"
+        )}`
+      : "To Be Announced";
+
+  const lastUpdated = settings.updated_at
+    ? format(
+        new Date(settings.updated_at),
+        "dd MMM yyyy HH:mm"
+      )
+    : "N/A";
 
   return (
     <section className="py-24">
@@ -30,16 +62,19 @@ export default function RecruitmentStatus() {
         <Reveal>
           <Card className="border-red-500/20 bg-card/60 backdrop-blur">
             <CardContent className="space-y-6 p-8 text-center">
-              <Badge className={current.badgeClass}>
-                {current.label}
+              <Badge className={badgeClass}>
+                {isOpen ? "OPEN" : "CLOSED"}
               </Badge>
 
               <h2 className="text-3xl font-bold">
-                {recruitmentStatus.title}
+                Recruitment
               </h2>
 
               <p className="mx-auto max-w-2xl text-muted-foreground">
-                {recruitmentStatus.description}
+                {settings.recruitment_notice ??
+                  (isOpen
+                    ? "Applications are currently open."
+                    : "Recruitment is currently closed.")}
               </p>
 
               <div className="grid gap-6 pt-4 md:grid-cols-2">
@@ -49,7 +84,7 @@ export default function RecruitmentStatus() {
                   </p>
 
                   <p className="font-semibold">
-                    {recruitmentStatus.applicationPeriod}
+                    {applicationPeriod}
                   </p>
                 </div>
 
@@ -59,7 +94,7 @@ export default function RecruitmentStatus() {
                   </p>
 
                   <p className="font-semibold">
-                    {recruitmentStatus.lastUpdated}
+                    {lastUpdated}
                   </p>
                 </div>
               </div>

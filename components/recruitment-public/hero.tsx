@@ -1,12 +1,23 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Activity,
   Clock3,
   HeartPulse,
   ShieldCheck,
+  ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
+
+import { useRecruitmentSettings } from "@/hooks/use-recruitment-settings";
 
 export default function RecruitmentHero() {
+  const { settings, loading } = useRecruitmentSettings();
+
+  const isOpen = settings?.is_open ?? false;
+
   return (
     <section className="relative overflow-hidden border-b bg-gradient-to-br from-primary/10 via-background to-background">
       {/* Background Blur */}
@@ -24,13 +35,33 @@ export default function RecruitmentHero() {
             </div>
           </div>
 
-          {/* Status Badges */}
+          {/* Status */}
           <div className="mb-6 flex flex-wrap justify-center gap-3">
-            <Badge className="rounded-full px-4 py-1 text-sm">
-              🟢 Recruitment Open
-            </Badge>
+            {loading ? (
+              <Badge
+                variant="outline"
+                className="rounded-full px-4 py-1 text-sm"
+              >
+                Loading...
+              </Badge>
+            ) : (
+              <Badge
+                className={`rounded-full px-4 py-1 text-sm ${
+                  isOpen
+                    ? "bg-green-600 hover:bg-green-600 text-white"
+                    : "bg-red-600 hover:bg-red-600 text-white"
+                }`}
+              >
+                {isOpen
+                  ? "🟢 Recruitment Open"
+                  : "🔴 Recruitment Closed"}
+              </Badge>
+            )}
 
-            <Badge variant="outline" className="rounded-full px-4 py-1 text-sm">
+            <Badge
+              variant="outline"
+              className="rounded-full px-4 py-1 text-sm"
+            >
               <Clock3 className="mr-2 h-4 w-4" />
               5–10 Minutes
             </Badge>
@@ -48,7 +79,35 @@ export default function RecruitmentHero() {
             medical roleplay with professionalism and teamwork.
           </p>
 
-          {/* Stats */}
+          {/* CTA Buttons */}
+          <div className="mt-10 flex flex-wrap justify-center gap-4">
+            {isOpen ? (
+              <Link href="/recruitment/apply">
+                <Button size="lg">
+                  Apply Now
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            ) : (
+              <Button size="lg" disabled>
+                Recruitment Closed
+              </Button>
+            )}
+
+            {settings?.discord_invite && (
+              <Link
+                href={settings.discord_invite}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="outline" size="lg">
+                  Join Discord
+                </Button>
+              </Link>
+            )}
+          </div>
+
+          {/* Features */}
           <div className="mt-14 grid gap-5 rounded-3xl border bg-background/80 p-6 shadow-sm backdrop-blur md:grid-cols-3">
             <div className="flex flex-col items-center">
               <Activity className="mb-3 h-8 w-8 text-primary" />
