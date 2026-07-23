@@ -46,7 +46,7 @@ export default function News() {
 
 {/* Other News */}
 <Stagger
-  className="grid gap-8 md:grid-cols-2 xl:grid-cols-3"
+  className="grid auto-rows-fr gap-8 md:grid-cols-2 xl:grid-cols-3"
   baseDelay={200}
 >
   {latestNews.map((news) => (

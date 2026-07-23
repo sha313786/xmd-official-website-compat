@@ -35,67 +35,80 @@ export default function Recruitment() {
             <p className="mt-6 text-lg leading-8 text-slate-400">
               {recruitmentContent.description}
             </p>
-
-            {/* CTA Buttons */}
-            <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-              <Link
-                href={recruitmentContent.primaryButton.href}
-                className="
-                  rounded-xl
-                  bg-red-600
-                  px-8
-                  py-4
-                  font-semibold
-                  text-white
-                  transition-all
-                  duration-300
-                  hover:bg-red-700
-                  hover:shadow-xl
-                  hover:shadow-red-600/30
-                "
-              >
-                {recruitmentContent.primaryButton.label}
-              </Link>
-
-              <Link
-                href={recruitmentContent.secondaryButton.href}
-                className="
-                  rounded-xl
-                  border
-                  border-white/10
-                  bg-white/5
-                  px-8
-                  py-4
-                  font-semibold
-                  text-white
-                  backdrop-blur-xl
-                  transition-all
-                  duration-300
-                  hover:border-red-500/40
-                  hover:bg-red-500/10
-                "
-              >
-                {recruitmentContent.secondaryButton.label}
-              </Link>
-            </div>
           </div>
         </Reveal>
 
         {/* Features + Timeline */}
         <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
-          {/* Features */}
-          <Stagger
-            className="grid gap-6 sm:grid-cols-2"
-          >
-            {recruitmentFeatures.map((feature) => (
-              <RecruitmentFeatureCard
-                key={feature.id}
-                icon={feature.icon}
-                title={feature.title}
-                description={feature.description}
-              />
-            ))}
-          </Stagger>
+          {/* Left Side */}
+          <div>
+            <Stagger className="grid auto-rows-fr gap-6 sm:grid-cols-2">
+              {recruitmentFeatures.map((feature) => (
+                <RecruitmentFeatureCard
+                  key={feature.id}
+                  icon={feature.icon}
+                  title={feature.title}
+                  description={feature.description}
+                />
+              ))}
+            </Stagger>
+
+            {/* CTA */}
+            <Reveal delay={300}>
+              <div className="mt-8 rounded-3xl border border-red-500/20 bg-gradient-to-r from-red-950/60 via-red-950/30 to-transparent p-8">
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold text-white">
+                    Ready to Make a Difference?
+                  </h3>
+
+                  <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-400">
+                    Start your journey with XMD today and become part of an
+                    elite emergency medical team serving XLANTIS City.
+                    Explore the recruitment process and begin your
+                    medical career with one of the city's most respected
+                    healthcare departments.
+                  </p>
+
+                  <Link
+                    href="/recruitment"
+                    className="
+                      mt-8
+                      inline-flex
+                      items-center
+                      justify-center
+                      rounded-xl
+                      bg-red-600
+                      px-8
+                      py-4
+                      font-semibold
+                      text-white
+                      transition-all
+                      duration-300
+                      hover:bg-red-700
+                      hover:shadow-lg
+                      hover:shadow-red-600/30
+                    "
+                  >
+                    View Recruitment
+
+                    <svg
+                      className="ml-2 h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
+            </Reveal>
+          </div>
 
           {/* Timeline */}
           <Reveal delay={250}>
@@ -104,42 +117,6 @@ export default function Recruitment() {
             />
           </Reveal>
         </div>
-
-        {/* Bottom CTA */}
-        <Reveal delay={350}>
-          <div className="mt-20 rounded-3xl border border-white/10 bg-white/5 p-10 text-center backdrop-blur-xl">
-            <h3 className="text-3xl font-bold text-white">
-              Ready to Begin Your Medical Career?
-            </h3>
-
-            <p className="mx-auto mt-4 max-w-2xl text-slate-400">
-              Join XMD and become part of a professional team dedicated
-              to protecting and serving the citizens of XLANTIS City.
-            </p>
-
-            <Link
-              href={recruitmentContent.primaryButton.href}
-              className="
-                mt-8
-                inline-flex
-                items-center
-                rounded-xl
-                bg-red-600
-                px-8
-                py-4
-                font-semibold
-                text-white
-                transition-all
-                duration-300
-                hover:bg-red-700
-                hover:shadow-xl
-                hover:shadow-red-600/30
-              "
-            >
-              Apply Today
-            </Link>
-          </div>
-        </Reveal>
       </div>
     </section>
   );

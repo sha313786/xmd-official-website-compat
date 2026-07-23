@@ -45,42 +45,42 @@ export default function MedicalServices() {
           ))}
         </Stagger>
 
-        {/* Bottom CTA */}
-        <Reveal delay={300}>
-          <div className="mt-20 text-center">
-            <h3 className="text-3xl font-bold text-white">
-              Need Immediate Medical Assistance?
-            </h3>
+        {/* Recruitment CTA */}
+<Reveal delay={300}>
+  <div className="mt-20 text-center">
+    <h3 className="text-3xl font-bold text-white">
+      Ready to Join XMD?
+    </h3>
 
-            <p className="mx-auto mt-4 max-w-2xl text-slate-400">
-              Our emergency medical team is available 24 hours a day,
-              providing rapid response and professional treatment whenever
-              help is needed.
-            </p>
+    <p className="mx-auto mt-4 max-w-2xl text-slate-400">
+      Take the next step toward becoming a member of XLANTIS Medical Department.
+      Explore the recruitment process, eligibility requirements, and begin your
+      medical career with XMD.
+    </p>
 
-            <a
-              href="#recruitment"
-              className="
-                mt-8
-                inline-flex
-                items-center
-                rounded-xl
-                bg-red-600
-                px-8
-                py-4
-                font-semibold
-                text-white
-                transition-all
-                duration-300
-                hover:bg-red-700
-                hover:shadow-lg
-                hover:shadow-red-600/30
-              "
-            >
-              Contact XMD
-            </a>
-          </div>
-        </Reveal>
+    <a
+      href="#recruitment"
+      className="
+        mt-8
+        inline-flex
+        items-center
+        rounded-xl
+        bg-red-600
+        px-8
+        py-4
+        font-semibold
+        text-white
+        transition-all
+        duration-300
+        hover:bg-red-700
+        hover:shadow-lg
+        hover:shadow-red-600/30
+      "
+    >
+      View Recruitment
+    </a>
+  </div>
+</Reveal>
       </div>
     </section>
   );

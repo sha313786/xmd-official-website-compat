@@ -56,6 +56,9 @@ export default function NewsCard({
     <article
       className="
         group
+        flex
+        h-full
+        flex-col
         overflow-hidden
         rounded-2xl
         border
@@ -90,7 +93,7 @@ export default function NewsCard({
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="flex flex-1 flex-col p-6">
         <h3 className="line-clamp-2 text-xl font-bold text-white">
           {title}
         </h3>
@@ -100,27 +103,28 @@ export default function NewsCard({
         </p>
 
         {/* Meta */}
-        <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-slate-500">
-          <div className="flex items-center gap-2">
-            <User className="h-4 w-4" />
-            {author}
+        <div className="mt-auto pt-6">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
+            <div className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              <span>{author}</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <CalendarDays className="h-4 w-4" />
+              <span>{publishedAt}</span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <CalendarDays className="h-4 w-4" />
-            {publishedAt}
-          </div>
+          {/* Read More */}
+          <Link
+            href={href}
+            className="mt-6 inline-flex items-center gap-2 font-semibold text-red-400 transition-colors duration-300 hover:text-red-300"
+          >
+            Read More
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
         </div>
-
-        {/* Read More */}
-        <Link
-          href={href}
-          className="mt-6 inline-flex items-center gap-2 font-semibold text-red-400 transition-colors duration-300 hover:text-red-300"
-        >
-          Read More
-
-          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-        </Link>
       </div>
     </article>
   );

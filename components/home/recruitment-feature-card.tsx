@@ -19,6 +19,7 @@ export default function RecruitmentFeatureCard({
         group
         flex
         h-full
+        min-h-[250px]
         flex-col
         rounded-2xl
         border
@@ -35,17 +36,57 @@ export default function RecruitmentFeatureCard({
       "
     >
       {/* Icon */}
-      <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-600/10 transition-colors duration-300 group-hover:bg-red-600/20">
-        <Icon className="h-8 w-8 text-red-500 transition-transform duration-300 group-hover:scale-110" />
+      <div
+        className="
+          mb-5
+          flex
+          h-14
+          w-14
+          items-center
+          justify-center
+          rounded-2xl
+          bg-red-600/10
+          transition-colors
+          duration-300
+          group-hover:bg-red-600/20
+        "
+      >
+        <Icon
+          className="
+            h-7
+            w-7
+            text-red-500
+            transition-transform
+            duration-300
+            group-hover:scale-110
+          "
+        />
       </div>
 
       {/* Title */}
-      <h3 className="text-2xl font-bold text-white">
+      <h3
+        className="
+          flex
+          h-16
+          items-start
+          text-xl
+          font-bold
+          leading-snug
+          text-white
+        "
+      >
         {title}
       </h3>
 
       {/* Description */}
-      <p className="mt-4 flex-grow leading-7 text-slate-400">
+      <p
+        className="
+          mt-4
+          flex-1
+          leading-7
+          text-slate-400
+        "
+      >
         {description}
       </p>
     </div>

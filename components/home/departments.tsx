@@ -51,42 +51,7 @@ export default function Departments() {
           ))}
         </Stagger>
 
-        {/* Bottom CTA */}
-        <Reveal delay={300}>
-          <div className="mt-20 rounded-3xl border border-white/10 bg-white/5 p-10 text-center backdrop-blur-xl">
-            <h3 className="text-3xl font-bold text-white">
-              Interested in Joining a Department?
-            </h3>
-
-            <p className="mx-auto mt-4 max-w-2xl text-slate-400">
-              XMD is always looking for dedicated professionals committed to
-              providing exceptional medical care and emergency services. Join
-              a department that matches your skills and help make a difference.
-            </p>
-
-            <a
-              href="#recruitment"
-              className="
-                mt-8
-                inline-flex
-                items-center
-                rounded-xl
-                bg-red-600
-                px-8
-                py-4
-                font-semibold
-                text-white
-                transition-all
-                duration-300
-                hover:bg-red-700
-                hover:shadow-lg
-                hover:shadow-red-600/30
-              "
-            >
-              View Recruitment
-            </a>
-          </div>
-        </Reveal>
+        
       </div>
     </section>
   );

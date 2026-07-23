@@ -23,7 +23,7 @@ export const managementTeam: ManagementMember[] = [
   {
     name: "OLIVER RIVERS",
     rank: "Chief",
-    image: "/images/about/chief.png",
+    image: "/images/about/chief..png",
   },
   {
     name: "RAGHAVAN PILLAI",
@@ -33,7 +33,7 @@ export const managementTeam: ManagementMember[] = [
   {
     name: "DENVER WIX",
     rank: "Assistant Chief",
-    image: "/images/about/assistant-chief.png",
+    image: "/images/about/assistant-chief1.png",
   },
   {
     name: "MOHD.SALA",
@@ -48,6 +48,6 @@ export const managementTeam: ManagementMember[] = [
   {
     name: "SUNNY KURUVILA",
     rank: "Assistant Chief",
-    image: "/images/about/assistant-chief.png",
+    image: "/images/about/assistant-chief4.png",
   },
 ];
