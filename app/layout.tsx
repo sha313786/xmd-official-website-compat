@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://xmdofficial.com"),
@@ -110,6 +111,7 @@ export default function RootLayout({
           closeButton
           duration={3000}
         />
+        <SpeedInsights />
       </body>
     </html>
   );
