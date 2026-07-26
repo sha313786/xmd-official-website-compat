@@ -44,7 +44,7 @@ export function PromotionLeaderboard() {
       case "MANAGEMENT_REWARD":
         return (
           <Badge className="bg-blue-600 hover:bg-blue-600">
-            MANAGEMENT REWARD
+            MANAGEMENT ROLE
           </Badge>
         );
 

@@ -148,7 +148,7 @@ export default function PromotionOverviewCard({
             </p>
 
             <p className="mt-1 text-xl font-bold">
-              {dutyHours}
+              {Number(dutyHours).toFixed(2)}
               <span className="text-sm font-normal text-muted-foreground">
                 {" "}
                 / {requiredHours}

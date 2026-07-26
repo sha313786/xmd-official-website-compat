@@ -77,10 +77,10 @@ export default function MemberProfilePage() {
         />
 
         <MemberStatCard
-          label="Duty Hours"
-          value={member.dutyHours}
-        />
-
+  label="Duty Hours"
+  value={Number(member.dutyHours).toFixed(2)}
+/>
+        
         <MemberStatCard
           label="Duty Days"
           value={member.dutyDays}

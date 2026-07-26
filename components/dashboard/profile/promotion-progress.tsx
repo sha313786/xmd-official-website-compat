@@ -52,7 +52,7 @@ export default function PromotionProgress({
             </p>
 
             <p className="text-2xl font-bold">
-              {dutyHours} Hours
+              {Number(dutyHours).toFixed(2)} Hours
             </p>
           </div>
         </div>

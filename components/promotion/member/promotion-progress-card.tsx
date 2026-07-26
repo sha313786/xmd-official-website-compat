@@ -66,9 +66,9 @@ export default function PromotionProgressCard({
 
         <div className="grid gap-4 md:grid-cols-2">
           <Info
-            label="Duty Hours"
-            value={`${totalHours} / ${requiredHours}`}
-          />
+  label="Duty Hours"
+  value={`${Number(totalHours).toFixed(2)} / ${requiredHours}`}
+/>
 
           <Info
             label="Duty Days"
@@ -85,11 +85,17 @@ export default function PromotionProgressCard({
           />
 
           <Info
-            label="Promotion Type"
-            value={
-              result?.promotion_type ?? "NONE"
-            }
-          />
+  label="Promotion Type"
+  value={
+    result?.promotion_type === "MANAGEMENT_REWARD"
+      ? "Management Role"
+      : result?.promotion_type === "DOUBLE"
+      ? "Double Promotion"
+      : result?.promotion_type === "SINGLE"
+      ? "Single Promotion"
+      : "Not Eligible"
+  }
+/>
         </div>
 
         <div className="rounded-lg border border-white/10 bg-slate-800 p-4">
@@ -99,9 +105,9 @@ export default function PromotionProgressCard({
             </p>
           ) : (
             <p className="font-semibold text-yellow-400">
-              {remainingHours} more duty hour
-              {remainingHours === 1 ? "" : "s"} required
-            </p>
+  {Number(remainingHours).toFixed(2)} more duty hour
+  {remainingHours === 1 ? "" : "s"} required
+</p>
           )}
         </div>
       </CardContent>
