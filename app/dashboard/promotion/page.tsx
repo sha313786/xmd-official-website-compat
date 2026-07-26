@@ -17,7 +17,7 @@ import { ManagementRouteGuard } from "@/components/shared/management-route-guard
 import { PromotionCycleCard } from "@/components/promotion/promotion-cycle-card";
 import { PromotionLeaderboard } from "@/components/promotion/promotion-leaderboard";
 import { EligibleMembersTable } from "@/components/promotion/eligible-members-table";
-import { ManagementRewardsTable } from "@/components/promotion/management-rewards-table";
+import { ManagementRolesTable } from "@/components/promotion/management-rewards-table";
 import { PromotionRefreshButton } from "@/components/promotion/promotion-refresh-button";
 import { PromotionSummaryCard } from "@/components/promotion/promotion-summary-card";
 
@@ -88,7 +88,7 @@ export default function PromotionDashboardPage() {
           <EligibleMembersTable />
         </div>
 
-        <ManagementRewardsTable />
+        <ManagementRolesTable  />
       </div>
     </ManagementRouteGuard>
   );

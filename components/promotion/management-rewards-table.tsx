@@ -15,7 +15,7 @@ import {
   usePromotionResults,
 } from "@/hooks/promotion/use-promotion-cycles";
 
-export function ManagementRolesTable() {
+export function ManagementRolesTable () {
   const { cycle } = useActivePromotionCycle();
 
   const { results, loading } = usePromotionResults(
