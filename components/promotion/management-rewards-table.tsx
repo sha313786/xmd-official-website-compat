@@ -15,14 +15,14 @@ import {
   usePromotionResults,
 } from "@/hooks/promotion/use-promotion-cycles";
 
-export function ManagementRewardsTable() {
+export function ManagementRolesTable() {
   const { cycle } = useActivePromotionCycle();
 
   const { results, loading } = usePromotionResults(
     cycle?.id
   );
 
-  const rewards = results.filter(
+  const managementRoles = results.filter(
     (member) =>
       member.promotion_type === "MANAGEMENT_REWARD"
   );
@@ -32,20 +32,20 @@ export function ManagementRewardsTable() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <ShieldCheck className="h-5 w-5 text-blue-500" />
-          Management Rewards
+          Management Roles
         </CardTitle>
       </CardHeader>
 
       <CardContent>
         {loading ? (
           <p>Loading...</p>
-        ) : rewards.length === 0 ? (
+        ) : managementRoles.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            No management rewards.
+            No management roles.
           </p>
         ) : (
           <div className="space-y-3">
-            {rewards.map((member) => (
+            {managementRoles.map((member) => (
               <div
                 key={member.id}
                 className="flex items-center justify-between rounded-lg border p-4"
@@ -57,7 +57,7 @@ export function ManagementRewardsTable() {
 
                   <div className="mt-2">
                     <Badge className="bg-blue-600 hover:bg-blue-600">
-                      MANAGEMENT REWARD
+                      MANAGEMENT ROLE
                     </Badge>
                   </div>
                 </div>

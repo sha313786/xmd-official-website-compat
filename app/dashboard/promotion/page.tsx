@@ -74,7 +74,7 @@ export default function PromotionDashboardPage() {
           />
 
           <PromotionSummaryCard
-            title="Management Rewards"
+            title="Management Roles"
             value="--"
             icon={ShieldCheck}
             color="text-red-500"

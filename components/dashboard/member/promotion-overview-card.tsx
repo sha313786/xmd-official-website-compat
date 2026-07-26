@@ -63,7 +63,7 @@ export default function PromotionOverviewCard({
       case "SINGLE":
         return "Single Promotion";
       case "MANAGEMENT_REWARD":
-        return "Management Reward";
+        return "Management Role";
       default:
         return "Not Eligible";
     }
