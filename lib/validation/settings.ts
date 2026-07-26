@@ -63,6 +63,8 @@ dutyLogsChannelId: z.string(),
 export type DiscordSettingsForm = z.infer<
   typeof discordSettingsSchema
 >;
+
+
 export const websiteSettingsSchema = z.object({
   heroTitle: z
     .string()
@@ -77,13 +79,40 @@ export const websiteSettingsSchema = z.object({
     .min(2, "Footer text is required"),
 
   contactEmail: z
-    .email("Invalid email address"),
+    .string()
+    .trim()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+      {
+        message: "Invalid email address",
+      }
+    ),
 
   discordInvite: z
-    .url("Invalid Discord invite URL"),
+    .string()
+    .trim()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^https?:\/\/(www\.)?(discord\.gg|discord\.com\/invite)\/.+$/i.test(value),
+      {
+        message: "Invalid Discord invite URL",
+      }
+    ),
 
   youtubeUrl: z
-    .url("Invalid YouTube URL"),
+    .string()
+    .trim()
+    .refine(
+      (value) =>
+        value === "" ||
+        /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/.+$/i.test(value),
+      {
+        message: "Invalid YouTube URL",
+      }
+    ),
 });
 
 export type WebsiteSettingsForm = z.infer<
