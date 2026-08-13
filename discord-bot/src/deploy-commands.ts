@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { pathToFileURL } from "url";
 
 import { REST, Routes } from "discord.js";
 
@@ -32,11 +33,16 @@ async function loadCommands(folder: string): Promise<void> {
       continue;
     }
 
-    const { default: command } = await import(fullPath);
+    const moduleUrl = pathToFileURL(fullPath).href;
+
+    const { default: command } = await import(moduleUrl);
 
     if (command?.data) {
       commands.push(command.data.toJSON());
-      Logger.info(`Found command: ${command.data.name}`);
+
+      Logger.info(
+        `Found command: ${command.data.name}`
+      );
     }
   }
 }
@@ -66,5 +72,6 @@ const rest = new REST({ version: "10" }).setToken(
     Logger.success("Slash commands registered.");
   } catch (error) {
     console.error(error);
+    process.exitCode = 1;
   }
 })();

@@ -1,5 +1,11 @@
-import { Events, Message } from "discord.js";
+import {
+  Events,
+  Message,
+} from "discord.js";
+
 import { NicknameConfig } from "../config/nickname";
+import { PrefixConfig } from "../config/prefix";
+import { handlePrefixCommand } from "../handlers/prefix-command-handler";
 
 export default {
   name: Events.MessageCreate,
@@ -8,8 +14,34 @@ export default {
     // Ignore bots
     if (message.author.bot) return;
 
+    // =========================
+    // PREFIX COMMANDS
+    // =========================
+
+    if (
+      message.content
+        .trim()
+        .startsWith(PrefixConfig.PREFIX)
+    ) {
+      await handlePrefixCommand(
+        message.client,
+        message
+      );
+
+      return;
+    }
+
+    // =========================
+    // NICKNAME SYSTEM
+    // =========================
+
     // Only nickname channel
-    if (message.channel.id !== NicknameConfig.CHANNEL_ID) return;
+    if (
+      message.channel.id !==
+      NicknameConfig.CHANNEL_ID
+    ) {
+      return;
+    }
 
     // Normalize
     const rpName = message.content
@@ -21,7 +53,9 @@ export default {
     if (!rpName) return;
 
     // Validate
-    if (!NicknameConfig.NAME_REGEX.test(rpName)) {
+    if (
+      !NicknameConfig.NAME_REGEX.test(rpName)
+    ) {
       await message.reply(
         "❌ Invalid RP Name.\nOnly letters and spaces are allowed."
       );

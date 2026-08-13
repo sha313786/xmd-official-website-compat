@@ -8,28 +8,24 @@ export const managementTeam: ManagementMember[] = [
   {
     name: "BEEMA APPAPPAN",
     rank: "Director",
-    image: "/images/about/director1.png",
-  },
-  {
-    name: "CAPTAIN VARGHESE MAPPILA",
-    rank: "Director",
-    image: "/images/about/director2.png",
+    image: "/images/about/appappan.png",
   },
   {
     name: "GAYATHRI GAYU",
     rank: "Director",
-    image: "/images/about/director3.png",
+    image: "/images/about/gayathri.png",
+  },
+   {
+    name: "RAGHAVAN PILLAI",
+    rank: "Director",
+    image: "/images/about/raghavan_pilla.png",
   },
   {
     name: "OLIVER RIVERS",
     rank: "Chief",
     image: "/images/about/oliver.png",
   },
-  {
-    name: "RAGHAVAN PILLAI",
-    rank: "Chief",
-    image: "/images/about/raghavan_pilla.png",
-  },
+
   {
     name: "DENVER WIX",
     rank: "Assistant Chief",
@@ -38,16 +34,16 @@ export const managementTeam: ManagementMember[] = [
   {
     name: "MOHD.SALA",
     rank: "Assistant Chief",
-    image: "/images/about/assistant-chief.png",
+    image: "/images/about/sala.png",
   },
   {
     name: "BASIL JOHN",
     rank: "Assistant Chief",
-    image: "/images/about/assistant-chief.png",
+    image: "/images/about/basil.png",
   },
   {
     name: "SUNNY KURUVILA",
     rank: "Assistant Chief",
-    image: "/images/about/assistant-chief4.png",
+    image: "/images/about/sunny.png",
   },
 ];

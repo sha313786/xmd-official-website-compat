@@ -1,7 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
+import { FileSpreadsheet } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { AddMemberDialog } from "@/components/members/add-member-dialog";
 import { MemberCard } from "@/components/members/member-card";
 import { MemberDepartmentFilter } from "@/components/members/member-department-filter";
@@ -15,10 +18,11 @@ import { useMembers } from "@/hooks/use-members";
 
 export default function MembersPage() {
   const {
-  members,
-  loading,
-  refresh,
-} = useMembers();
+    members,
+    loading,
+    refresh,
+  } = useMembers();
+
   const [search, setSearch] = useState("");
   const [rank, setRank] = useState("All");
   const [department, setDepartment] = useState("All");
@@ -27,22 +31,29 @@ export default function MembersPage() {
   const canManageMembers = true;
 
   const filteredMembers = useMemo(() => {
-    const query = search.toLowerCase().trim();
+    const query = search
+      .toLowerCase()
+      .trim();
 
     return members.filter((member) => {
       const matchesSearch =
-  !query ||
-  (member.fullName ?? "")
-    .toLowerCase()
-    .includes(query) ||
-  member.rank.toLowerCase().includes(query) ||
-  member.department.toLowerCase().includes(query) ||
-  (member.badgeNumber ?? "")
-    .toLowerCase()
-    .includes(query);
+        !query ||
+        (member.fullName ?? "")
+          .toLowerCase()
+          .includes(query) ||
+        member.rank
+          .toLowerCase()
+          .includes(query) ||
+        member.department
+          .toLowerCase()
+          .includes(query) ||
+        (member.badgeNumber ?? "")
+          .toLowerCase()
+          .includes(query);
 
       const matchesRank =
-        rank === "All" || member.rank === rank;
+        rank === "All" ||
+        member.rank === rank;
 
       const matchesDepartment =
         department === "All" ||
@@ -54,7 +65,12 @@ export default function MembersPage() {
         matchesDepartment
       );
     });
-  }, [members, search, rank, department]);
+  }, [
+    members,
+    search,
+    rank,
+    department,
+  ]);
 
   if (loading) {
     return (
@@ -69,9 +85,21 @@ export default function MembersPage() {
         description="Browse all registered XMD members."
         action={
           <PermissionGuard allowed={canManageMembers}>
-            <AddMemberDialog
-              onSuccess={refresh}
-            />
+            <div className="flex items-center gap-2">
+              <Button
+                asChild
+                variant="outline"
+              >
+                <Link href="/dashboard/members/import">
+                  <FileSpreadsheet className="mr-2 h-4 w-4" />
+                  Import Existing Members
+                </Link>
+              </Button>
+
+              <AddMemberDialog
+                onSuccess={refresh}
+              />
+            </div>
           </PermissionGuard>
         }
       />
