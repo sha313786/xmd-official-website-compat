@@ -4,46 +4,60 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 
-export const data = new SlashCommandBuilder()
-  .setName("rename-xmd")
-  .setDescription("Change [XMD] nicknames to XMD |")
-  .setDefaultMemberPermissions(PermissionFlagsBits.ManageNicknames);
+import { CommandController } from "../../core/command/command.controller";
 
-export async function execute(interaction: ChatInputCommandInteraction) {
-  if (!interaction.guild) {
-    return interaction.reply({
-      content: "❌ This command can only be used inside a server.",
-      ephemeral: true,
-    });
-  }
+class RenameXMDCommand extends CommandController {
+  public readonly data = new SlashCommandBuilder()
+    .setName("rename-xmd")
+    .setDescription("Change [XMD] nicknames to XMD |")
+    .setDefaultMemberPermissions(
+      PermissionFlagsBits.ManageNicknames
+    );
 
-  await interaction.deferReply({ ephemeral: true });
-
-  await interaction.guild.members.fetch();
-
-  let changed = 0;
-  let skipped = 0;
-
-  for (const member of interaction.guild.members.cache.values()) {
-    const nickname = member.nickname;
-
-    if (!nickname || !nickname.startsWith("[XMD]")) {
-      continue;
+  protected async run(
+    interaction: ChatInputCommandInteraction
+  ): Promise<void> {
+    if (!interaction.guild) {
+      await this.failure(
+        interaction,
+        "❌ This command can only be used inside a server."
+      );
+      return;
     }
 
-    const newNickname = `XMD |${nickname.slice(5)}`.trim();
+    await interaction.guild.members.fetch();
 
-    try {
-      await member.setNickname(newNickname);
-      changed++;
-    } catch {
-      skipped++;
+    let changed = 0;
+    let skipped = 0;
+
+    for (const member of interaction.guild.members.cache.values()) {
+      const nickname = member.nickname;
+
+      if (!nickname || !nickname.startsWith("[XMD]")) {
+        continue;
+      }
+
+      const name = nickname.slice("[XMD]".length).trim();
+      const newNickname = `XMD | ${name}`;
+
+      try {
+        await member.setNickname(newNickname);
+        changed++;
+      } catch (error) {
+        skipped++;
+      }
     }
-  }
 
-  await interaction.editReply(
-    `✅ **XMD Nickname Migration Complete**\n\n` +
-    `Changed: **${changed}**\n` +
-    `Skipped: **${skipped}**`
-  );
+    await this.success(
+      interaction,
+      [
+        "✅ **XMD Nickname Migration Complete**",
+        "",
+        `Changed: **${changed}**`,
+        `Skipped: **${skipped}**`,
+      ].join("\n")
+    );
+  }
 }
+
+export default new RenameXMDCommand();
