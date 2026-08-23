@@ -2,7 +2,6 @@ import {
   Client,
   EmbedBuilder,
   Guild,
-  GuildMember,
   TextChannel,
 } from "discord.js";
 
@@ -12,14 +11,6 @@ class XMDHierarchyService {
   private updating = false;
   private updateTimer: NodeJS.Timeout | null = null;
 
-  /**
-   * Initialize the hierarchy system.
-   *
-   * If the automatic hierarchy message already exists,
-   * it will be reused.
-   *
-   * Otherwise, a new message will be created.
-   */
   async initialize(client: Client<true>): Promise<void> {
     const channel = await client.channels.fetch(
       XMDHierarchyConfig.CHANNEL_ID
@@ -31,21 +22,13 @@ class XMDHierarchyService {
       );
     }
 
-    const textChannel = channel as TextChannel;
-
-    await this.update(textChannel);
+    await this.update(channel as TextChannel);
 
     console.log(
       "[XMD HIERARCHY] Initialization completed."
     );
   }
 
-  /**
-   * Schedule a hierarchy refresh.
-   *
-   * Multiple role changes happening quickly will result
-   * in one refresh instead of many Discord API requests.
-   */
   scheduleUpdate(guild: Guild): void {
     if (this.updateTimer) {
       clearTimeout(this.updateTimer);
@@ -77,32 +60,6 @@ class XMDHierarchyService {
     }, 1000);
   }
 
-  /**
-   * Find the existing automatic hierarchy message.
-   */
-  private async findHierarchyMessage(
-    channel: TextChannel
-  ) {
-    const messages = await channel.messages.fetch({
-      limit: 100,
-    });
-
-    return messages.find((message) => {
-      if (message.author.id !== channel.client.user?.id) {
-        return false;
-      }
-
-      return message.embeds.some(
-        (embed) =>
-          embed.footer?.text ===
-          XMDHierarchyConfig.FOOTER_IDENTIFIER
-      );
-    });
-  }
-
-  /**
-   * Create or update the hierarchy message.
-   */
   private async update(
     channel: TextChannel
   ): Promise<void> {
@@ -119,36 +76,28 @@ class XMDHierarchyService {
 
       const embed = this.buildEmbed(guild);
 
-      const existingMessage =
-        await this.findHierarchyMessage(channel);
+      // Existing hierarchy message
+      const message = await channel.messages.fetch(
+        "1525429097423966408"
+      );
 
-      if (existingMessage) {
-        await existingMessage.edit({
-          embeds: [embed],
-        });
-
-        console.log(
-          `[XMD HIERARCHY] Updated message ${existingMessage.id}`
-        );
-
-        return;
-      }
-
-      const newMessage = await channel.send({
+      await message.edit({
         embeds: [embed],
       });
 
       console.log(
-        `[XMD HIERARCHY] Created message ${newMessage.id}`
+        `[XMD HIERARCHY] Updated message ${message.id}`
+      );
+    } catch (error) {
+      console.error(
+        "[XMD HIERARCHY] Update failed:",
+        error
       );
     } finally {
       this.updating = false;
     }
   }
 
-  /**
-   * Build the hierarchy embed.
-   */
   private buildEmbed(guild: Guild) {
     const embed = new EmbedBuilder()
       .setTitle("📋 XMD Organizational Hierarchy")
@@ -178,7 +127,7 @@ class XMDHierarchyService {
         : "> *No members*";
 
       embed.addFields({
-        name: `${role.name}`,
+        name: role.name,
         value: memberList,
         inline: false,
       });
