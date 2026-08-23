@@ -7,8 +7,6 @@ import type {
   RecruitmentStatus,
 } from "@/types/recruitment";
 
-const supabase = createClient();
-
 export interface RecruitmentStatistics {
   total: number;
   pending: number;
@@ -24,6 +22,7 @@ export interface ReviewApplicationRequest {
 
 class ApplicationService {
   async getApplications(): Promise<RecruitmentApplication[]> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("recruitment_applications")
       .select("*")
@@ -39,6 +38,7 @@ class ApplicationService {
   async getApplication(
     id: string
   ): Promise<RecruitmentApplication | null> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("recruitment_applications")
       .select("*")
@@ -53,6 +53,7 @@ class ApplicationService {
   async createApplication(
     application: RecruitmentApplicationInsert
   ): Promise<RecruitmentApplication> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("recruitment_applications")
       .insert(application)
@@ -68,6 +69,7 @@ class ApplicationService {
     id: string,
     updates: RecruitmentApplicationUpdate
   ): Promise<RecruitmentApplication> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("recruitment_applications")
       .update({
@@ -86,6 +88,7 @@ class ApplicationService {
   async deleteApplication(
     id: string
   ): Promise<void> {
+    const supabase = createClient();
     const { error } = await supabase
       .from("recruitment_applications")
       .delete()
@@ -98,6 +101,7 @@ class ApplicationService {
     id: string,
     review: ReviewApplicationRequest
   ): Promise<RecruitmentApplication> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("recruitment_applications")
       .update({
@@ -119,6 +123,7 @@ class ApplicationService {
     id: string,
     status: RecruitmentStatus
   ): Promise<RecruitmentApplication> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("recruitment_applications")
       .update({
@@ -158,6 +163,7 @@ class ApplicationService {
   async getApplicationsByStatus(
     status: RecruitmentStatus
   ): Promise<RecruitmentApplication[]> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("recruitment_applications")
       .select("*")

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { FileSpreadsheet } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { AddMemberDialog } from "@/components/members/add-member-dialog";
 import { MemberCard } from "@/components/members/member-card";
 import { MemberDepartmentFilter } from "@/components/members/member-department-filter";
@@ -86,15 +86,13 @@ export default function MembersPage() {
         action={
           <PermissionGuard allowed={canManageMembers}>
             <div className="flex items-center gap-2">
-              <Button
-                asChild
-                variant="outline"
+              <Link
+                href="/dashboard/members/import"
+                className={buttonVariants({ variant: "outline" })}
               >
-                <Link href="/dashboard/members/import">
-                  <FileSpreadsheet className="mr-2 h-4 w-4" />
-                  Import Existing Members
-                </Link>
-              </Button>
+                <FileSpreadsheet className="mr-2 h-4 w-4" />
+                Import Existing Members
+              </Link>
 
               <AddMemberDialog
                 onSuccess={refresh}
