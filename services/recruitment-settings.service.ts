@@ -1,7 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
 
-const supabase = createClient();
-
 export interface RecruitmentSettings {
   id: string;
   is_open: boolean;
@@ -18,6 +16,7 @@ export interface RecruitmentSettings {
 
 class RecruitmentSettingsService {
   async getSettings(): Promise<RecruitmentSettings | null> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("recruitment_settings")
       .select("*")
@@ -30,6 +29,7 @@ class RecruitmentSettingsService {
   async updateSettings(
     updates: Partial<RecruitmentSettings>
   ): Promise<RecruitmentSettings> {
+    const supabase = createClient();
     const settings = await this.getSettings();
 
     if (!settings) {

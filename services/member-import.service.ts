@@ -4,9 +4,7 @@ import type {
   ImportValidationError,
 } from "@/types/member-import";
 
-import type { MemberInsert } from "@/types/member";
-
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 
 import {
   validateImportMembers,
@@ -14,6 +12,7 @@ import {
 
 import {
   convertGoogleMembersToMemberInsert,
+  type MemberInsert,
 } from "@/utils/import-converter";
 
 import {
@@ -48,6 +47,7 @@ export class MemberImportService {
    * automatic badge generation.
    */
   private async getExistingMembers(): Promise<ExistingMemberLookup> {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("members")
       .select(
@@ -252,6 +252,7 @@ export class MemberImportService {
     }
 
     const insertedMembers: MemberInsert[] = [];
+    const supabase = createClient();
 
     for (
       let index = 0;
