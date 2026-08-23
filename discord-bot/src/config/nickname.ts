@@ -16,7 +16,7 @@ export const NicknameConfig = {
   /**
    * Nickname prefix.
    */
-  PREFIX: "[XMD]",
+  PREFIX: "XMD |",
 
   MIN_LENGTH: 3,
 
