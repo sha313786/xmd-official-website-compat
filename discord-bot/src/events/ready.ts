@@ -2,6 +2,7 @@ import { Client, Events } from "discord.js";
 
 import { Logger } from "../config/logger";
 import { dutyPanelService } from "../services/duty-panel.service";
+import { xmdHierarchyService } from "../services/xmd-hierarchy.service";
 
 export default {
   name: Events.ClientReady,
@@ -13,6 +14,10 @@ export default {
     );
 
     try {
+      // =========================
+      // DUTY PANEL
+      // =========================
+
       Logger.info("Restoring duty panel...");
 
       await dutyPanelService.initialize(client);
@@ -20,9 +25,21 @@ export default {
       Logger.success(
         "Duty panel initialization completed."
       );
+
+      // =========================
+      // XMD HIERARCHY
+      // =========================
+
+      Logger.info("Initializing XMD hierarchy...");
+
+      await xmdHierarchyService.initialize(client);
+
+      Logger.success(
+        "XMD hierarchy initialization completed."
+      );
     } catch (error) {
       Logger.error(
-        "Failed to initialize duty panel.",
+        "Failed to initialize bot services.",
         error
       );
     }
