@@ -127,17 +127,15 @@ export async function handlePrefixCommand(
       message,
       args
     );
-  } catch (error) {
+    } catch (error) {
     Logger.error(
       `Prefix command failed: ${commandName}`
     );
 
     console.error(error);
 
-    if (!message.replied) {
-      await message.reply(
-        "❌ An error occurred while executing this command."
-      );
-    }
+    await message.reply(
+      "❌ An error occurred while executing this command."
+    );
   }
 }

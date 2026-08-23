@@ -1,6 +1,7 @@
 import {
   Client,
   Message,
+  TextChannel,
 } from "discord.js";
 
 import { PrefixCommand } from "../../types/prefix-command";
@@ -25,7 +26,11 @@ const command: PrefixCommand = {
 
     const content = args.join(" ");
 
-    await message.channel.send({
+    if (!message.channel.isTextBased()) {
+      return;
+    }
+
+    await (message.channel as TextChannel).send({
       content,
       allowedMentions: {
         parse: [],
