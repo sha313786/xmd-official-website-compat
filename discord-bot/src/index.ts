@@ -1,4 +1,5 @@
 import { Events } from "discord.js";
+import express from "express"; // Import Express
 
 import { client } from "./client";
 
@@ -10,6 +11,19 @@ import { registerEvents } from "./handlers/event-handler";
 
 import { HealthService } from "./services/health.service";
 import { StatusDashboardService } from "./services/status-dashboard.service";
+
+// --- Setup Express for Render Port Binding ---
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get("/", (req, res) => {
+  res.status(200).send("Discord bot is active and running!");
+});
+
+app.listen(Number(PORT), "0.0.0.0", () => {
+  Logger.info(`[HTTP] Server is listening on port ${PORT}`);
+});
+// ---------------------------------------------
 
 async function bootstrap() {
   await registerCommands(client);
