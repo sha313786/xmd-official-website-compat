@@ -10,6 +10,7 @@ import { XMDHierarchyConfig } from "../config/xmd-hierarchy";
 class XMDHierarchyService {
   private updating = false;
   private updateTimer: NodeJS.Timeout | null = null;
+  private hierarchyMessageId: string | null = null;
 
   async initialize(client: Client<true>): Promise<void> {
     const channel = await client.channels.fetch(
@@ -22,10 +23,12 @@ class XMDHierarchyService {
       );
     }
 
-    await this.update(channel as TextChannel);
+    await this.createHierarchyMessage(
+      channel as TextChannel
+    );
 
     console.log(
-      "[XMD HIERARCHY] Initialization completed."
+      `[XMD HIERARCHY] Initialization completed. Message: ${this.hierarchyMessageId}`
     );
   }
 
@@ -46,18 +49,39 @@ class XMDHierarchyService {
           console.error(
             "[XMD HIERARCHY] Channel not found."
           );
-
           return;
         }
 
-        await this.update(channel as TextChannel);
+        await this.update(
+          channel as TextChannel
+        );
       } catch (error) {
         console.error(
-          "[XMD HIERARCHY] Failed to update hierarchy:",
+          "[XMD HIERARCHY] Failed to update:",
           error
         );
       }
     }, 1000);
+  }
+
+  private async createHierarchyMessage(
+    channel: TextChannel
+  ): Promise<void> {
+    const guild = channel.guild;
+
+    await guild.members.fetch();
+
+    const embed = this.buildEmbed(guild);
+
+    const message = await channel.send({
+      embeds: [embed],
+    });
+
+    this.hierarchyMessageId = message.id;
+
+    console.log(
+      `[XMD HIERARCHY] Created new message: ${message.id}`
+    );
   }
 
   private async update(
@@ -76,23 +100,30 @@ class XMDHierarchyService {
 
       const embed = this.buildEmbed(guild);
 
-      // Existing hierarchy message
-      const message = await channel.messages.fetch(
-        "1525429097423966408"
-      );
+      if (!this.hierarchyMessageId) {
+        await this.createHierarchyMessage(channel);
+        return;
+      }
 
-      await message.edit({
-        embeds: [embed],
-      });
+      try {
+        const message = await channel.messages.fetch(
+          this.hierarchyMessageId
+        );
 
-      console.log(
-        `[XMD HIERARCHY] Updated message ${message.id}`
-      );
-    } catch (error) {
-      console.error(
-        "[XMD HIERARCHY] Update failed:",
-        error
-      );
+        await message.edit({
+          embeds: [embed],
+        });
+
+        console.log(
+          `[XMD HIERARCHY] Updated message: ${message.id}`
+        );
+      } catch {
+        console.log(
+          "[XMD HIERARCHY] Message no longer exists. Creating a new one..."
+        );
+
+        await this.createHierarchyMessage(channel);
+      }
     } finally {
       this.updating = false;
     }
@@ -119,10 +150,7 @@ class XMDHierarchyService {
 
       const memberList = members.size
         ? members
-            .map(
-              (member) =>
-                `> ${member}`
-            )
+            .map((member) => `> ${member}`)
             .join("\n")
         : "> *No members*";
 
