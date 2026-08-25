@@ -21,12 +21,6 @@ export const managementTeam: ManagementMember[] = [
     image: "/images/about/raghavan_pilla.png",
   },
   {
-    name: "OLIVER RIVERS",
-    rank: "Chief",
-    image: "/images/about/oliver.png",
-  },
-
-  {
     name: "DENVER WIX",
     rank: "Assistant Chief",
     image: "/images/about/denver.png",
