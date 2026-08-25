@@ -86,15 +86,12 @@ export default function MembersPage() {
         action={
           <PermissionGuard allowed={canManageMembers}>
             <div className="flex items-center gap-2">
-              <Button
-                asChild
-                variant="outline"
-              >
-                <Link href="/dashboard/members/import">
-                  <FileSpreadsheet className="mr-2 h-4 w-4" />
-                  Import Existing Members
-                </Link>
-              </Button>
+              <Link href="/dashboard/members/import">
+  <Button variant="outline">
+    <FileSpreadsheet className="mr-2 h-4 w-4" />
+    Import Existing Members
+  </Button>
+</Link>
 
               <AddMemberDialog
                 onSuccess={refresh}
