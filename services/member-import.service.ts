@@ -4,7 +4,7 @@ import type {
   ImportValidationError,
 } from "@/types/member-import";
 
-import type { MemberInsert } from "@/types/member";
+import type { MemberInsert } from "@/utils/import-converter";
 
 import { supabase } from "@/lib/supabase";
 

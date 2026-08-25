@@ -51,3 +51,9 @@ export interface Member {
   createdAt?: string;
   updatedAt?: string;
 }
+
+/**
+ * Data structure used when inserting a new member.
+ *
+ * This intentionally excludes the database-generated ID.
+ */
