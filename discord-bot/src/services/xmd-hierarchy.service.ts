@@ -23,13 +23,6 @@ class XMDHierarchyService {
       );
     }
 
-    /*
-     * Do NOT call guild.members.fetch() here.
-     *
-     * The bot already has its guild member cache populated.
-     * Fetching the entire guild causes Discord Gateway opcode 8
-     * requests and can trigger rate limits.
-     */
     await this.createHierarchyMessage(
       channel as TextChannel
     );
@@ -76,10 +69,8 @@ class XMDHierarchyService {
   ): Promise<void> {
     const guild = channel.guild;
 
-    /*
-     * Use the existing member cache.
-     * Do not fetch all guild members.
-     */
+    await guild.members.fetch();
+
     const embed = this.buildEmbed(guild);
 
     const message = await channel.send({
@@ -105,10 +96,8 @@ class XMDHierarchyService {
     try {
       const guild = channel.guild;
 
-      /*
-       * Use cached members instead of guild.members.fetch().
-       * This prevents Gateway opcode 8 rate limits.
-       */
+      await guild.members.fetch();
+
       const embed = this.buildEmbed(guild);
 
       if (!this.hierarchyMessageId) {
