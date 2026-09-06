@@ -201,7 +201,7 @@ export default function Footer() {
               <p>
                 Powered by{" "}
                 <span className="font-medium text-red-500">
-                  XMD Official Team
+                  XMD Official
                 </span>
               </p>
 
