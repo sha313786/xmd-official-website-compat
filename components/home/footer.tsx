@@ -5,12 +5,24 @@ import Image from "next/image";
 import {
   MapPin,
   HeartPulse,
-  MessageCircle,
   Youtube,
   Instagram,
 } from "lucide-react";
 
 const DISCORD_URL = "https://discord.gg/wD6Tqqg6pc";
+
+function DiscordIcon({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M19.54 5.32A16.92 16.92 0 0 0 15.4 4l-.51 1.04a15.6 15.6 0 0 0-5.78 0L8.6 4a16.98 16.98 0 0 0-4.14 1.33C1.83 9.56 1.12 13.7 1.47 17.79a16.96 16.96 0 0 0 5.1 2.6l1.24-1.7c-.68-.25-1.33-.56-1.94-.92l.48-.37c3.74 1.74 7.79 1.74 11.49 0 .16.13.32.25.48.37-.62.36-1.27.67-1.95.92l1.24 1.7a16.93 16.93 0 0 0 5.1-2.6c.42-4.74-.72-8.84-3.17-12.47ZM8.67 15.08c-1.12 0-2.04-1.03-2.04-2.29s.9-2.29 2.04-2.29c1.14 0 2.06 1.03 2.04 2.29 0 1.26-.9 2.29-2.04 2.29Zm6.66 0c-1.12 0-2.04-1.03-2.04-2.29s.9-2.29 2.04-2.29c1.14 0 2.06 1.03 2.04 2.29 0 1.26-.9 2.29-2.04 2.29Z" />
+    </svg>
+  );
+}
 
 export default function Footer() {
   return (
@@ -121,14 +133,14 @@ export default function Footer() {
                 Emergency Services 24/7
               </div>
 
-              {/* Discord */}
+              {/* Discord Contact */}
               <a
                 href={DISCORD_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 transition-colors hover:text-red-400"
+                className="flex items-center gap-3 text-gray-400 transition-colors hover:text-red-400"
               >
-                <MessageCircle className="h-4 w-4 text-red-500" />
+                <DiscordIcon className="h-4 w-4 text-red-500" />
                 Join our Discord
               </a>
 
@@ -149,9 +161,10 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Join XMD Discord"
+                title="Join XMD Discord"
                 className="rounded-lg border border-white/10 p-3 transition-all hover:border-red-500 hover:bg-red-500/10"
               >
-                <MessageCircle className="h-5 w-5 text-white" />
+                <DiscordIcon className="h-5 w-5 text-white" />
               </a>
 
               {/* YouTube */}
