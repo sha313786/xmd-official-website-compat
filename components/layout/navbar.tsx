@@ -105,6 +105,13 @@ export default function Navbar() {
   >
   Login
   </Link>
+
+  <Link
+    href="/login"
+    className="rounded-2xl bg-gradient-to-r from-[#8B0000] via-red-600 to-red-500 px-6 py-2.5 font-semibold text-white shadow-lg shadow-red-500/30 transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 hover:shadow-red-500/50"
+  >
+    Staff Login
+  </Link>
 </div>
 </div>
     </header>
