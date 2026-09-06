@@ -101,16 +101,9 @@ export default function Navbar() {
 <div className="flex items-center gap-3">
   <Link
     href="/patient/login"
-    className="rounded-2xl border border-red-500/30 px-5 py-2.5 font-semibold text-red-400 transition-all duration-300 hover:-translate-y-0.5 hover:border-red-500/60 hover:bg-red-500/10 hover:text-red-300"
-  >
-    Patient Login
-  </Link>
-
-  <Link
-    href="/login"
     className="rounded-2xl bg-gradient-to-r from-[#8B0000] via-red-600 to-red-500 px-6 py-2.5 font-semibold text-white shadow-lg shadow-red-500/30 transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 hover:shadow-red-500/50"
   >
-    Staff Login
+  Login
   </Link>
 </div>
 </div>

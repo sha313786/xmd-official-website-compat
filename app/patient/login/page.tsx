@@ -135,7 +135,7 @@ export default function PatientLoginPage() {
 
             <div className="relative z-10 max-w-sm">
               <h2 className="text-3xl font-extrabold uppercase tracking-wide text-white sm:text-4xl">
-                Hello, Patient!
+                Hello!
               </h2>
 
               <p className="mt-5 text-sm leading-6 text-indigo-100">
@@ -156,7 +156,7 @@ export default function PatientLoginPage() {
                 </p>
                 <a
                   href="/login"
-                  className="mt-2 inline-block text-sm font-semibold text-white underline decoration-red-500 decoration-2 underline-offset-4 hover:text-red-300"
+                  className="rounded-2xl bg-gradient-to-r from-[#8B0000] via-red-600 to-red-500 px-6 py-2.5 font-semibold text-white shadow-lg shadow-red-500/30 transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 hover:shadow-red-500/50"
                 >
                   Staff Login
                 </a>
