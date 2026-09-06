@@ -8,3 +8,4 @@ export * from "./application-service";
 export * from "./report.service";
 export * from "./promotion.service";
 export * from "./notification/notification.service";
+export { patientService } from "./patient.service";

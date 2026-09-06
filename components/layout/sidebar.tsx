@@ -38,6 +38,7 @@ export default function Sidebar() {
     ? [
         { name: "Dashboard", href: "/dashboard" },
         { name: "Members", href: "/dashboard/members" },
+        { name: "Patients", href: "/dashboard/patients" },
         { name: "Promotion", href: "/dashboard/promotion" },
         { name: "Recruitment", href: "/dashboard/recruitment" },
         { name: "Reports", href: "/dashboard/reports" },
