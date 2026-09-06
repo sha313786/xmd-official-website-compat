@@ -14,7 +14,9 @@ export default function PatientLoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (
+    event: FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
 
     setLoading(true);
@@ -39,11 +41,12 @@ export default function PatientLoginPage() {
     }
 
     // Verify that the authenticated account belongs to an XMD patient.
-    const { data: patient, error: patientError } = await supabase
-      .from("patients")
-      .select("id")
-      .eq("auth_user_id", data.user.id)
-      .maybeSingle();
+    const { data: patient, error: patientError } =
+      await supabase
+        .from("patients")
+        .select("id")
+        .eq("auth_user_id", data.user.id)
+        .maybeSingle();
 
     if (patientError || !patient) {
       await supabase.auth.signOut();
@@ -62,10 +65,12 @@ export default function PatientLoginPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#05052b] px-4 py-8">
-      <div className="w-full max-w-[770px] overflow-hidden rounded-xl border border-white/80 bg-[#17104b] shadow-2xl shadow-black/40">
-        <div className="grid min-h-[480px] md:grid-cols-2">
+      <div className="w-full max-w-[900px] overflow-hidden rounded-xl border border-white/80 bg-[#17104b] shadow-2xl shadow-black/40">
+        <div className="grid min-h-[520px] md:grid-cols-2">
 
-          {/* LEFT — SIGN IN */}
+          {/* =========================================
+              LEFT — PATIENT LOGIN
+          ========================================== */}
           <section className="flex flex-col justify-center bg-gradient-to-br from-[#291275] to-[#19104d] px-8 py-12 sm:px-12">
             <div className="mx-auto w-full max-w-sm text-center">
 
@@ -138,13 +143,15 @@ export default function PatientLoginPage() {
                   />
                 </div>
 
-                {/* Login */}
+                {/* Login Button */}
                 <button
                   type="submit"
                   disabled={loading}
                   className="mt-3 h-11 min-w-[145px] rounded-full bg-gradient-to-r from-[#8b0000] via-red-600 to-red-500 px-8 text-sm font-bold uppercase tracking-wide text-white shadow-lg shadow-red-600/30 transition hover:scale-[1.03] hover:shadow-red-500/50 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {loading ? "Signing in..." : "Patient Login"}
+                  {loading
+                    ? "Signing in..."
+                    : "Patient Login"}
                 </button>
               </form>
 
@@ -154,48 +161,42 @@ export default function PatientLoginPage() {
             </div>
           </section>
 
-          {/* RIGHT — WELCOME */}
-          <section className="relative flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#21158c] via-[#20168f] to-[#26168e] px-8 py-12 text-center">
+          {/* =========================================
+              RIGHT — REGISTER INVITATION
+          ========================================== */}
+          <section className="relative flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#21158c] via-[#20168f] to-[#26168e] px-8 py-12 text-center sm:px-10">
 
             {/* Decorative glow */}
             <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-indigo-400/20 blur-3xl" />
 
             <div className="relative z-10 max-w-sm">
-              <p className="mb-3 text-sm font-medium uppercase tracking-[0.25em] text-indigo-200">
+
+              <p className="mb-4 text-sm font-medium uppercase tracking-[0.25em] text-indigo-200">
                 XLANTIS MEDICAL DEPARTMENT
               </p>
 
               <h2 className="text-3xl font-extrabold uppercase tracking-wide text-white sm:text-4xl">
-                Hello, Patient!
+                HELLO,
+                <br />
+                PATIENT!
               </h2>
 
-              <p className="mt-5 text-sm leading-6 text-indigo-100">
-                Access your medical reports and
-                securely manage your XMD patient
-                information.
+              <p className="mt-6 text-sm leading-6 text-indigo-100">
+                New to XMD Patient Portal?
+                <br />
+                Create your patient account and securely
+                <br />
+                access your medical information.
               </p>
 
-              {/* Website button */}
+              {/* Register Now */}
               <Link
-                href="/"
-                className="mt-8 inline-flex h-11 items-center justify-center rounded-full border border-black/60 px-8 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-white/10"
+                href="/patient/register"
+                className="mt-9 inline-flex h-11 items-center justify-center rounded-full bg-gradient-to-r from-[#8b0000] via-red-600 to-red-500 px-9 text-sm font-bold uppercase tracking-wide text-white shadow-lg shadow-red-500/30 transition hover:-translate-y-0.5 hover:scale-105 hover:shadow-red-500/50"
               >
-                XMD Website
+                REGISTER NOW
               </Link>
 
-              {/* Staff login */}
-              <div className="mt-8 border-t border-white/10 pt-6">
-                <p className="text-xs text-indigo-200">
-                  XMD Staff?
-                </p>
-
-                <Link
-                  href="/login"
-                  className="mt-2 inline-block text-sm font-semibold text-white underline decoration-red-500 decoration-2 underline-offset-4 transition hover:text-red-300"
-                >
-                  Staff Login
-                </Link>
-              </div>
             </div>
           </section>
 
