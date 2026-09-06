@@ -10,11 +10,14 @@ import {
   Instagram,
 } from "lucide-react";
 
+const DISCORD_URL = "https://discord.gg/wD6Tqqg6pc";
+
 export default function Footer() {
   return (
     <footer className="border-t border-white/10 bg-[#050816]">
       <div className="mx-auto max-w-7xl px-6 py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
@@ -53,23 +56,50 @@ export default function Footer() {
             </h4>
 
             <ul className="space-y-3 text-sm">
-              {[
-                "Home",
-                "About",
-                "Services",
-                "Departments",
-                "Recruitment",
-                "Contact",
-              ].map((item) => (
-                <li key={item}>
-                  <Link
-                    href={`#${item.toLowerCase()}`}
-                    className="text-gray-400 transition-colors hover:text-red-500"
-                  >
-                    {item}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link
+                  href="#home"
+                  className="text-gray-400 transition-colors hover:text-red-500"
+                >
+                  Home
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/about"
+                  className="text-gray-400 transition-colors hover:text-red-500"
+                >
+                  About
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="#services"
+                  className="text-gray-400 transition-colors hover:text-red-500"
+                >
+                  Services
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="#departments"
+                  className="text-gray-400 transition-colors hover:text-red-500"
+                >
+                  Departments
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/recruitment"
+                  className="text-gray-400 transition-colors hover:text-red-500"
+                >
+                  Recruitment
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -80,6 +110,7 @@ export default function Footer() {
             </h4>
 
             <div className="space-y-4 text-sm text-gray-400">
+
               <div className="flex items-center gap-3">
                 <MapPin className="h-4 w-4 text-red-500" />
                 XLANTIS City
@@ -90,10 +121,17 @@ export default function Footer() {
                 Emergency Services 24/7
               </div>
 
-              <div className="flex items-center gap-3">
+              {/* Discord */}
+              <a
+                href={DISCORD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 transition-colors hover:text-red-400"
+              >
                 <MessageCircle className="h-4 w-4 text-red-500" />
                 Join our Discord
-              </div>
+              </a>
+
             </div>
           </div>
 
@@ -104,52 +142,65 @@ export default function Footer() {
             </h4>
 
             <div className="flex gap-4">
-              <Link
-                href="#"
+
+              {/* Discord */}
+              <a
+                href={DISCORD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Join XMD Discord"
                 className="rounded-lg border border-white/10 p-3 transition-all hover:border-red-500 hover:bg-red-500/10"
               >
                 <MessageCircle className="h-5 w-5 text-white" />
-              </Link>
+              </a>
 
-              <Link
+              {/* YouTube */}
+              <a
                 href="#"
+                aria-label="XMD YouTube"
                 className="rounded-lg border border-white/10 p-3 transition-all hover:border-red-500 hover:bg-red-500/10"
               >
                 <Youtube className="h-5 w-5 text-white" />
-              </Link>
+              </a>
 
-              <Link
+              {/* Instagram */}
+              <a
                 href="#"
+                aria-label="XMD Instagram"
                 className="rounded-lg border border-white/10 p-3 transition-all hover:border-red-500 hover:bg-red-500/10"
               >
                 <Instagram className="h-5 w-5 text-white" />
-              </Link>
+              </a>
+
             </div>
           </div>
         </div>
 
+        {/* Bottom */}
         <div className="mt-12 border-t border-white/10 pt-6">
-         <div className="flex flex-col items-center justify-between gap-4 text-sm text-gray-500 md:flex-row">
-           <p>
-             © 2026 XLANTIS Medical Department. All rights reserved.
-           </p>
+          <div className="flex flex-col items-center justify-between gap-4 text-sm text-gray-500 md:flex-row">
+
+            <p>
+              © 2026 XLANTIS Medical Department. All rights reserved.
+            </p>
 
             <div className="text-center md:text-right">
-                <p>
-                  Powered by{" "}
-                 <span className="font-medium text-red-500">
+              <p>
+                Powered by{" "}
+                <span className="font-medium text-red-500">
                   XMD Official Team
                 </span>
-                </p>
+              </p>
 
-                <p className="text-xs text-gray-500">
-              Designed &amp; Developed by{" "}
-             <span className="font-semibold text-white">
+              <p className="text-xs text-gray-500">
+                Designed &amp; Developed by{" "}
+                <span className="font-semibold text-white">
                   SRB STUDIOS
                 </span>
-            </p>
-        </div>
-    </div>
+              </p>
+            </div>
+
+          </div>
         </div>
       </div>
     </footer>

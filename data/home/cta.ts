@@ -24,7 +24,6 @@ export interface CTAStat {
   value: string;
   label: string;
 }
-
 export const ctaContent: CTAContent = {
   badge: "Join XLANTIS Medical Department",
 
@@ -40,10 +39,9 @@ export const ctaContent: CTAContent = {
 
   secondaryButton: {
     label: "Contact XMD",
-    href: "/contact",
+    href: "https://discord.gg/wD6Tqqg6pc",
   },
 };
-
 export const ctaStats: CTAStat[] = [
   {
     id: 1,
