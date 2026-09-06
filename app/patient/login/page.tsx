@@ -78,12 +78,7 @@ export default function PatientLoginPage() {
                 Sign in
               </h1>
 
-              {/* XMD Mark */}
-              <div className="mx-auto mt-6 flex h-10 w-10 items-center justify-center rounded-full border border-red-500 text-xs font-bold text-white">
-                XMD
-              </div>
-
-              <p className="mt-5 text-sm text-slate-300">
+              <p className="mt-6 text-sm text-slate-300">
                 Sign in to access your patient portal
               </p>
 
@@ -177,8 +172,6 @@ export default function PatientLoginPage() {
 
               <h2 className="text-3xl font-extrabold uppercase tracking-wide text-white sm:text-4xl">
                 HELLO,
-                <br />
-                PATIENT!
               </h2>
 
               <p className="mt-6 text-sm leading-6 text-indigo-100">
