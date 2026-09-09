@@ -39,6 +39,7 @@ export function RecruitmentApplicationForm() {
     full_name: "",
     character_name: "",
     real_age: 0,
+    discord_id: "",
 
     medical_experience: "",
     current_occupation: "",
@@ -66,6 +67,8 @@ export function RecruitmentApplicationForm() {
       setSubmitting(true);
 
       const application: RecruitmentApplicationInsert = {
+        discord_id: values.discord_id,
+
         full_name: values.full_name,
         character_name: values.character_name,
         real_age: values.real_age,

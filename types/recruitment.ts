@@ -10,6 +10,7 @@ export interface RecruitmentApplication {
   full_name: string;
   character_name: string;
   real_age: number;
+  discord_id: string;
 
   // Roleplay Information
   medical_experience: string;

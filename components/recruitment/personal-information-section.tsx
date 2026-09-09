@@ -81,7 +81,7 @@ export function PersonalInformationSection({
           control={form.control}
           name="real_age"
           render={({ field }) => (
-            <FormItem className="md:col-span-2">
+            <FormItem>
               <FormLabel>Real Age</FormLabel>
 
               <FormControl>
@@ -93,6 +93,26 @@ export function PersonalInformationSection({
                   onChange={(e) =>
                     field.onChange(Number(e.target.value))
                   }
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="discord_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Discord User ID</FormLabel>
+
+              <FormControl>
+                <Input
+                  placeholder="Enter your Discord User ID"
+                  inputMode="numeric"
+                  {...field}
                 />
               </FormControl>
 

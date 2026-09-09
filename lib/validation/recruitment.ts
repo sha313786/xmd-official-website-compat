@@ -17,6 +17,10 @@ export const recruitmentApplicationSchema = z.object({
   .min(16, "Minimum age is 16.")
   .max(100, "Invalid age."),
 
+  discord_id: z
+  .string()
+  .regex(/^\d{17,20}$/, "Please enter a valid Discord User ID."),
+
   // Roleplay Information
   medical_experience: z
     .string()
