@@ -17,9 +17,6 @@ Congratulations! Your recruitment application has been **accepted** by the **XLA
 
 Your journey with XMD is about to begin. Stay connected and follow the instructions from the **XMD Management Team** for the next steps.
 
-**Join the XMD Discord Server:**
-https://discord.gg/wD6Tqqg6pc
-
 **Keep moving forward — there’s a lot ahead, and we’re excited to see what you bring to XMD.**
 
 — **XLANTIS Medical Department (XMD)**`;
