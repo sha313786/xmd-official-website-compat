@@ -102,11 +102,14 @@ export function RecruitmentApplicationForm() {
 
       router.push("/recruitment/success");
     } catch (error) {
-      console.error(error);
-      alert("Failed to submit application.");
-    } finally {
-      setSubmitting(false);
-    }
+  console.error("APPLICATION SUBMISSION ERROR:", error);
+
+  alert(
+    error instanceof Error
+      ? error.message
+      : "Failed to submit application."
+  );
+}
   }
 
   return (
