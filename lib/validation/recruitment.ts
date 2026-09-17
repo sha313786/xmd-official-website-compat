@@ -14,7 +14,7 @@ export const recruitmentApplicationSchema = z.object({
 
   real_age: z
   .number()
-  .min(16, "Minimum age is 16.")
+  .min(18, "Minimum age is 18.")
   .max(100, "Invalid age."),
 
   discord_id: z
@@ -24,7 +24,7 @@ export const recruitmentApplicationSchema = z.object({
   // Roleplay Information
   medical_experience: z
     .string()
-    .min(10, "Please describe your medical roleplay experience.")
+    .min(1, "Please describe your medical roleplay experience.")
     .max(3000),
 
   current_occupation: z
@@ -55,27 +55,27 @@ export const recruitmentApplicationSchema = z.object({
   // Application Questions
   why_join: z
     .string()
-    .min(20, "Please explain why you want to join XMD.")
+    .min(2, "Please explain why you want to join XMD.")
     .max(3000),
 
   why_choose_you: z
     .string()
-    .min(20, "Please explain why we should choose you.")
+    .min(2, "Please explain why we should choose you.")
     .max(3000),
 
   strengths: z
     .string()
-    .min(10, "Please describe your strengths.")
+    .min(1, "Please describe your strengths.")
     .max(1500),
 
   weaknesses: z
     .string()
-    .min(10, "Please describe your weaknesses.")
+    .min(1, "Please describe your weaknesses.")
     .max(1500),
 
   patient_scenario: z
     .string()
-    .min(30, "Please answer the scenario question.")
+    .min(3, "Please answer the scenario question.")
     .max(5000),
 
   // Declaration

@@ -38,7 +38,7 @@ export function RecruitmentApplicationForm() {
   defaultValues: {
     full_name: "",
     character_name: "",
-    real_age: 0,
+    real_age: ,
     discord_id: "",
 
     medical_experience: "",
@@ -48,7 +48,7 @@ export function RecruitmentApplicationForm() {
     gang_name: "",
 
     preferred_shift: "",
-    hours_per_day: 2,
+    hours_per_day: 0,
 
     why_join: "",
     why_choose_you: "",
