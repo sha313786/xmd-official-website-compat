@@ -1,5 +1,4 @@
 import crypto from "node:crypto";
-import { User } from "discord.js";
 import { supabase } from "../config/supabase";
 import { logger } from "../utils/logger";
 
@@ -21,7 +20,7 @@ export class AuthService {
    * Create a new verification code for a Discord user.
    */
   static async createVerification(
-    user: User
+    discordId: string
   ): Promise<string> {
     const code = this.generateCode();
 
@@ -29,18 +28,10 @@ export class AuthService {
       Date.now() + EXPIRY_MINUTES * 60 * 1000
     ).toISOString();
 
-    console.log({
-    id: user.id,
-    username: user.username,
-    avatar: user.avatar,
-  });
-
     const { error } = await supabase
       .from("discord_verifications")
       .insert({
-        discord_id: user.id,
-        discord_username: user.username,
-        discord_avatar: user.avatar,
+        discord_id: discordId,
         verification_code: code,
         expires_at: expiresAt,
         verified: false,

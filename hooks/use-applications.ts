@@ -1,10 +1,7 @@
-"use client";
-
 import { useCallback, useEffect, useState } from "react";
-
 import { applicationService } from "@/services/recruitment/application-service";
-
-import {
+import type {
+  InterviewStatus,
   RecruitmentApplication,
   RecruitmentApplicationInsert,
   RecruitmentApplicationUpdate,
@@ -12,44 +9,30 @@ import {
 } from "@/types/recruitment";
 
 export function useApplications() {
-  const [applications, setApplications] = useState<
-    RecruitmentApplication[]
-  >([]);
-
+  const [applications, setApplications] = useState<RecruitmentApplication[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
 
-  const [error, setError] = useState<string | null>(null);
-
-  const loadApplications = useCallback(async () => {
+  const refresh = useCallback(async () => {
     try {
-      setError(null);
-
+      setLoading(true);
       const data = await applicationService.getAll();
-
       setApplications(data);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to load applications.");
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-  const id = requestAnimationFrame(() => {
-    void loadApplications();
-  });
-
-  return () => cancelAnimationFrame(id);
-}, [loadApplications]);
+    void refresh();
+  }, [refresh]);
 
   const createApplication = async (
     application: RecruitmentApplicationInsert
   ) => {
     const created = await applicationService.create(application);
-
-    setApplications((prev) => [created, ...prev]);
-
+    await refresh();
     return created;
   };
 
@@ -58,68 +41,63 @@ export function useApplications() {
     updates: RecruitmentApplicationUpdate
   ) => {
     const updated = await applicationService.update(id, updates);
-
-    setApplications((prev) =>
-      prev.map((application) =>
-        application.id === id ? updated : application
-      )
-    );
-
+    await refresh();
     return updated;
   };
 
   const deleteApplication = async (id: string) => {
     await applicationService.delete(id);
-
-    setApplications((prev) =>
-      prev.filter((application) => application.id !== id)
-    );
+    await refresh();
   };
 
   const approveApplication = async (
     id: string,
-    reviewerId?: string
+    reviewedBy: string | null = null,
+    reviewNotes: string | null = null
   ) => {
     const updated = await applicationService.approve(
       id,
-      reviewerId
+      reviewedBy,
+      reviewNotes
     );
-
-    setApplications((prev) =>
-      prev.map((application) =>
-        application.id === id ? updated : application
-      )
-    );
-
+    await refresh();
     return updated;
   };
 
   const rejectApplication = async (
     id: string,
-    reviewerId?: string,
-    reviewNotes?: string
+    reviewedBy: string | null = null,
+    reviewNotes: string | null = null
   ) => {
     const updated = await applicationService.reject(
       id,
-      reviewerId,
+      reviewedBy,
       reviewNotes
     );
-
-    setApplications((prev) =>
-      prev.map((application) =>
-        application.id === id ? updated : application
-      )
-    );
-
+    await refresh();
     return updated;
+  };
+
+  const updateInterviewStatus = async (
+    id: string,
+    interviewStatus: InterviewStatus
+  ) => {
+    const updated = await applicationService.updateInterviewStatus(
+      id,
+      interviewStatus
+    );
+    await refresh();
+    return updated;
+  };
+
+  const createMemberFromApplication = async (id: string) => {
+    const memberId = await applicationService.createMemberFromApplication(id);
+    await refresh();
+    return memberId;
   };
 
   const getApplication = async (id: string) => {
     return applicationService.getById(id);
-  };
-
-  const refresh = async () => {
-    await loadApplications();
   };
 
   const getStatistics = async () => {
@@ -131,31 +109,25 @@ export function useApplications() {
   };
 
   const getRecentApplications = async (limit = 5) => {
-    return applicationService.getRecent(limit);
+    return applicationService.getRecentApplications(limit);
   };
 
-  const getApplicationsByStatus = async (
-    status: RecruitmentStatus
-  ) => {
+  const getApplicationsByStatus = async (status: RecruitmentStatus) => {
     return applicationService.getByStatus(status);
   };
 
   return {
     applications,
     loading,
-    error,
-
+    refresh,
     createApplication,
     updateApplication,
     deleteApplication,
-
     approveApplication,
     rejectApplication,
-
+    updateInterviewStatus,
+    createMemberFromApplication,
     getApplication,
-
-    refresh,
-
     getStatistics,
     getMonthlyApplications,
     getRecentApplications,

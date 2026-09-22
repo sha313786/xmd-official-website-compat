@@ -13,75 +13,112 @@ export default {
   name: Events.MessageReactionAdd,
 
   async execute(reaction: MessageReaction, user: User) {
-    if (user.bot) return;
+    console.log(
+      `[NICKNAME] Reaction received: ${reaction.emoji.name} by ${user.tag}`
+    );
 
-    if (reaction.partial) {
-      await reaction.fetch();
-    }
-
-    if (reaction.message.partial) {
-      await reaction.message.fetch();
-    }
-
-    const message = reaction.message;
-
-    // Only nickname channel
-    if (message.channel.id !== NicknameConfig.CHANNEL_ID) {
+    if (user.bot) {
+      console.log("[NICKNAME] Ignored: bot user");
       return;
     }
 
-    // Already processed
-    if (processed.has(message.id)) {
-      return;
-    }
+    try {
+      if (reaction.partial) {
+        console.log("[NICKNAME] Fetching partial reaction...");
+        await reaction.fetch();
+      }
 
-    const guild = message.guild;
+      if (reaction.message.partial) {
+        console.log("[NICKNAME] Fetching partial message...");
+        await reaction.message.fetch();
+      }
 
-    if (!guild) {
-      return;
-    }
+      const message = reaction.message;
 
-    // Staff member
-    const staff = await guild.members.fetch(user.id);
+      console.log(
+        `[NICKNAME] Message channel: ${message.channel.id}`
+      );
 
-    // Only Management
-    if (
-      !staff.roles.cache.has(
-        NicknameConfig.MANAGEMENT_ROLE_ID
-      )
-    ) {
-      return;
-    }
+      console.log(
+        `[NICKNAME] Config channel: ${NicknameConfig.CHANNEL_ID}`
+      );
 
-    // Message author can be null
-    const author = message.author;
+      if (message.channel.id !== NicknameConfig.CHANNEL_ID) {
+        console.log("[NICKNAME] Ignored: wrong channel");
+        return;
+      }
 
-    if (!author) {
-      return;
-    }
+      if (processed.has(message.id)) {
+        console.log("[NICKNAME] Ignored: already processed");
+        return;
+      }
 
-    // Target member
-    const target = await guild.members.fetch(author.id);
+      const guild = message.guild;
 
-    const content = message.content;
+      if (!guild) {
+        console.log("[NICKNAME] Ignored: no guild");
+        return;
+      }
 
-if (!content) {
-  return;
-}
+      const staff = await guild.members.fetch(user.id);
 
-const rpName = NicknameService.normalize(content);
+      console.log(
+        `[NICKNAME] Staff: ${staff.user.tag}`
+      );
 
-    const emoji = reaction.emoji.name;
+      console.log(
+        `[NICKNAME] Staff roles: ${staff.roles.cache
+          .map(role => role.id)
+          .join(", ")}`
+      );
 
-if (!emoji) {
-  return;
-}
+      console.log(
+        `[NICKNAME] Required management role: ${NicknameConfig.MANAGEMENT_ROLE_ID}`
+      );
 
-switch (emoji) {
-      case "✅": {
-        processed.add(message.id);
+      if (
+        !staff.roles.cache.has(
+          NicknameConfig.MANAGEMENT_ROLE_ID
+        )
+      ) {
+        console.log(
+          "[NICKNAME] Ignored: user does not have management role"
+        );
+        return;
+      }
 
-        try {
+      const author = message.author;
+
+      if (!author) {
+        console.log("[NICKNAME] Ignored: no message author");
+        return;
+      }
+
+      const target = await guild.members.fetch(author.id);
+
+      const content = message.content;
+
+      if (!content) {
+        console.log("[NICKNAME] Ignored: empty message");
+        return;
+      }
+
+      const rpName = NicknameService.normalize(content);
+
+      const emoji = reaction.emoji.name;
+
+      console.log(
+        `[NICKNAME] Processing emoji: ${emoji}`
+      );
+
+      if (!emoji) {
+        return;
+      }
+
+      switch (emoji) {
+        case "✅": {
+          processed.add(message.id);
+
           await NicknameService.changeNickname(
             target,
             rpName
@@ -94,35 +131,41 @@ switch (emoji) {
           );
 
           await message.reactions.removeAll();
-        } catch (error) {
-          console.error(error);
 
-          await message.reply(
-            `❌ ${
-              error instanceof Error
-                ? error.message
-                : "Unknown error"
-            }`
+          console.log(
+            `[NICKNAME] Successfully changed nickname for ${target.user.tag}`
           );
+
+          break;
         }
 
-        break;
+        case "❌": {
+          processed.add(message.id);
+
+          await message.reply(
+            `❌ ${target}, your nickname request has been rejected.`
+          );
+
+          await message.reactions.removeAll();
+
+          console.log(
+            `[NICKNAME] Nickname request rejected for ${target.user.tag}`
+          );
+
+          break;
+        }
+
+        default:
+          console.log(
+            `[NICKNAME] Ignored emoji: ${emoji}`
+          );
+          break;
       }
-
-      case "❌": {
-        processed.add(message.id);
-
-        await message.reply(
-          `❌ ${target}, your nickname request has been rejected.`
-        );
-
-        await message.reactions.removeAll();
-
-        break;
-      }
-
-      default:
-        break;
+    } catch (error) {
+      console.error(
+        "[NICKNAME] Reaction handler error:",
+        error
+      );
     }
   },
 };

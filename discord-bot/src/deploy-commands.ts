@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import { pathToFileURL } from "url";
 
 import { REST, Routes } from "discord.js";
 
@@ -11,53 +10,39 @@ const commands: object[] = [];
 
 const commandsPath = path.join(__dirname, "commands");
 
-async function loadCommands(folder: string): Promise<void> {
+function loadCommands(folder: string) {
   if (!fs.existsSync(folder)) return;
 
-  const entries = fs.readdirSync(folder, {
-    withFileTypes: true,
-  });
+  const entries = fs.readdirSync(folder, { withFileTypes: true });
 
   for (const entry of entries) {
     const fullPath = path.join(folder, entry.name);
 
     if (entry.isDirectory()) {
-      await loadCommands(fullPath);
+      loadCommands(fullPath);
       continue;
     }
 
-    if (
-      !entry.name.endsWith(".ts") &&
-      !entry.name.endsWith(".js")
-    ) {
+    if (!entry.name.endsWith(".ts") && !entry.name.endsWith(".js")) {
       continue;
     }
 
-    const moduleUrl = pathToFileURL(fullPath).href;
-
-    const { default: command } = await import(moduleUrl);
+    const command = require(fullPath).default;
 
     if (command?.data) {
       commands.push(command.data.toJSON());
-
-      Logger.info(
-        `Found command: ${command.data.name}`
-      );
+      Logger.info(`Found command: ${command.data.name}`);
     }
   }
 }
 
-const rest = new REST({ version: "10" }).setToken(
-  env.DISCORD_TOKEN
-);
+loadCommands(commandsPath);
+
+const rest = new REST({ version: "10" }).setToken(env.DISCORD_TOKEN);
 
 (async () => {
   try {
-    await loadCommands(commandsPath);
-
-    Logger.info(
-      `Registering ${commands.length} slash command(s)...`
-    );
+    Logger.info(`Registering ${commands.length} slash command(s)...`);
 
     await rest.put(
       Routes.applicationGuildCommands(
@@ -72,6 +57,5 @@ const rest = new REST({ version: "10" }).setToken(
     Logger.success("Slash commands registered.");
   } catch (error) {
     console.error(error);
-    process.exitCode = 1;
   }
 })();

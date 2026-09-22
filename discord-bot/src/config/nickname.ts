@@ -11,12 +11,12 @@ export const NicknameConfig = {
   /**
    * Management role allowed to approve/reject.
    */
-  MANAGEMENT_ROLE_ID: "1525391646936662066",
+  MANAGEMENT_ROLE_ID: "1525391222158659754",
 
   /**
    * Nickname prefix.
    */
-  PREFIX: "XMD |",
+  PREFIX: "XMD | ",
 
   MIN_LENGTH: 3,
 

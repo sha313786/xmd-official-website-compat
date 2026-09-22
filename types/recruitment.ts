@@ -3,6 +3,12 @@ export type RecruitmentStatus =
   | "approved"
   | "rejected";
 
+export type InterviewStatus =
+  | "pending"
+  | "passed"
+  | "failed"
+  | "no_show";
+
 export interface RecruitmentApplication {
   id: string;
 
@@ -38,6 +44,10 @@ export interface RecruitmentApplication {
   reviewed_by: string | null;
   review_notes: string | null;
 
+  // Interview
+  interview_status: InterviewStatus;
+  member_id: string | null;
+
   created_at: string;
   updated_at: string;
 }
@@ -48,6 +58,8 @@ export type RecruitmentApplicationInsert = Omit<
   | "status"
   | "reviewed_by"
   | "review_notes"
+  | "interview_status"
+  | "member_id"
   | "created_at"
   | "updated_at"
 >;
@@ -58,4 +70,6 @@ export type RecruitmentApplicationUpdate = Partial<
   status?: RecruitmentStatus;
   reviewed_by?: string | null;
   review_notes?: string | null;
+  interview_status?: InterviewStatus;
+  member_id?: string | null;
 };

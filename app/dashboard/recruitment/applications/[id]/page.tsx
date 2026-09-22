@@ -1,17 +1,10 @@
 "use client";
 
 import Link from "next/link";
-
 import { useParams } from "next/navigation";
-
-import {
-  ArrowLeft,
-  Check,
-  X,
-} from "lucide-react";
+import { ArrowLeft, Check, X, Clock, UserCheck, UserX } from "lucide-react";
 
 import { useApplication } from "@/hooks/use-application";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,355 +18,322 @@ import { useMember } from "@/hooks/member/use-member";
 
 export default function ApplicationDetailsPage() {
   const params = useParams();
-  const {
-  profile,
-} = useProfile();
+  const id = params.id as string;
 
+  const { profile } = useProfile();
   const {
     application,
     loading,
     approve,
     reject,
-  } = useApplication(params.id as string);
-  const {
-  member: reviewer,
-} = useMember(
-  application?.reviewed_by
-);
+    updateInterviewStatus,
+  } = useApplication(id);
+
+  const { member: reviewer } = useMember(application?.reviewed_by);
 
   if (loading) {
     return (
-      <div className="flex h-[70vh] items-center justify-center">
-        Loading application...
+      <div className="p-6">
+        <p>Loading application...</p>
       </div>
     );
   }
 
   if (!application) {
     return (
-      <div className="flex h-[70vh] items-center justify-center">
-        Application not found.
+      <div className="p-6">
+        <p>Application not found.</p>
       </div>
     );
   }
 
+  const handleApprove = async () => {
+    await approve(profile?.id ?? null);
+  };
+
+  const handleReject = async () => {
+    await reject(profile?.id ?? null);
+  };
+
+  const handleInterviewStatus = async (
+    status: "pending" | "passed" | "failed" | "no_show"
+  ) => {
+    await updateInterviewStatus(status);
+  };
+
   return (
     <div className="space-y-6 p-6">
-
-      <Link href="/dashboard/recruitment/applications">
-        <Button variant="ghost">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Applications
-        </Button>
-      </Link>
-
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <Link href="/dashboard/recruitment">
+          <Button variant="outline" size="icon">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+        </Link>
 
         <div>
-
-          <h1 className="text-3xl font-bold">
-            Application Details
-          </h1>
-
+          <h1 className="text-2xl font-bold">{application.full_name}</h1>
           <p className="text-muted-foreground">
-            Review recruitment application.
+            Recruitment application details
           </p>
-
         </div>
+      </div>
 
-        <Badge>
-          {application.status.toUpperCase()}
-        </Badge>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Personal Information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div>
+              <p className="text-sm text-muted-foreground">Full Name</p>
+              <p>{application.full_name}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Character Name</p>
+              <p>{application.character_name}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Real Age</p>
+              <p>{application.real_age}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Discord ID</p>
+              <p>{application.discord_id}</p>
+            </div>
+          </CardContent>
+        </Card>
 
+        <Card>
+          <CardHeader>
+            <CardTitle>Roleplay Information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Medical Experience
+              </p>
+              <p>{application.medical_experience}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Current Occupation
+              </p>
+              <p>{application.current_occupation || "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Gang Member</p>
+              <p>
+                {application.gang_member
+                  ? application.gang_name || "Yes"
+                  : "No"}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Availability</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div>
+              <p className="text-sm text-muted-foreground">Preferred Shift</p>
+              <p>{application.preferred_shift}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Hours Per Day</p>
+              <p>{application.hours_per_day}</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Questions</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <p className="text-sm font-medium">Why Join?</p>
+              <p className="text-sm text-muted-foreground">
+                {application.why_join}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-medium">Why Choose You?</p>
+              <p className="text-sm text-muted-foreground">
+                {application.why_choose_you}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-medium">Strengths</p>
+              <p className="text-sm text-muted-foreground">
+                {application.strengths}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-medium">Weaknesses</p>
+              <p className="text-sm text-muted-foreground">
+                {application.weaknesses}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-medium">Patient Scenario</p>
+              <p className="text-sm text-muted-foreground">
+                {application.patient_scenario}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
-
         <CardHeader>
-
-          <CardTitle>
-            Personal Information
-          </CardTitle>
-
+          <CardTitle>Declaration</CardTitle>
         </CardHeader>
-
-        <CardContent className="grid gap-4 md:grid-cols-2">
-
-          <Info
-            title="Full Name"
-            value={application.full_name}
-          />
-
-          <Info
-            title="Character Name"
-            value={application.character_name}
-          />
-
-          <Info
-            title="Age"
-            value={application.real_age}
-          />
-
-        </CardContent>
-
-      </Card>
-
-      <Card>
-
-        <CardHeader>
-
-          <CardTitle>
-            Roleplay Information
-          </CardTitle>
-
-        </CardHeader>
-
-        <CardContent className="grid gap-4 md:grid-cols-2">
-
-          <Info
-            title="Medical Experience"
-            value={application.medical_experience}
-          />
-
-          <Info
-            title="Occupation"
-            value={
-              application.current_occupation ??
-              "-"
-            }
-          />
-
-          <Info
-            title="Gang Member"
-            value={
-              application.gang_member
-                ? "Yes"
-                : "No"
-            }
-          />
-
-          <Info
-            title="Gang Name"
-            value={
-              application.gang_name ??
-              "-"
-            }
-          />
-
-        </CardContent>
-
-      </Card>
-
-      <Card>
-
-        <CardHeader>
-
-          <CardTitle>
-            Availability
-          </CardTitle>
-
-        </CardHeader>
-
-        <CardContent className="grid gap-4 md:grid-cols-2">
-
-          <Info
-            title="Preferred Shift"
-            value={application.preferred_shift}
-          />
-
-          <Info
-            title="Hours Per Day"
-            value={application.hours_per_day}
-          />
-
-        </CardContent>
-
-      </Card>
-
-      <Card>
-
-        <CardHeader>
-
-          <CardTitle>
-            Recruitment Questions
-          </CardTitle>
-
-        </CardHeader>
-
-        <CardContent className="space-y-6">
-
-          <Question
-            title="Why do you want to join XMD?"
-            value={application.why_join}
-          />
-
-          <Question
-            title="Why should we choose you?"
-            value={application.why_choose_you}
-          />
-
-          <Question
-            title="Strengths"
-            value={application.strengths}
-          />
-
-          <Question
-            title="Weaknesses"
-            value={application.weaknesses}
-          />
-
-          <Question
-            title="Patient Scenario"
-            value={application.patient_scenario}
-          />
-
-        </CardContent>
-
-      </Card>
-
-      <Card>
-
-        <CardHeader>
-
-          <CardTitle>
-            Declaration
-          </CardTitle>
-
-        </CardHeader>
-
         <CardContent>
-
-          <Badge
-            variant={
-              application.declaration
-                ? "default"
-                : "destructive"
-            }
-          >
+          <Badge variant={application.declaration ? "default" : "destructive"}>
             {application.declaration
-              ? "Accepted"
-              : "Not Accepted"}
+              ? "Declaration Accepted"
+              : "Declaration Not Accepted"}
           </Badge>
-
         </CardContent>
-
       </Card>
 
       <Card>
-
         <CardHeader>
-
-          <CardTitle>
-            Management Review
-          </CardTitle>
-
+          <CardTitle>Management Review</CardTitle>
         </CardHeader>
-
-        <CardContent className="space-y-6">
-
-          <Info
-  title="Reviewed By"
-  value={
-    reviewer?.fullName ??
-    "-"
-  }
-/>
-
-          <Info
-            title="Review Notes"
-            value={
-              application.review_notes ??
-              "-"
-            }
-          />
-
-          <div className="flex gap-3">
-
-            {application.status === "pending" ? (
-  <div className="flex gap-3">
-    <Button
-  onClick={() => {
-    if (!profile) return;
-
-    approve(profile.id);
-  }}
->
-      <Check className="mr-2 h-4 w-4" />
-      Approve
-    </Button>
-
-    <Button
-  variant="destructive"
-  onClick={() => {
-    if (!profile) return;
-
-    reject(profile.id);
-  }}
->
-      <X className="mr-2 h-4 w-4" />
-      Reject
-    </Button>
-  </div>
-) : (
-  <Badge
-    variant={
-      application.status === "approved"
-        ? "default"
-        : "destructive"
-    }
-  >
-    {application.status === "approved"
-      ? "Application Approved"
-      : "Application Rejected"}
-  </Badge>
-)}
-
+        <CardContent className="space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-muted-foreground">Status:</span>
+            <Badge>{application.status}</Badge>
           </div>
 
-        </CardContent>
+          {application.reviewed_by && (
+            <div>
+              <p className="text-sm text-muted-foreground">Reviewed By</p>
+              <p>
+                {reviewer?.fullName ||
+                  application.reviewed_by}
+              </p>
+            </div>
+          )}
 
+          {application.review_notes && (
+            <div>
+              <p className="text-sm text-muted-foreground">Review Notes</p>
+              <p>{application.review_notes}</p>
+            </div>
+          )}
+
+          {application.status === "pending" && (
+            <div className="flex gap-3">
+              <Button onClick={handleApprove}>
+                <Check className="mr-2 h-4 w-4" />
+                Approve Application
+              </Button>
+
+              <Button variant="destructive" onClick={handleReject}>
+                <X className="mr-2 h-4 w-4" />
+                Reject Application
+              </Button>
+            </div>
+          )}
+        </CardContent>
       </Card>
 
-    </div>
-  );
-}
+      {application.status === "approved" && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Interview Result</CardTitle>
+          </CardHeader>
 
-function Info({
-  title,
-  value,
-}: {
-  title: string;
-  value: React.ReactNode;
-}) {
-  return (
-    <div>
-      <p className="text-sm text-muted-foreground">
-        {title}
-      </p>
+          <CardContent className="space-y-5">
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-muted-foreground">
+                Interview Status:
+              </span>
+              <Badge>{application.interview_status}</Badge>
+            </div>
 
-      <p className="font-medium">
-        {value}
-      </p>
-    </div>
-  );
-}
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <Button
+                variant={
+                  application.interview_status === "passed"
+                    ? "default"
+                    : "outline"
+                }
+                onClick={() => handleInterviewStatus("passed")}
+              >
+                <UserCheck className="mr-2 h-4 w-4" />
+                Pass Interview
+              </Button>
 
-function Question({
-  title,
-  value,
-}: {
-  title: string;
-  value: string;
-}) {
-  return (
-    <div>
-      <p className="mb-2 font-medium">
-        {title}
-      </p>
+              <Button
+                variant={
+                  application.interview_status === "failed"
+                    ? "destructive"
+                    : "outline"
+                }
+                onClick={() => handleInterviewStatus("failed")}
+              >
+                <UserX className="mr-2 h-4 w-4" />
+                Fail Interview
+              </Button>
 
-      <div className="rounded-lg border bg-muted/30 p-4">
-        {value}
-      </div>
+              <Button
+                variant={
+                  application.interview_status === "no_show"
+                    ? "secondary"
+                    : "outline"
+                }
+                onClick={() => handleInterviewStatus("no_show")}
+              >
+                <Clock className="mr-2 h-4 w-4" />
+                No Show
+              </Button>
+
+              <Button
+                variant={
+                  application.interview_status === "pending"
+                    ? "secondary"
+                    : "outline"
+                }
+                onClick={() => handleInterviewStatus("pending")}
+              >
+                Pending
+              </Button>
+            </div>
+
+            {application.member_id ? (
+              <div className="rounded-lg border p-4">
+                <p className="font-medium">Member Created</p>
+                <p className="text-sm text-muted-foreground">
+                  This application is already linked to a member.
+                </p>
+                <p className="mt-1 text-sm">
+                  Member ID: {application.member_id}
+                </p>
+              </div>
+            ) : application.interview_status === "passed" ? (
+              <div className="rounded-lg border p-4">
+                <p className="font-medium">Interview Passed</p>
+                <p className="text-sm text-muted-foreground">
+                  The member creation process has been triggered automatically.
+                </p>
+              </div>
+            ) : (
+              <div className="rounded-lg border p-4">
+                <p className="font-medium">Member creation pending</p>
+                <p className="text-sm text-muted-foreground">
+                  The application must have a passed interview before a member
+                  is created.
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

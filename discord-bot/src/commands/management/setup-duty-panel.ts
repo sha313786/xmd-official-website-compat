@@ -1,16 +1,21 @@
 import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   ChannelType,
   ChatInputCommandInteraction,
+  EmbedBuilder,
   PermissionFlagsBits,
   SlashCommandBuilder,
   TextChannel,
 } from "discord.js";
 
-import { CommandController } from "../../core/command/command.controller";
+import { SlashCommand } from "../../types/command";
 import { botSettingsService } from "../../services/bot-settings.service";
+import { dutyPanelService } from "../../services/duty-panel.service";
 
-class SetupDutyPanelCommand extends CommandController {
-  public readonly data = new SlashCommandBuilder()
+const command: SlashCommand = {
+  data: new SlashCommandBuilder()
     .setName("setup-duty-panel")
     .setDescription("Create or recreate the XMD Duty Panel.")
     .setDefaultMemberPermissions(
@@ -22,11 +27,9 @@ class SetupDutyPanelCommand extends CommandController {
         .setDescription("Duty panel channel")
         .addChannelTypes(ChannelType.GuildText)
         .setRequired(true)
-    );
+    ),
 
-  protected async run(
-    interaction: ChatInputCommandInteraction
-  ): Promise<void> {
+  async execute(interaction: ChatInputCommandInteraction) {
     const channel = interaction.options.getChannel(
       "channel",
       true
@@ -40,18 +43,68 @@ class SetupDutyPanelCommand extends CommandController {
       "duty_panel_message_id"
     );
 
-    // Phase 8 will implement panel creation and replacement.
-    await this.success(
-      interaction,
-      [
-        "✅ Duty panel setup initialized.",
-        "",
-        `Target Channel: ${channel}`,
-        `Previous Channel ID: ${oldChannelId ?? "None"}`,
-        `Previous Message ID: ${oldMessageId ?? "None"}`,
-      ].join("\n")
-    );
-  }
-}
+    if (oldChannelId && oldMessageId) {
+      try {
+        const oldChannel =
+          await interaction.client.channels.fetch(
+            oldChannelId
+          );
 
-export default new SetupDutyPanelCommand();
+        if (
+          oldChannel &&
+          oldChannel.type === ChannelType.GuildText
+        ) {
+          const oldMessage = await (
+            oldChannel as TextChannel
+          ).messages.fetch(oldMessageId);
+
+          await oldMessage.delete();
+        }
+      } catch {
+        // Ignore if the previous panel no longer exists.
+      }
+    }
+
+    const embed = new EmbedBuilder()
+      .setColor(0xff0000)
+      .setTitle("🏥 XMD DUTY PANEL")
+      .setDescription(
+        [
+          "Welcome to the **XMD Duty System**.",
+          "",
+          "Use the buttons below to start or end your duty.",
+          "",
+          "• Verified XMD members only",
+          "• One active duty session per member",
+          "• Live dashboard updates automatically",
+        ].join("\n")
+      )
+      .setFooter({
+        text: "XMD Management Portal",
+      })
+      .setTimestamp();
+
+    const message = await channel.send({
+      embeds: [embed],
+      components: [dutyPanelService.createButtons()],
+    });
+
+    await botSettingsService.set(
+      "duty_panel_channel_id",
+      channel.id
+    );
+
+    await botSettingsService.set(
+      "duty_panel_message_id",
+      message.id
+    );
+
+    await interaction.reply({
+      content:
+        "✅ Duty panel has been created successfully.",
+      ephemeral: true,
+    });
+  },
+};
+
+export default command;

@@ -3,21 +3,16 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 
-import { CommandController } from "../../core/command/command.controller";
+import { SlashCommand } from "../../types/command";
 
-class PingCommand extends CommandController {
-  public readonly data = new SlashCommandBuilder()
+const command: SlashCommand = {
+  data: new SlashCommandBuilder()
     .setName("ping")
-    .setDescription("Replies with Pong!");
+    .setDescription("Replies with Pong!"),
 
-  protected async run(
-    interaction: ChatInputCommandInteraction
-  ): Promise<void> {
-    await this.success(
-      interaction,
-      "🏓 Pong!"
-    );
-  }
-}
+  async execute(interaction: ChatInputCommandInteraction) {
+    await interaction.reply("🏓 Pong!");
+  },
+};
 
-export default new PingCommand();
+export default command;

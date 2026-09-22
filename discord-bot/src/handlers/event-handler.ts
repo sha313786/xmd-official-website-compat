@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { pathToFileURL } from "url";
 
 import { Client } from "discord.js";
 
@@ -15,24 +16,48 @@ export async function registerEvents(client: Client) {
 
   const files = fs
     .readdirSync(eventsPath)
-    .filter(file => file.endsWith(".ts") || file.endsWith(".js"));
+    .filter(
+      file =>
+        file.endsWith(".ts") ||
+        file.endsWith(".js")
+    );
 
   for (const file of files) {
-    const imported = await import(path.join(eventsPath, file));
+    const fullPath = path.join(
+      eventsPath,
+      file
+    );
 
-const event =
-  imported.default?.default ??
-  imported.default ??
-  imported;
+    Logger.info(
+      `Importing event: ${file}`
+    );
 
-if (!event) continue;
+    const moduleUrl =
+      pathToFileURL(fullPath).href;
+
+    const imported = await import(moduleUrl);
+
+    const event =
+      imported.default?.default ??
+      imported.default ??
+      imported;
+
+    if (!event) continue;
 
     if (event.once) {
-      client.once(event.name, (...args) => event.execute(...args));
+      client.once(
+        event.name,
+        (...args) => event.execute(...args)
+      );
     } else {
-      client.on(event.name, (...args) => event.execute(...args));
+      client.on(
+        event.name,
+        (...args) => event.execute(...args)
+      );
     }
 
-    Logger.info(`Loaded event: ${event.name}`);
+    Logger.info(
+      `Loaded event: ${event.name}`
+    );
   }
 }

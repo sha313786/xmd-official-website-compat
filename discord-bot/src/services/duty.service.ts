@@ -109,15 +109,25 @@ export class DutyService {
   }
 
   /**
-   * End the active duty session.
+   * End the caller's active duty session.
    */
   static async endDuty(discordId: string) {
     const member = await this.getMember(discordId);
 
-    const session = await this.getActiveSession(member.id);
+    return this.endDutyForMember(member.id);
+  }
+
+  /**
+   * Force-end an active duty session for a specific member.
+   *
+   * This only closes the currently open duty_logs row.
+   * Existing promotion and duty calculation rules are unchanged.
+   */
+  static async endDutyForMember(memberId: string) {
+    const session = await this.getActiveSession(memberId);
 
     if (!session) {
-      throw new Error("You are not currently On Duty.");
+      throw new Error("This member is not currently On Duty.");
     }
 
     const dutyEnd = new Date();
@@ -140,6 +150,7 @@ export class DutyService {
         updated_at: dutyEnd.toISOString(),
       })
       .eq("id", session.id)
+      .is("duty_end", null)
       .select()
       .single();
 

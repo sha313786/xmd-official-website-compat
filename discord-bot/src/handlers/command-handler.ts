@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { pathToFileURL } from "url";
 
 import { Client, Collection } from "discord.js";
 
@@ -22,21 +23,27 @@ export async function registerCommands(client: Client) {
     return;
   }
 
-  const categories = fs.readdirSync(commandsPath);
+  const categories = fs
+    .readdirSync(commandsPath)
+    .filter(category =>
+      fs.statSync(path.join(commandsPath, category)).isDirectory()
+    );
 
   for (const category of categories) {
     // Prefix commands have their own handler.
-    // Do not load them as slash commands.
     if (category === "prefix") {
       continue;
     }
 
-    const categoryPath = path.join(commandsPath, category);
+    const categoryPath = path.join(
+      commandsPath,
+      category
+    );
 
     const files = fs
       .readdirSync(categoryPath)
       .filter(
-        (file) =>
+        file =>
           file.endsWith(".ts") ||
           file.endsWith(".js")
       );
@@ -46,9 +53,15 @@ export async function registerCommands(client: Client) {
         `Importing ${category}/${file}`
       );
 
-      const imported = await import(
-        path.join(categoryPath, file)
+      const fullPath = path.join(
+        categoryPath,
+        file
       );
+
+      // Convert Windows absolute path to file:// URL
+      const moduleUrl = pathToFileURL(fullPath).href;
+
+      const imported = await import(moduleUrl);
 
       const command =
         imported.default?.default ??

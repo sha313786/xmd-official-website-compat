@@ -10,28 +10,21 @@ import { registerEvents } from "./handlers/event-handler";
 
 import { HealthService } from "./services/health.service";
 import { StatusDashboardService } from "./services/status-dashboard.service";
-import { RecruitmentDMMonitorService } from "./services/recruitment-dm-monitor.service";
 
-async function bootstrap() {
-  await registerCommands(client);
-  await registerEvents(client);
-
-  await client.login(env.DISCORD_TOKEN);
-}
-
-bootstrap().catch((error) => {
-  Logger.error("Failed to start bot:", error);
-  process.exit(1);
-});
+// Register commands and events
+registerCommands(client);
+registerEvents(client);
 
 // Client Ready
 client.once(Events.ClientReady, (readyClient) => {
   Logger.success(`Logged in as ${readyClient.user.tag}`);
   Logger.info(`${client.commands.size} command(s) loaded.`);
 
+  // Start production monitoring
   HealthService.start();
+
+  // Start Discord status dashboard
   StatusDashboardService.start();
-  RecruitmentDMMonitorService.start();
 });
 
 // Unhandled Promise Rejections
@@ -51,7 +44,6 @@ async function shutdown(signal: string) {
   try {
     HealthService.stop();
     StatusDashboardService.stop();
-    RecruitmentDMMonitorService.stop();
 
     client.destroy();
 
@@ -69,4 +61,10 @@ process.on("SIGINT", () => {
 
 process.on("SIGTERM", () => {
   void shutdown("SIGTERM");
+});
+
+// Login
+client.login(env.DISCORD_TOKEN).catch((error) => {
+  Logger.error("Failed to login to Discord:", error);
+  process.exit(1);
 });

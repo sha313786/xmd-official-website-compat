@@ -40,16 +40,24 @@ export function useProfile() {
   }
 
   useEffect(() => {
-    loadProfile();
+    let active = true;
+
+    void loadProfile();
 
     // Refresh every 30 seconds while profile page is open
     const interval = setInterval(() => {
-      loadProfile();
+      if (active) {
+        void loadProfile();
+      }
     }, 30000);
 
-    // Live update whenever duty_logs changes
+    // Use a unique channel name for each hook instance.
+    // This prevents Supabase Realtime from reusing an already-subscribed
+    // channel and throwing "cannot add postgres_changes callbacks after subscribe()".
+    const channelName = `profile-duty-live-${crypto.randomUUID()}`;
+
     const channel = supabase
-      .channel("profile-duty-live")
+      .channel(channelName)
       .on(
         "postgres_changes",
         {
@@ -58,14 +66,19 @@ export function useProfile() {
           table: "duty_logs",
         },
         () => {
-          loadProfile();
+          if (active) {
+            void loadProfile();
+          }
         }
-      )
-      .subscribe();
+      );
+
+    // Register all postgres_changes handlers before subscribing.
+    void channel.subscribe();
 
     return () => {
+      active = false;
       clearInterval(interval);
-      supabase.removeChannel(channel);
+      void supabase.removeChannel(channel);
     };
   }, []);
 

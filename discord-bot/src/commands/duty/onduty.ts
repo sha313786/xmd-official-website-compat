@@ -5,6 +5,7 @@ import {
 
 import { CommandController } from "../../core/command/command.controller";
 import { dutyService } from "../../services/duty.service";
+import { dutyLogService } from "../../services/duty-log.service";
 
 class OnDutyCommand extends CommandController {
   public readonly data = new SlashCommandBuilder()
@@ -14,7 +15,28 @@ class OnDutyCommand extends CommandController {
   protected async run(
     interaction: ChatInputCommandInteraction
   ): Promise<void> {
-    await dutyService.startDuty(interaction.user.id);
+    const session =
+      await dutyService.startDuty(
+        interaction.user.id
+      );
+
+    try {
+      const member =
+        await dutyService.getMember(
+          interaction.user.id
+        );
+
+      await dutyLogService.logOnDuty(
+        interaction.client,
+        member,
+        session
+      );
+    } catch (error) {
+      console.error(
+        "[ON DUTY COMMAND] Failed to send Discord duty log:",
+        error
+      );
+    }
 
     await this.success(
       interaction,

@@ -9,6 +9,7 @@ const REQUIRED_ENV_VARS = [
   "SUPABASE_URL",
   "SUPABASE_ANON_KEY",
   "SUPABASE_SERVICE_ROLE_KEY",
+  "DUTY_LOG_CHANNEL_ID",
 ] as const;
 
 const missing = REQUIRED_ENV_VARS.filter(
@@ -33,6 +34,9 @@ export const env = {
   SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY!,
   SUPABASE_SERVICE_ROLE_KEY:
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
+
+  DUTY_LOG_CHANNEL_ID:
+    process.env.DUTY_LOG_CHANNEL_ID!,
 
   NODE_ENV: process.env.NODE_ENV ?? "development",
 };
