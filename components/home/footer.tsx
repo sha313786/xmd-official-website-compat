@@ -27,50 +27,52 @@ function DiscordIcon({ className = "h-5 w-5" }: { className?: string }) {
 export default function Footer() {
   return (
     <footer className="border-t border-white/10 bg-[#050816]">
-      <div className="mx-auto max-w-7xl px-6 py-14">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14">
+        <div className="grid gap-8 sm:gap-10 sm:grid-cols-2 lg:grid-cols-4">
 
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <Image
-                src="/images/logo.png"
-                alt="XMD Logo"
-                width={60}
-                height={60}
-                priority
-              />
+              <div className="relative h-12 w-12 shrink-0">
+                <Image
+                  src="/images/logo.png"
+                  alt="XMD Logo"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
 
               <div>
                 <h3 className="text-xl font-bold text-white">
                   XMD
                 </h3>
 
-                <p className="text-xs uppercase tracking-wider text-gray-400">
+                <p className="text-[11px] uppercase tracking-wider text-gray-400">
                   XLANTIS MEDICAL DEPARTMENT
                 </p>
               </div>
             </div>
 
-            <p className="text-sm leading-7 text-gray-400">
+            <p className="text-sm leading-6 text-gray-400">
               Advancing Through X-pertise
             </p>
 
-            <p className="text-sm text-gray-500">
+            <p className="text-xs text-gray-500 leading-relaxed">
               Emergency Response • Professional Healthcare • Community First
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="mb-5 text-lg font-semibold text-white">
+            <h4 className="mb-4 text-base font-semibold text-white">
               Quick Links
             </h4>
 
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-2.5 text-sm">
               <li>
                 <Link
-                  href="#home"
+                  href="/#home"
                   className="text-gray-400 transition-colors hover:text-red-500"
                 >
                   Home
@@ -88,7 +90,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="#services"
+                  href="/#services"
                   className="text-gray-400 transition-colors hover:text-red-500"
                 >
                   Services
@@ -97,7 +99,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="#departments"
+                  href="/#departments"
                   className="text-gray-400 transition-colors hover:text-red-500"
                 >
                   Departments
@@ -117,20 +119,20 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="mb-5 text-lg font-semibold text-white">
+            <h4 className="mb-4 text-base font-semibold text-white">
               Contact
             </h4>
 
-            <div className="space-y-4 text-sm text-gray-400">
+            <div className="space-y-3 text-sm text-gray-400">
 
-              <div className="flex items-center gap-3">
-                <MapPin className="h-4 w-4 text-red-500" />
-                XLANTIS City
+              <div className="flex items-center gap-2.5">
+                <MapPin className="h-4 w-4 shrink-0 text-red-500" />
+                <span>XLANTIS City</span>
               </div>
 
-              <div className="flex items-center gap-3">
-                <HeartPulse className="h-4 w-4 text-red-500" />
-                Emergency Services 24/7
+              <div className="flex items-center gap-2.5">
+                <HeartPulse className="h-4 w-4 shrink-0 text-red-500" />
+                <span>Emergency Services 24/7</span>
               </div>
 
               {/* Discord Contact */}
@@ -138,10 +140,10 @@ export default function Footer() {
                 href={DISCORD_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 text-gray-400 transition-colors hover:text-red-400"
+                className="flex items-center gap-2.5 text-gray-400 transition-colors hover:text-red-400"
               >
-                <DiscordIcon className="h-4 w-4 text-red-500" />
-                Join our Discord
+                <DiscordIcon className="h-4 w-4 shrink-0 text-red-500" />
+                <span>Join our Discord</span>
               </a>
 
             </div>
@@ -149,11 +151,11 @@ export default function Footer() {
 
           {/* Social */}
           <div>
-            <h4 className="mb-5 text-lg font-semibold text-white">
+            <h4 className="mb-4 text-base font-semibold text-white">
               Follow Us
             </h4>
 
-            <div className="flex gap-4">
+            <div className="flex gap-3">
 
               {/* Discord */}
               <a
@@ -162,7 +164,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 aria-label="Join XMD Discord"
                 title="Join XMD Discord"
-                className="rounded-lg border border-white/10 p-3 transition-all hover:border-red-500 hover:bg-red-500/10"
+                className="rounded-xl border border-white/10 p-2.5 transition-all hover:border-red-500 hover:bg-red-500/10 active:scale-95"
               >
                 <DiscordIcon className="h-5 w-5 text-white" />
               </a>
@@ -171,7 +173,7 @@ export default function Footer() {
               <a
                 href="#"
                 aria-label="XMD YouTube"
-                className="rounded-lg border border-white/10 p-3 transition-all hover:border-red-500 hover:bg-red-500/10"
+                className="rounded-xl border border-white/10 p-2.5 transition-all hover:border-red-500 hover:bg-red-500/10 active:scale-95"
               >
                 <Youtube className="h-5 w-5 text-white" />
               </a>
@@ -180,7 +182,7 @@ export default function Footer() {
               <a
                 href="#"
                 aria-label="XMD Instagram"
-                className="rounded-lg border border-white/10 p-3 transition-all hover:border-red-500 hover:bg-red-500/10"
+                className="rounded-xl border border-white/10 p-2.5 transition-all hover:border-red-500 hover:bg-red-500/10 active:scale-95"
               >
                 <Instagram className="h-5 w-5 text-white" />
               </a>
@@ -190,8 +192,8 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-12 border-t border-white/10 pt-6">
-          <div className="flex flex-col items-center justify-between gap-4 text-sm text-gray-500 md:flex-row">
+        <div className="mt-10 border-t border-white/10 pt-6">
+          <div className="flex flex-col items-center justify-between gap-4 text-xs sm:text-sm text-gray-500 md:flex-row text-center md:text-left">
 
             <p>
               © 2026 XLANTIS Medical Department. All rights reserved.
@@ -205,7 +207,7 @@ export default function Footer() {
                 </span>
               </p>
 
-              <p className="text-xs text-gray-500">
+              <p className="text-[11px] text-gray-500">
                 Designed &amp; Developed by{" "}
                 <span className="font-semibold text-white">
                   SRB STUDIOS

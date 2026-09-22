@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
-import  Reveal  from "@/components/ui/reveal";
+import Reveal from "@/components/ui/reveal";
 import { aboutHeroContent } from "@/data/about/hero";
 
 export default function AboutHero() {
@@ -14,46 +14,46 @@ export default function AboutHero() {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
       <div className="absolute bottom-0 left-0 h-32 w-full bg-gradient-to-b from-transparent to-background" />
 
-      <div className="relative mx-auto flex max-w-7xl flex-col items-center px-6 py-20 md:py-28 text-center">
+      <div className="relative mx-auto flex max-w-7xl flex-col items-center px-4 sm:px-6 pt-28 pb-16 md:pt-36 md:pb-24 text-center">
         <Reveal>
-          <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-2 text-sm text-gray-400">
+          <nav aria-label="Breadcrumb" className="mb-6 sm:mb-8 flex items-center gap-2 text-xs sm:text-sm text-gray-400">
             <Link href="/" className="transition hover:text-white">
               Home
             </Link>
-            <ChevronRight className="h-4 w-4" />
-            <span className="text-red-500">About</span>
+            <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span className="text-red-500 font-medium">About</span>
           </nav>
         </Reveal>
 
         <Reveal delay={0.05}>
-          <div className="relative mb-8">
+          <div className="relative mb-6 sm:mb-8">
             <div className="absolute inset-0 rounded-full bg-red-600/20 blur-3xl animate-pulse" />
             <Image
               src="/images/logo.png"
               alt="XMD Logo"
-              width={120}
-              height={120}
+              width={100}
+              height={100}
               priority
-              className="relative animate-float"
+              className="relative animate-float sm:w-[120px] sm:h-[120px]"
             />
           </div>
         </Reveal>
 
         <Reveal delay={0.1}>
-          <h1 className="text-5xl font-black uppercase tracking-[0.2em] text-white md:text-6xl">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white">
             {aboutHeroContent.title}
           </h1>
         </Reveal>
 
         <Reveal delay={0.15}>
-          <p className="mt-5 text-xl font-semibold text-red-500">
+          <p className="mt-3 sm:mt-5 text-base sm:text-xl font-semibold text-red-500">
             {aboutHeroContent.subtitle}
           </p>
-          <div className="mx-auto mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-red-600 via-red-500 to-red-700" />
+          <div className="mx-auto mt-4 sm:mt-5 h-1 w-20 sm:w-24 rounded-full bg-gradient-to-r from-red-600 via-red-500 to-red-700" />
         </Reveal>
 
         <Reveal delay={0.2}>
-          <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-gray-300">
+          <p className="mx-auto mt-6 sm:mt-8 max-w-3xl text-sm sm:text-lg leading-relaxed sm:leading-8 text-gray-300 px-2">
             {aboutHeroContent.description}
           </p>
         </Reveal>

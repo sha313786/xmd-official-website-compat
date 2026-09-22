@@ -18,31 +18,31 @@ export default function Recruitment() {
   return (
     <section
       id="recruitment"
-      className="bg-black py-24"
+      className="bg-black py-12 sm:py-16 md:py-24"
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Header */}
         <Reveal>
-          <div className="mx-auto mb-20 max-w-3xl text-center">
-            <span className="inline-flex rounded-full border border-red-500/20 bg-red-500/10 px-4 py-1 text-sm font-medium text-red-400">
+          <div className="mx-auto mb-10 sm:mb-20 max-w-3xl text-center">
+            <span className="inline-flex rounded-full border border-red-500/20 bg-red-500/10 px-4 py-1 text-xs sm:text-sm font-medium text-red-400">
               {recruitmentContent.badge}
             </span>
 
-            <h2 className="mt-6 text-4xl font-black tracking-tight text-white md:text-5xl">
+            <h2 className="mt-4 sm:mt-6 text-2xl sm:text-4xl md:text-5xl font-black tracking-tight text-white">
               {recruitmentContent.title}
             </h2>
 
-            <p className="mt-6 text-lg leading-8 text-slate-400">
+            <p className="mt-3 sm:mt-6 text-sm sm:text-lg leading-relaxed sm:leading-8 text-slate-400">
               {recruitmentContent.description}
             </p>
           </div>
         </Reveal>
 
         {/* Features + Timeline */}
-        <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
+        <div className="grid gap-8 lg:gap-12 lg:grid-cols-2 lg:items-start">
           {/* Left Side */}
           <div>
-            <Stagger className="grid auto-rows-fr gap-6 sm:grid-cols-2">
+            <Stagger className="grid auto-rows-fr gap-4 sm:gap-6 sm:grid-cols-2">
               {recruitmentFeatures.map((feature) => (
                 <RecruitmentFeatureCard
                   key={feature.id}
@@ -55,13 +55,13 @@ export default function Recruitment() {
 
             {/* CTA */}
             <Reveal delay={300}>
-              <div className="mt-8 rounded-3xl border border-red-500/20 bg-gradient-to-r from-red-950/60 via-red-950/30 to-transparent p-8">
+              <div className="mt-6 sm:mt-8 rounded-2xl sm:rounded-3xl border border-red-500/20 bg-gradient-to-r from-red-950/60 via-red-950/30 to-transparent p-5 sm:p-8">
                 <div className="text-center">
-                  <h3 className="text-2xl font-bold text-white">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white">
                     Ready to Make a Difference?
                   </h3>
 
-                  <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-400">
+                  <p className="mx-auto mt-3 sm:mt-4 max-w-xl text-xs sm:text-sm leading-relaxed text-slate-400">
                     Start your journey with XMD today and become part of an
                     elite emergency medical team serving XLANTIS City.
                     Explore the recruitment process and begin your
@@ -72,14 +72,15 @@ export default function Recruitment() {
                   <Link
                     href="/recruitment"
                     className="
-                      mt-8
+                      mt-6 sm:mt-8
+                      w-full sm:w-auto
                       inline-flex
                       items-center
                       justify-center
                       rounded-xl
                       bg-red-600
                       px-8
-                      py-4
+                      py-3.5 sm:py-4
                       font-semibold
                       text-white
                       transition-all
@@ -87,6 +88,7 @@ export default function Recruitment() {
                       hover:bg-red-700
                       hover:shadow-lg
                       hover:shadow-red-600/30
+                      active:scale-98
                     "
                   >
                     View Recruitment

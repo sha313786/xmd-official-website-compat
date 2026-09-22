@@ -1,3 +1,5 @@
+import Navbar from "@/components/layout/navbar";
+import Footer from "@/components/home/footer";
 import RecruitmentHero from "@/components/recruitment-public/hero";
 import RecruitmentStatus from "@/components/recruitment-public/status";
 import RecruitmentNotice from "@/components/recruitment-public/notice";
@@ -11,6 +13,7 @@ import RecruitmentApply from "@/components/recruitment-public/apply";
 export default function RecruitmentPage() {
   return (
     <>
+      <Navbar />
       <RecruitmentHero />
       <RecruitmentStatus />
       <RecruitmentNotice />
@@ -20,6 +23,7 @@ export default function RecruitmentPage() {
       <RecruitmentGuidelines />
       <RecruitmentFaq />
       <RecruitmentApply />
+      <Footer />
     </>
   );
 }
