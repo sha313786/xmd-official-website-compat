@@ -58,7 +58,7 @@ export default function RecruitmentApplyPage() {
 
             {/* Quick Requirements Bar */}
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="flex items-center gap-3.5 rounded-2xl border border-red-950/80 bg-black/80 p-4 shadow-[0_0_25px_rgba(220,38,38,0.06)] backdrop-blur-md">
+              <div className="flex items-center gap-3.5 rounded-2xl border border-red-950/90 bg-[#0c0d14]/95 p-4 shadow-[0_10px_25px_rgba(0,0,0,0.7)] backdrop-blur-md">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-600/15 text-red-500 ring-1 ring-red-500/30">
                   <Clock className="h-5 w-5" />
                 </div>
@@ -68,7 +68,7 @@ export default function RecruitmentApplyPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3.5 rounded-2xl border border-red-950/80 bg-black/80 p-4 shadow-[0_0_25px_rgba(220,38,38,0.06)] backdrop-blur-md">
+              <div className="flex items-center gap-3.5 rounded-2xl border border-red-950/90 bg-[#0c0d14]/95 p-4 shadow-[0_10px_25px_rgba(0,0,0,0.7)] backdrop-blur-md">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-600/15 text-red-500 ring-1 ring-red-500/30">
                   <ShieldCheck className="h-5 w-5" />
                 </div>
@@ -78,7 +78,7 @@ export default function RecruitmentApplyPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3.5 rounded-2xl border border-red-950/80 bg-black/80 p-4 shadow-[0_0_25px_rgba(220,38,38,0.06)] backdrop-blur-md">
+              <div className="flex items-center gap-3.5 rounded-2xl border border-red-950/90 bg-[#0c0d14]/95 p-4 shadow-[0_10px_25px_rgba(0,0,0,0.7)] backdrop-blur-md">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-600/15 text-red-500 ring-1 ring-red-500/30">
                   <AlertTriangle className="h-5 w-5" />
                 </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { UseFormReturn } from "react-hook-form";
-import { Clock } from "lucide-react";
 
 import type { RecruitmentApplicationFormValues } from "@/lib/validation/recruitment";
 import { Input } from "@/components/ui/input";
@@ -22,7 +21,7 @@ export function AvailabilitySection({
   form,
 }: AvailabilitySectionProps) {
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-red-950/80 bg-black/85 p-6 sm:p-8 shadow-[0_0_35px_rgba(220,38,38,0.06)] backdrop-blur-xl transition-all duration-300 hover:border-red-600/40">
+    <div className="relative overflow-hidden rounded-3xl border border-red-950/90 bg-[#0c0d14]/95 p-6 sm:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-xl transition-all duration-300 hover:border-red-600/40">
       {/* Section Header */}
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-white/10 pb-5">
         <div className="flex items-center gap-3">
@@ -54,11 +53,11 @@ export function AvailabilitySection({
               <FormControl>
                 <Input
                   placeholder="e.g. Evening Shift (8:00 PM – 11:30 PM IST / UTC)"
-                  className="h-12 rounded-xl border-white/10 bg-black/90 px-4 text-white placeholder:text-zinc-600 transition-all focus-visible:border-red-500 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.2)]"
+                  className="h-12 rounded-xl border border-white/10 bg-[#12131c] px-4 text-white placeholder:text-zinc-400 transition-all hover:border-red-500/30 focus-visible:bg-[#151622] focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.25)]"
                   {...field}
                 />
               </FormControl>
-              <FormDescription className="text-[11px] text-zinc-500">
+              <FormDescription className="text-[11px] text-zinc-400">
                 The timeframe when you are most available to clock in for duty.
               </FormDescription>
               <FormMessage className="text-xs text-red-400" />
@@ -82,7 +81,7 @@ export function AvailabilitySection({
                   min={1}
                   max={24}
                   placeholder="e.g. 3"
-                  className="h-12 rounded-xl border-white/10 bg-black/90 px-4 text-white placeholder:text-zinc-600 transition-all focus-visible:border-red-500 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.2)]"
+                  className="h-12 rounded-xl border border-white/10 bg-[#12131c] px-4 text-white placeholder:text-zinc-400 transition-all hover:border-red-500/30 focus-visible:bg-[#151622] focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.25)]"
                   value={field.value ? field.value : ""}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -90,7 +89,7 @@ export function AvailabilitySection({
                   }}
                 />
               </FormControl>
-              <FormDescription className="text-[11px] text-zinc-500">
+              <FormDescription className="text-[11px] text-zinc-400">
                 Estimated daily active hours you can commit on-duty.
               </FormDescription>
               <FormMessage className="text-xs text-red-400" />

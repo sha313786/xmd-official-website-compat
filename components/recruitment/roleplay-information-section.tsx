@@ -26,7 +26,7 @@ export function RoleplayInformationSection({
   const gangMember = form.watch("gang_member");
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-red-950/80 bg-black/85 p-6 sm:p-8 shadow-[0_0_35px_rgba(220,38,38,0.06)] backdrop-blur-xl transition-all duration-300 hover:border-red-600/40">
+    <div className="relative overflow-hidden rounded-3xl border border-red-950/90 bg-[#0c0d14]/95 p-6 sm:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-xl transition-all duration-300 hover:border-red-600/40">
       {/* Section Header */}
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-white/10 pb-5">
         <div className="flex items-center gap-3">
@@ -59,11 +59,11 @@ export function RoleplayInformationSection({
                 <Textarea
                   rows={5}
                   placeholder="Detail your prior EMS/medical experience (servers played, ranks held, medical scenarios handled). If you are a newcomer to EMS, explain your commitment and enthusiasm to learn XMD medical SOPs..."
-                  className="rounded-xl border-white/10 bg-black/90 p-4 text-sm text-white placeholder:text-zinc-600 transition-all focus-visible:border-red-500 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.2)]"
+                  className="rounded-xl border border-white/10 bg-[#12131c] p-4 text-sm text-white placeholder:text-zinc-400 transition-all hover:border-red-500/30 focus-visible:bg-[#151622] focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.25)]"
                   {...field}
                 />
               </FormControl>
-              <FormDescription className="text-[11px] text-zinc-500">
+              <FormDescription className="text-[11px] text-zinc-400">
                 Be as detailed as possible. Previous experience is beneficial but not strictly mandatory.
               </FormDescription>
               <FormMessage className="text-xs text-red-400" />
@@ -78,18 +78,18 @@ export function RoleplayInformationSection({
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-xs sm:text-sm font-semibold text-zinc-200">
-                Current In-City Occupation <span className="text-zinc-500 font-normal">(Optional)</span>
+                Current In-City Occupation <span className="text-zinc-400 font-normal">(Optional)</span>
               </FormLabel>
 
               <FormControl>
                 <Input
                   placeholder="e.g. Taxi Driver, Delivery Courier, Mechanic, Police Officer, Unemployed..."
-                  className="h-12 rounded-xl border-white/10 bg-black/90 px-4 text-white placeholder:text-zinc-600 transition-all focus-visible:border-red-500 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.2)]"
+                  className="h-12 rounded-xl border border-white/10 bg-[#12131c] px-4 text-white placeholder:text-zinc-400 transition-all hover:border-red-500/30 focus-visible:bg-[#151622] focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.25)]"
                   {...field}
                   value={field.value ?? ""}
                 />
               </FormControl>
-              <FormDescription className="text-[11px] text-zinc-500">
+              <FormDescription className="text-[11px] text-zinc-400">
                 What does your character currently do for a living in XLANTIS City?
               </FormDescription>
               <FormMessage className="text-xs text-red-400" />
@@ -102,7 +102,7 @@ export function RoleplayInformationSection({
           control={form.control}
           name="gang_member"
           render={({ field }) => (
-            <FormItem className="rounded-2xl border border-red-950/80 bg-black/90 p-5 transition hover:border-red-600/30">
+            <FormItem className="rounded-2xl border border-red-950/80 bg-[#12131c] p-5 transition hover:border-red-600/40">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="space-y-1">
                   <FormLabel className="text-sm font-semibold text-white flex items-center gap-2">
@@ -129,7 +129,7 @@ export function RoleplayInformationSection({
 
         {/* Conditional Gang Name Input */}
         {gangMember && (
-          <div className="rounded-2xl border border-red-600/30 bg-red-950/30 p-5 shadow-[0_0_25px_rgba(220,38,38,0.1)] animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="rounded-2xl border border-red-600/35 bg-red-950/30 p-5 shadow-[0_0_25px_rgba(220,38,38,0.12)] animate-in fade-in slide-in-from-top-2 duration-300">
             <FormField
               control={form.control}
               name="gang_name"
@@ -142,12 +142,12 @@ export function RoleplayInformationSection({
                   <FormControl>
                     <Input
                       placeholder="e.g. Cartel De La Muerte / Position: Recruit"
-                      className="h-12 rounded-xl border-red-500/40 bg-black/90 px-4 text-white placeholder:text-zinc-600 transition-all focus-visible:border-red-500 focus-visible:ring-red-600/50"
+                      className="h-12 rounded-xl border border-red-500/40 bg-[#160a0a] px-4 text-white placeholder:text-zinc-400 transition-all focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-600/50"
                       {...field}
                       value={field.value ?? ""}
                     />
                   </FormControl>
-                  <FormDescription className="text-[11px] text-red-400/80">
+                  <FormDescription className="text-[11px] text-red-400/90">
                     Honesty is mandatory. Concealing an active gang membership may result in a permanent blacklist.
                   </FormDescription>
                   <FormMessage className="text-xs text-red-400" />

@@ -24,7 +24,10 @@ export function DeclarationSection({
   submitting,
 }: DeclarationSectionProps) {
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-red-950/80 bg-black/85 p-6 sm:p-8 shadow-[0_0_35px_rgba(220,38,38,0.06)] backdrop-blur-xl transition-all duration-300 hover:border-red-600/40">
+    <div className="relative overflow-hidden rounded-3xl border border-red-950/90 bg-[#0c0d14]/95 p-6 sm:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-xl transition-all duration-300 hover:border-red-600/40">
+      {/* Red ambient highlight */}
+      <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-red-600/15 blur-3xl" />
+
       {/* Section Header */}
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-white/10 pb-5">
         <div className="flex items-center gap-3">
@@ -44,13 +47,13 @@ export function DeclarationSection({
 
       <div className="space-y-6">
         {/* Important Notice */}
-        <div className="rounded-2xl border border-red-950/80 bg-red-950/20 p-4 sm:p-5 flex items-start gap-3.5 shadow-[0_0_25px_rgba(220,38,38,0.08)]">
+        <div className="rounded-2xl border border-red-900/50 bg-[#160707]/80 p-4 sm:p-5 flex items-start gap-3.5 shadow-[0_4px_20px_rgba(220,38,38,0.1)]">
           <CheckCircle2 className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
           <div className="text-xs sm:text-sm text-zinc-300 space-y-1">
             <p className="font-bold text-white uppercase tracking-wider text-xs">
               Verification & Interview Protocol
             </p>
-            <p className="text-zinc-400 leading-relaxed text-xs sm:text-sm">
+            <p className="text-zinc-300 leading-relaxed text-xs sm:text-sm">
               Once submitted, XMD Recruitment Command will process your dossier. If accepted, you will receive an automated Discord DM invitation for an oral voice interview. Please verify that your Discord DMs are open to server members.
             </p>
           </div>
@@ -61,18 +64,18 @@ export function DeclarationSection({
           control={form.control}
           name="declaration"
           render={({ field }) => (
-            <FormItem className="rounded-2xl border border-red-950/80 bg-black/90 p-5 transition hover:border-red-600/50 shadow-[0_0_20px_rgba(0,0,0,0.8)]">
+            <FormItem className="rounded-2xl border border-red-950/90 bg-[#12131c] p-5 transition hover:border-red-600/50 shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
               <div className="flex items-start gap-3.5">
                 <FormControl className="mt-1">
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    className="h-5 w-5 rounded-md border-white/30 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                    className="h-5 w-5 rounded-md border-white/40 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600 focus-visible:ring-red-500"
                   />
                 </FormControl>
 
                 <div className="space-y-1">
-                  <FormLabel className="text-xs sm:text-sm text-zinc-200 leading-relaxed font-normal cursor-pointer">
+                  <FormLabel className="text-xs sm:text-sm text-zinc-100 leading-relaxed font-normal cursor-pointer">
                     I solemnly declare that all information submitted in this application is accurate, true, and written entirely by me. I understand that falsification, failure to maintain medical neutrality, plagiarism, or server rule breaches will result in immediate disqualification and a permanent blacklist from the XLANTIS Medical Department.
                   </FormLabel>
                   <FormMessage className="text-xs text-red-400 font-medium pt-1" />
@@ -86,7 +89,7 @@ export function DeclarationSection({
         <Button
           type="submit"
           disabled={submitting}
-          className="h-14 w-full rounded-2xl bg-gradient-to-r from-[#7f0000] via-[#dc2626] to-[#b91c1c] text-base font-bold text-white shadow-[0_0_35px_rgba(220,38,38,0.4)] transition-all duration-300 hover:scale-[1.01] hover:brightness-110 hover:shadow-[0_0_45px_rgba(220,38,38,0.6)] active:scale-[0.99] disabled:opacity-50"
+          className="h-14 w-full rounded-2xl bg-gradient-to-r from-[#7f0000] via-[#dc2626] to-[#b91c1c] text-base font-bold text-white shadow-[0_0_35px_rgba(220,38,38,0.4)] transition-all duration-300 hover:scale-[1.01] hover:brightness-110 hover:shadow-[0_0_45px_rgba(220,38,38,0.6)] active:scale-[0.99] disabled:opacity-50 cursor-pointer"
         >
           {submitting ? (
             <span className="flex items-center gap-2">

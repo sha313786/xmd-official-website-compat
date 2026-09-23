@@ -22,7 +22,10 @@ export function ApplicationQuestionsSection({
   form,
 }: ApplicationQuestionsSectionProps) {
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-red-950/80 bg-black/85 p-6 sm:p-8 shadow-[0_0_35px_rgba(220,38,38,0.06)] backdrop-blur-xl transition-all duration-300 hover:border-red-600/40">
+    <div className="relative overflow-hidden rounded-3xl border border-red-950/90 bg-[#0c0d14]/95 p-6 sm:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-xl transition-all duration-300 hover:border-red-600/40">
+      {/* Red ambient highlight */}
+      <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-red-600/15 blur-3xl" />
+
       {/* Section Header */}
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-white/10 pb-5">
         <div className="flex items-center gap-3">
@@ -55,11 +58,11 @@ export function ApplicationQuestionsSection({
                 <Textarea
                   rows={4}
                   placeholder="Explain what motivates you to serve in XMD rather than other civilian or public safety organizations in XLANTIS..."
-                  className="rounded-xl border-white/10 bg-black/90 p-4 text-sm text-white placeholder:text-zinc-600 transition-all focus-visible:border-red-500 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.2)]"
+                  className="rounded-xl border border-white/10 bg-[#12131c] p-4 text-sm text-white placeholder:text-zinc-400 transition-all hover:border-red-500/30 focus-visible:bg-[#151622] focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.25)]"
                   {...field}
                 />
               </FormControl>
-              <FormDescription className="text-[11px] text-zinc-500">
+              <FormDescription className="text-[11px] text-zinc-400">
                 Minimum 20 characters. Express your genuine roleplay interest.
               </FormDescription>
               <FormMessage className="text-xs text-red-400" />
@@ -81,11 +84,11 @@ export function ApplicationQuestionsSection({
                 <Textarea
                   rows={4}
                   placeholder="Detail your discipline, communication reliability, maturity, and what unique value you will bring to the medical team..."
-                  className="rounded-xl border-white/10 bg-black/90 p-4 text-sm text-white placeholder:text-zinc-600 transition-all focus-visible:border-red-500 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.2)]"
+                  className="rounded-xl border border-white/10 bg-[#12131c] p-4 text-sm text-white placeholder:text-zinc-400 transition-all hover:border-red-500/30 focus-visible:bg-[#151622] focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.25)]"
                   {...field}
                 />
               </FormControl>
-              <FormDescription className="text-[11px] text-zinc-500">
+              <FormDescription className="text-[11px] text-zinc-400">
                 Minimum 20 characters. Highlight your teamwork and communication skills.
               </FormDescription>
               <FormMessage className="text-xs text-red-400" />
@@ -108,7 +111,7 @@ export function ApplicationQuestionsSection({
                   <Textarea
                     rows={4}
                     placeholder="e.g. Composure under stress, clear radio protocols, patient demeanor, respect for hierarchy..."
-                    className="rounded-xl border-white/10 bg-black/90 p-4 text-sm text-white placeholder:text-zinc-600 transition-all focus-visible:border-red-500 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.2)]"
+                    className="rounded-xl border border-white/10 bg-[#12131c] p-4 text-sm text-white placeholder:text-zinc-400 transition-all hover:border-red-500/30 focus-visible:bg-[#151622] focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.25)]"
                     {...field}
                   />
                 </FormControl>
@@ -131,7 +134,7 @@ export function ApplicationQuestionsSection({
                   <Textarea
                     rows={4}
                     placeholder="e.g. Tendency to over-focus on one patient, still memorizing ten-codes, learning surgical RP terms..."
-                    className="rounded-xl border-white/10 bg-black/90 p-4 text-sm text-white placeholder:text-zinc-600 transition-all focus-visible:border-red-500 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.2)]"
+                    className="rounded-xl border border-white/10 bg-[#12131c] p-4 text-sm text-white placeholder:text-zinc-400 transition-all hover:border-red-500/30 focus-visible:bg-[#151622] focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-600/40 focus-visible:shadow-[0_0_15px_rgba(220,38,38,0.25)]"
                     {...field}
                   />
                 </FormControl>
@@ -142,9 +145,9 @@ export function ApplicationQuestionsSection({
         </div>
 
         {/* Patient Scenario */}
-        <div className="rounded-2xl border border-red-600/40 bg-gradient-to-br from-[#180404] via-black to-black p-5 sm:p-6 shadow-[0_0_35px_rgba(220,38,38,0.12)]">
+        <div className="rounded-2xl border border-red-900/60 bg-gradient-to-br from-[#1c0808]/90 via-[#0e0707]/90 to-[#0c0d14]/90 p-5 sm:p-6 shadow-[0_4px_25px_rgba(220,38,38,0.12)]">
           <div className="mb-4 flex items-start gap-3">
-            <div className="rounded-xl bg-red-600/20 p-2.5 text-red-400 ring-1 ring-red-500/40 shrink-0">
+            <div className="rounded-xl bg-red-600/20 p-2.5 text-red-400 ring-1 ring-red-500/50 shrink-0">
               <Stethoscope className="h-5 w-5" />
             </div>
             <div>
@@ -177,7 +180,7 @@ export function ApplicationQuestionsSection({
 2) Managing panicking patient & bystanders
 3) Immediate clinical triage (ABC - Airway, Breathing, Circulation)
 4) Patient stabilization and emergency transport..."
-                    className="rounded-xl border-red-950/80 bg-black/95 p-4 text-sm text-white placeholder:text-zinc-600 transition-all focus-visible:border-red-500 focus-visible:ring-red-600/50 focus-visible:shadow-[0_0_20px_rgba(220,38,38,0.25)]"
+                    className="rounded-xl border border-red-900/60 bg-[#0e0707] p-4 text-sm text-white placeholder:text-zinc-400 transition-all hover:border-red-500/40 focus-visible:bg-[#140a0a] focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-600/50 focus-visible:shadow-[0_0_20px_rgba(220,38,38,0.3)]"
                     {...field}
                   />
                 </FormControl>
