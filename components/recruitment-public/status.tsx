@@ -16,10 +16,10 @@ export default function RecruitmentStatus() {
 
   if (loading) {
     return (
-      <section className="py-24">
-        <div className="container mx-auto max-w-5xl px-6">
-          <Card className="border-red-500/20 bg-card/60 backdrop-blur">
-            <CardContent className="flex justify-center p-10">
+      <section className="py-16 bg-[#030508]">
+        <div className="container mx-auto max-w-5xl px-4 sm:px-6">
+          <Card className="border border-red-950/80 bg-[#0c0d14]/95 shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur">
+            <CardContent className="flex justify-center p-10 text-zinc-400">
               Loading recruitment status...
             </CardContent>
           </Card>
@@ -35,8 +35,8 @@ export default function RecruitmentStatus() {
   const isOpen = settings.is_open;
 
   const badgeClass = isOpen
-    ? "bg-green-500/10 text-green-400 border-green-500/30"
-    : "bg-red-500/10 text-red-400 border-red-500/30";
+    ? "bg-emerald-600/20 text-emerald-400 border-emerald-500/40"
+    : "bg-red-600/20 text-red-400 border-red-500/40";
 
   const applicationPeriod =
     settings.application_start && settings.application_end
@@ -57,43 +57,43 @@ export default function RecruitmentStatus() {
     : "N/A";
 
   return (
-    <section className="py-24">
-      <div className="container mx-auto max-w-5xl px-6">
+    <section className="py-16 bg-[#030508]">
+      <div className="container mx-auto max-w-5xl px-4 sm:px-6">
         <Reveal>
-          <Card className="border-red-500/20 bg-card/60 backdrop-blur">
-            <CardContent className="space-y-6 p-8 text-center">
-              <Badge className={badgeClass}>
-                {isOpen ? "OPEN" : "CLOSED"}
+          <Card className="border border-red-950/90 bg-[#0c0d14]/95 shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur">
+            <CardContent className="space-y-6 p-6 sm:p-10 text-center">
+              <Badge className={`${badgeClass} px-4 py-1 text-xs font-bold uppercase tracking-wider`}>
+                {isOpen ? "Recruitment Active" : "Recruitment Inactive"}
               </Badge>
 
-              <h2 className="text-3xl font-bold">
-                Recruitment
+              <h2 className="text-2xl sm:text-3xl font-black text-white tracking-wide">
+                Cadet Enrollment Status
               </h2>
 
-              <p className="mx-auto max-w-2xl text-muted-foreground">
+              <p className="mx-auto max-w-2xl text-sm sm:text-base text-zinc-300 leading-relaxed">
                 {settings.recruitment_notice ??
                   (isOpen
-                    ? "Applications are currently open."
-                    : "Recruitment is currently closed.")}
+                    ? "Applications are currently open for all eligible citizens."
+                    : "Cadet recruitment is currently closed while active applications are processed.")}
               </p>
 
-              <div className="grid gap-6 pt-4 md:grid-cols-2">
-                <div>
-                  <p className="text-sm text-muted-foreground">
+              <div className="grid gap-6 pt-4 sm:grid-cols-2 border-t border-white/10 mt-6">
+                <div className="rounded-xl border border-white/5 bg-black/40 p-4">
+                  <p className="text-xs uppercase tracking-wider text-zinc-400 font-semibold">
                     Application Period
                   </p>
 
-                  <p className="font-semibold">
+                  <p className="mt-1 font-bold text-white text-base">
                     {applicationPeriod}
                   </p>
                 </div>
 
-                <div>
-                  <p className="text-sm text-muted-foreground">
-                    Last Updated
+                <div className="rounded-xl border border-white/5 bg-black/40 p-4">
+                  <p className="text-xs uppercase tracking-wider text-zinc-400 font-semibold">
+                    Last Registry Sync
                   </p>
 
-                  <p className="font-semibold">
+                  <p className="mt-1 font-bold text-white text-base">
                     {lastUpdated}
                   </p>
                 </div>
