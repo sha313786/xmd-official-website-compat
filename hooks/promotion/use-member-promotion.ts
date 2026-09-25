@@ -28,35 +28,53 @@ export function useMemberPromotion() {
       try {
         setLoading(true);
 
-        console.log("Step 1");
+        // ---------------------------------------------
+        // 1. Get logged-in member
+        // ---------------------------------------------
 
-        // Keep existing member lookup
         const dashboardUser =
           await DashboardRoleService.getDashboardUser();
 
-        console.log("Dashboard User:", dashboardUser);
+        console.log(
+          "[PROMOTION] Dashboard User:",
+          dashboardUser
+        );
 
         if (!dashboardUser) {
-          setLoading(false);
+          setCycle(null);
+          setResult(null);
           return;
         }
 
-        console.log("Step 2");
+        // ---------------------------------------------
+        // 2. Get active promotion cycle
+        // ---------------------------------------------
 
-        // Keep existing active-cycle lookup
         const activeCycle =
           await promotionService.getActiveCycle();
 
-        console.log("Active Cycle:", activeCycle);
+        console.log(
+          "[PROMOTION] Active Cycle:",
+          activeCycle
+        );
 
         if (!activeCycle) {
-          setLoading(false);
+          setCycle(null);
+          setResult(null);
           return;
         }
 
-        console.log("Step 3");
+        setCycle(activeCycle);
 
-        // Keep existing promotion result
+        // ---------------------------------------------
+        // 3. Get stored promotion result
+        //
+        // This is ONLY for:
+        // - leaderboard position
+        // - promotion type
+        // - promotion result
+        // ---------------------------------------------
+
         const memberResult =
           await promotionService.getMemberResult(
             activeCycle.id,
@@ -64,13 +82,13 @@ export function useMemberPromotion() {
           );
 
         console.log(
-          "Stored Member Result:",
+          "[PROMOTION] Stored Result:",
           memberResult
         );
 
-        // ------------------------------------------------
-        // LIVE DUTY DATA
-        // ------------------------------------------------
+        // ---------------------------------------------
+        // 4. Get ALL duty logs for ACTIVE cycle
+        // ---------------------------------------------
 
         const dutyLogs =
           await promotionService.getDutyLogs(
@@ -78,22 +96,35 @@ export function useMemberPromotion() {
           );
 
         console.log(
-          "Cycle Duty Logs:",
+          "[PROMOTION] Duty Logs:",
           dutyLogs
         );
+
+        // ---------------------------------------------
+        // 5. Filter THIS MEMBER
+        // ---------------------------------------------
 
         const memberDutyLogs =
           dutyLogs.filter(
             (log) =>
-              log.member_id === dashboardUser.id
+              String(log.member_id) ===
+              String(dashboardUser.id)
           );
 
         console.log(
-          "Member Duty Logs:",
+          "[PROMOTION] Member ID:",
+          dashboardUser.id
+        );
+
+        console.log(
+          "[PROMOTION] Member Duty Logs:",
           memberDutyLogs
         );
 
-        // Calculate current duty hours
+        // ---------------------------------------------
+        // 6. Calculate LIVE duty hours
+        // ---------------------------------------------
+
         const totalHours =
           memberDutyLogs.reduce(
             (total, log) =>
@@ -102,56 +133,74 @@ export function useMemberPromotion() {
             0
           );
 
-        // Calculate unique duty days
+        // ---------------------------------------------
+        // 7. Calculate LIVE duty days
+        // ---------------------------------------------
+
+        const dutyDates =
+          memberDutyLogs
+            .map(
+              (log) =>
+                log.normalized_duty_date
+            )
+            .filter(
+              (
+                date
+              ): date is string =>
+                Boolean(date)
+            );
+
         const dutyDays =
-          new Set(
-            memberDutyLogs
-              .map(
-                (log) =>
-                  log.normalized_duty_date
-              )
-              .filter(Boolean)
-          ).size;
+          new Set(dutyDates).size;
 
         console.log(
-          "LIVE Duty Hours:",
+          "[PROMOTION] LIVE HOURS:",
           totalHours
         );
 
         console.log(
-          "LIVE Duty Days:",
+          "[PROMOTION] LIVE DAYS:",
           dutyDays
         );
 
-        // ------------------------------------------------
-        // Preserve promotion result but update live stats
-        // ------------------------------------------------
+        // ---------------------------------------------
+        // 8. Create result even if promotion_results
+        //    does not exist yet
+        // ---------------------------------------------
 
         const liveResult =
-          memberResult
-            ? {
-                ...memberResult,
+          {
+            ...(memberResult ?? {}),
 
-                total_hours: Number(
-                  totalHours.toFixed(2)
-                ),
+            cycle_id:
+              activeCycle.id,
 
-                duty_days: dutyDays,
-              }
-            : null;
+            member_id:
+              dashboardUser.id,
+
+            total_hours:
+              Number(
+                totalHours.toFixed(2)
+              ),
+
+            duty_days:
+              dutyDays,
+          } as PromotionResult;
 
         console.log(
-          "Final Promotion Result:",
+          "[PROMOTION] FINAL RESULT:",
           liveResult
         );
 
-        setCycle(activeCycle);
         setResult(liveResult);
       } catch (error) {
         console.error(
-          "Promotion Hook Error:",
+          "[PROMOTION] LOAD ERROR:",
           error
         );
+
+        setCycle(null);
+        setResult(null);
       } finally {
         setLoading(false);
       }
