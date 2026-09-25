@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   PromotionCycle,
@@ -8,6 +8,7 @@ import {
 } from "@/types/promotion";
 
 import { promotionService } from "@/services/promotion.service";
+
 import {
   DashboardRoleService,
 } from "@/services/dashboard/dashboard-role.service";
@@ -22,209 +23,146 @@ export function useMemberPromotion() {
   const [loading, setLoading] =
     useState(true);
 
-  const loadPromotion = useCallback(async () => {
-    try {
-      setLoading(true);
+  useEffect(() => {
+    async function load() {
+      try {
+        setLoading(true);
 
-      console.log("========== MEMBER PROMOTION LOAD ==========");
+        console.log("Step 1");
 
-      // --------------------------------------------------
-      // 1. Get logged-in dashboard member
-      // --------------------------------------------------
+        // Keep existing member lookup
+        const dashboardUser =
+          await DashboardRoleService.getDashboardUser();
 
-      const dashboardUser =
-        await DashboardRoleService.getDashboardUser();
+        console.log("Dashboard User:", dashboardUser);
 
-      console.log("Dashboard User:", dashboardUser);
+        if (!dashboardUser) {
+          setLoading(false);
+          return;
+        }
 
-      if (!dashboardUser) {
-        setCycle(null);
-        setResult(null);
-        return;
-      }
+        console.log("Step 2");
 
-      // --------------------------------------------------
-      // 2. Get active promotion cycle
-      // --------------------------------------------------
+        // Keep existing active-cycle lookup
+        const activeCycle =
+          await promotionService.getActiveCycle();
 
-      const activeCycle =
-        await promotionService.getActiveCycle();
+        console.log("Active Cycle:", activeCycle);
 
-      console.log("Active Cycle:", activeCycle);
+        if (!activeCycle) {
+          setLoading(false);
+          return;
+        }
 
-      if (!activeCycle) {
-        setCycle(null);
-        setResult(null);
-        return;
-      }
+        console.log("Step 3");
 
-      // --------------------------------------------------
-      // 3. Get stored promotion result
-      //
-      // This still provides:
-      // - leaderboard position
-      // - promotion type
-      // - promotion result
-      // - other engine-generated values
-      // --------------------------------------------------
+        // Keep existing promotion result
+        const memberResult =
+          await promotionService.getMemberResult(
+            activeCycle.id,
+            dashboardUser.id
+          );
 
-      const storedResult =
-        await promotionService.getMemberResult(
-          activeCycle.id,
-          dashboardUser.id
+        console.log(
+          "Stored Member Result:",
+          memberResult
         );
 
-      console.log("Stored Promotion Result:", storedResult);
+        // ------------------------------------------------
+        // LIVE DUTY DATA
+        // ------------------------------------------------
 
-      // --------------------------------------------------
-      // 4. Get LIVE duty logs for this member + cycle
-      // --------------------------------------------------
+        const dutyLogs =
+          await promotionService.getDutyLogs(
+            activeCycle.id
+          );
 
-      const dutyLogs =
-        await promotionService.getDutyLogs(
-          activeCycle.id
+        console.log(
+          "Cycle Duty Logs:",
+          dutyLogs
         );
 
-      console.log(
-        "All Duty Logs:",
-        dutyLogs
-      );
+        const memberDutyLogs =
+          dutyLogs.filter(
+            (log) =>
+              log.member_id === dashboardUser.id
+          );
 
-      // Only use this member's logs
-      const memberDutyLogs =
-        dutyLogs.filter(
-          (log) =>
-            log.member_id === dashboardUser.id
-        );
-
-      console.log(
-        "Member Duty Logs:",
-        memberDutyLogs
-      );
-
-      // --------------------------------------------------
-      // 5. Calculate current duty hours directly
-      //    from duty_logs
-      // --------------------------------------------------
-
-      const totalHours =
-        memberDutyLogs.reduce(
-          (total, log) =>
-            total +
-            Number(log.duty_hours ?? 0),
-          0
-        );
-
-      // --------------------------------------------------
-      // 6. Calculate unique duty days
-      // --------------------------------------------------
-
-      const dutyDays =
-        new Set(
+        console.log(
+          "Member Duty Logs:",
           memberDutyLogs
-            .map(
-              (log) =>
-                log.normalized_duty_date
-            )
-            .filter(Boolean)
-        ).size;
+        );
 
-      console.log(
-        "LIVE Duty Hours:",
-        totalHours
-      );
+        // Calculate current duty hours
+        const totalHours =
+          memberDutyLogs.reduce(
+            (total, log) =>
+              total +
+              Number(log.duty_hours ?? 0),
+            0
+          );
 
-      console.log(
-        "LIVE Duty Days:",
-        dutyDays
-      );
+        // Calculate unique duty days
+        const dutyDays =
+          new Set(
+            memberDutyLogs
+              .map(
+                (log) =>
+                  log.normalized_duty_date
+              )
+              .filter(Boolean)
+          ).size;
 
-      // --------------------------------------------------
-      // 7. Keep promotion result information
-      //    but replace stale duty totals
-      // --------------------------------------------------
+        console.log(
+          "LIVE Duty Hours:",
+          totalHours
+        );
 
-      const liveResult =
-        storedResult
-          ? {
-              ...storedResult,
+        console.log(
+          "LIVE Duty Days:",
+          dutyDays
+        );
 
-              // IMPORTANT:
-              // Always use duty_logs for live hours
-              total_hours: Number(
-                totalHours.toFixed(2)
-              ),
+        // ------------------------------------------------
+        // Preserve promotion result but update live stats
+        // ------------------------------------------------
 
-              // IMPORTANT:
-              // Always use duty_logs for live days
-              duty_days: dutyDays,
-            }
-          : null;
+        const liveResult =
+          memberResult
+            ? {
+                ...memberResult,
 
-      console.log(
-        "Final Member Promotion Result:",
-        liveResult
-      );
+                total_hours: Number(
+                  totalHours.toFixed(2)
+                ),
 
-      // --------------------------------------------------
-      // 8. Update state
-      // --------------------------------------------------
+                duty_days: dutyDays,
+              }
+            : null;
 
-      setCycle(activeCycle);
-      setResult(liveResult);
+        console.log(
+          "Final Promotion Result:",
+          liveResult
+        );
 
-      console.log(
-        "=========================================="
-      );
-    } catch (error) {
-      console.error(
-        "Member Promotion Load Error:",
-        error
-      );
-
-      setResult(null);
-    } finally {
-      setLoading(false);
+        setCycle(activeCycle);
+        setResult(liveResult);
+      } catch (error) {
+        console.error(
+          "Promotion Hook Error:",
+          error
+        );
+      } finally {
+        setLoading(false);
+      }
     }
+
+    load();
   }, []);
-
-  // ----------------------------------------------------
-  // Initial load
-  // ----------------------------------------------------
-
-  useEffect(() => {
-    void loadPromotion();
-  }, [loadPromotion]);
-
-  // ----------------------------------------------------
-  // Refresh when user comes back to the page/tab
-  // ----------------------------------------------------
-
-  useEffect(() => {
-    const handleFocus = () => {
-      void loadPromotion();
-    };
-
-    window.addEventListener(
-      "focus",
-      handleFocus
-    );
-
-    return () => {
-      window.removeEventListener(
-        "focus",
-        handleFocus
-      );
-    };
-  }, [loadPromotion]);
 
   return {
     cycle,
     result,
     loading,
-
-    // Expose refresh in case another component
-    // needs to manually refresh promotion data.
-    refresh: loadPromotion,
   };
 }
