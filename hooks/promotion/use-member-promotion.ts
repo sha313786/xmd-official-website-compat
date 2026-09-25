@@ -7,7 +7,7 @@ import {
   PromotionResult,
 } from "@/types/promotion";
 
-import { promotionService } from "@/services/promotion.service";
+import { createClient } from "@/lib/supabase/client";
 
 import {
   DashboardRoleService,
@@ -24,13 +24,19 @@ export function useMemberPromotion() {
     useState(true);
 
   useEffect(() => {
-    async function load() {
+    async function loadPromotion() {
+      const supabase = createClient();
+
       try {
         setLoading(true);
 
-        // ---------------------------------------------
-        // 1. Get logged-in member
-        // ---------------------------------------------
+        console.log(
+          "========== MY PROMOTION =========="
+        );
+
+        // ============================================
+        // 1. GET LOGGED-IN MEMBER
+        // ============================================
 
         const dashboardUser =
           await DashboardRoleService.getDashboardUser();
@@ -41,58 +47,126 @@ export function useMemberPromotion() {
         );
 
         if (!dashboardUser) {
+          console.error(
+            "[PROMOTION] Member not found."
+          );
+
           setCycle(null);
           setResult(null);
           return;
         }
 
-        // ---------------------------------------------
-        // 2. Get active promotion cycle
-        // ---------------------------------------------
+        // ============================================
+        // 2. GET ACTIVE PROMOTION CYCLE
+        // ============================================
 
-        const activeCycle =
-          await promotionService.getActiveCycle();
+        const {
+          data: activeCycle,
+          error: cycleError,
+        } = await supabase
+          .from("promotion_cycles")
+          .select("*")
+          .eq("is_active", true)
+          .single();
 
         console.log(
           "[PROMOTION] Active Cycle:",
           activeCycle
         );
 
-        if (!activeCycle) {
+        console.log(
+          "[PROMOTION] Cycle Error:",
+          cycleError
+        );
+
+        if (cycleError || !activeCycle) {
+          console.error(
+            "[PROMOTION] ACTIVE CYCLE NOT FOUND",
+            cycleError
+          );
+
           setCycle(null);
           setResult(null);
           return;
         }
 
-        setCycle(activeCycle);
+        // ============================================
+        // 3. SET CYCLE IMMEDIATELY
+        // ============================================
 
-        // ---------------------------------------------
-        // 3. Get stored promotion result
+        setCycle(
+          activeCycle as PromotionCycle
+        );
+
+        // ============================================
+        // 4. GET STORED PROMOTION RESULT
         //
-        // This is ONLY for:
+        // Used for:
         // - leaderboard position
         // - promotion type
         // - promotion result
-        // ---------------------------------------------
+        // ============================================
 
-        const memberResult =
-          await promotionService.getMemberResult(
-            activeCycle.id,
+        const {
+          data: storedResult,
+          error: resultError,
+        } = await supabase
+          .from("promotion_results")
+          .select("*")
+          .eq("cycle_id", activeCycle.id)
+          .eq(
+            "member_id",
             dashboardUser.id
-          );
+          )
+          .maybeSingle();
 
         console.log(
           "[PROMOTION] Stored Result:",
-          memberResult
+          storedResult
         );
 
-        // ---------------------------------------------
-        // 4. Get ALL duty logs for ACTIVE cycle
-        // ---------------------------------------------
+        console.log(
+          "[PROMOTION] Result Error:",
+          resultError
+        );
 
-        const dutyLogs =
-          await promotionService.getDutyLogs(
+        // ============================================
+        // 5. GET THIS MEMBER'S DUTY LOGS
+        //
+        // IMPORTANT:
+        // duty_logs is now the source of truth
+        // for current duty hours and duty days.
+        // ============================================
+
+        const {
+          data: dutyLogs,
+          error: dutyError,
+        } = await supabase
+          .from("duty_logs")
+          .select(
+            `
+              id,
+              member_id,
+              cycle_id,
+              duty_start,
+              duty_end,
+              duty_hours,
+              normalized_duty_date
+            `
+          )
+          .eq(
+            "cycle_id",
             activeCycle.id
+          )
+          .eq(
+            "member_id",
+            dashboardUser.id
+          )
+          .order(
+            "normalized_duty_date",
+            {
+              ascending: true,
+            }
           );
 
         console.log(
@@ -100,113 +174,108 @@ export function useMemberPromotion() {
           dutyLogs
         );
 
-        // ---------------------------------------------
-        // 5. Filter THIS MEMBER
-        // ---------------------------------------------
-
-        const memberDutyLogs =
-          dutyLogs.filter(
-            (log) =>
-              String(log.member_id) ===
-              String(dashboardUser.id)
-          );
-
         console.log(
-          "[PROMOTION] Member ID:",
-          dashboardUser.id
+          "[PROMOTION] Duty Error:",
+          dutyError
         );
 
-        console.log(
-          "[PROMOTION] Member Duty Logs:",
-          memberDutyLogs
-        );
+        if (dutyError) {
+          throw dutyError;
+        }
 
-        // ---------------------------------------------
-        // 6. Calculate LIVE duty hours
-        // ---------------------------------------------
+        // ============================================
+        // 6. CALCULATE LIVE DUTY HOURS
+        // ============================================
 
         const totalHours =
-          memberDutyLogs.reduce(
-            (total, log) =>
+          (dutyLogs ?? []).reduce(
+            (
+              total,
+              log
+            ) =>
               total +
-              Number(log.duty_hours ?? 0),
+              Number(
+                log.duty_hours ?? 0
+              ),
             0
           );
 
-        // ---------------------------------------------
-        // 7. Calculate LIVE duty days
-        // ---------------------------------------------
-
-        const dutyDates =
-          memberDutyLogs
-            .map(
-              (log) =>
-                log.normalized_duty_date
-            )
-            .filter(
-              (
-                date
-              ): date is string =>
-                Boolean(date)
-            );
+        // ============================================
+        // 7. CALCULATE LIVE DUTY DAYS
+        // ============================================
 
         const dutyDays =
-          new Set(dutyDates).size;
+          new Set(
+            (dutyLogs ?? [])
+              .map(
+                (log) =>
+                  log.normalized_duty_date
+              )
+              .filter(Boolean)
+          ).size;
 
         console.log(
-          "[PROMOTION] LIVE HOURS:",
+          "[PROMOTION] LIVE DUTY HOURS:",
           totalHours
         );
 
         console.log(
-          "[PROMOTION] LIVE DAYS:",
+          "[PROMOTION] LIVE DUTY DAYS:",
           dutyDays
         );
 
-        // ---------------------------------------------
-        // 8. Create result even if promotion_results
-        //    does not exist yet
-        // ---------------------------------------------
+        // ============================================
+        // 8. BUILD FINAL RESULT
+        //
+        // Keep promotion_results data for promotion
+        // information, but ALWAYS replace duty stats
+        // with current duty_logs values.
+        // ============================================
 
-        const liveResult =
-          {
-            ...(memberResult ?? {}),
+        const finalResult = {
+          ...(storedResult ?? {}),
 
-            cycle_id:
-              activeCycle.id,
+          cycle_id:
+            activeCycle.id,
 
-            member_id:
-              dashboardUser.id,
+          member_id:
+            dashboardUser.id,
 
-            total_hours:
-              Number(
-                totalHours.toFixed(2)
-              ),
+          total_hours:
+            Number(
+              totalHours.toFixed(2)
+            ),
 
-            duty_days:
-              dutyDays,
-          } as PromotionResult;
+          duty_days:
+            dutyDays,
+        } as PromotionResult;
 
         console.log(
           "[PROMOTION] FINAL RESULT:",
-          liveResult
+          finalResult
         );
 
-        setResult(liveResult);
+        setResult(finalResult);
+
+        console.log(
+          "=================================="
+        );
       } catch (error) {
         console.error(
-          "[PROMOTION] LOAD ERROR:",
+          "[PROMOTION] ERROR:",
           error
         );
 
-        setCycle(null);
+        // IMPORTANT:
+        // Do NOT destroy an already-loaded cycle
+        // because a later request failed.
         setResult(null);
       } finally {
         setLoading(false);
       }
     }
 
-    load();
+    loadPromotion();
   }, []);
 
   return {
