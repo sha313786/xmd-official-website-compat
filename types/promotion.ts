@@ -7,9 +7,15 @@ export interface PromotionProgress {
 export interface PromotionCycle {
   id: string;
   name: string;
+
   start_date: string;
   end_date: string;
+
   is_active: boolean;
+
+  required_hours: number;
+  required_days: number;
+
   created_at: string;
   updated_at: string;
 }
