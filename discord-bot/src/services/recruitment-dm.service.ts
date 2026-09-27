@@ -21,19 +21,26 @@ Your journey with XMD is about to begin. Stay connected and follow the instructi
 
 — **XLANTIS Medical Department (XMD)**`;
 
-const REJECTION_MESSAGE = `**XMD Recruitment Application**
+function buildRejectionMessage(reason?: string | null): string {
+  const cleanReason = reason?.trim();
+  const reasonSection = cleanReason
+    ? `\n**Decision / Reason:**\n> ${cleanReason.replace(/\n/g, "\n> ")}\n`
+    : "";
+
+  return `**XMD Recruitment Application**
 
 Thank you for taking the time to apply to the **XLANTIS Medical Department (XMD)**.
 
 After careful consideration, your recruitment application has **not been accepted at this time**.
 
 **Application Status:** REJECTED
-
+${reasonSection}
 Please don't be discouraged. We appreciate your interest in XMD, and you may have another opportunity to apply in the future.
 
 **Keep improving, keep moving forward, and don't give up on your goals.**
 
 — **XLANTIS Medical Department (XMD)**`;
+}
 
 export class RecruitmentDMService {
   static async processApplications(): Promise<void> {
@@ -44,7 +51,7 @@ export class RecruitmentDMService {
     const { data: applications, error } = await supabase
       .from("recruitment_applications")
       .select(
-        "id, discord_id, status, acceptance_dm_sent, rejection_dm_sent"
+        "id, discord_id, status, review_notes, acceptance_dm_sent, rejection_dm_sent"
       )
       .in("status", ["approved", "rejected"])
       .not("discord_id", "is", null);
@@ -108,7 +115,7 @@ export class RecruitmentDMService {
             application.discord_id
           );
 
-          await user.send(REJECTION_MESSAGE);
+          await user.send(buildRejectionMessage(application.review_notes));
 
           const { error: updateError } = await supabase
             .from("recruitment_applications")

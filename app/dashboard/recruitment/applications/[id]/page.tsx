@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, Check, X, Clock, UserCheck, UserX } from "lucide-react";
@@ -15,6 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useProfile } from "@/hooks/profile/use-profile";
 import { useMember } from "@/hooks/member/use-member";
+import { RejectApplicationDialog } from "@/components/recruitment/reject-application-dialog";
 
 export default function ApplicationDetailsPage() {
   const params = useParams();
@@ -28,6 +30,8 @@ export default function ApplicationDetailsPage() {
     reject,
     updateInterviewStatus,
   } = useApplication(id);
+
+  const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
 
   const { member: reviewer } = useMember(application?.reviewed_by);
 
@@ -51,8 +55,8 @@ export default function ApplicationDetailsPage() {
     await approve(profile?.id ?? null);
   };
 
-  const handleReject = async () => {
-    await reject(profile?.id ?? null);
+  const handleConfirmReject = async (reason: string) => {
+    await reject(profile?.id ?? null, reason);
   };
 
   const handleInterviewStatus = async (
@@ -220,20 +224,28 @@ export default function ApplicationDetailsPage() {
           )}
 
           {application.review_notes && (
-            <div>
-              <p className="text-sm text-muted-foreground">Review Notes</p>
-              <p>{application.review_notes}</p>
+            <div className={`rounded-lg border p-4 space-y-1.5 ${
+              application.status === "rejected"
+                ? "border-red-500/20 bg-red-500/5 text-red-200"
+                : "border-border bg-muted/40"
+            }`}>
+              <p className={`text-xs font-semibold uppercase tracking-wider ${
+                application.status === "rejected" ? "text-red-400" : "text-muted-foreground"
+              }`}>
+                {application.status === "rejected" ? "Rejection Reason (Sent to Applicant via DM)" : "Review Notes"}
+              </p>
+              <p className="text-sm whitespace-pre-wrap">{application.review_notes}</p>
             </div>
           )}
 
           {application.status === "pending" && (
-            <div className="flex gap-3">
-              <Button onClick={handleApprove}>
+            <div className="flex flex-wrap gap-3">
+              <Button onClick={handleApprove} className="bg-emerald-600 hover:bg-emerald-700 text-white">
                 <Check className="mr-2 h-4 w-4" />
                 Approve Application
               </Button>
 
-              <Button variant="destructive" onClick={handleReject}>
+              <Button variant="destructive" onClick={() => setRejectDialogOpen(true)}>
                 <X className="mr-2 h-4 w-4" />
                 Reject Application
               </Button>
@@ -334,6 +346,15 @@ export default function ApplicationDetailsPage() {
           </CardContent>
         </Card>
       )}
+
+      <RejectApplicationDialog
+        open={rejectDialogOpen}
+        onOpenChange={setRejectDialogOpen}
+        applicantName={application.full_name}
+        characterName={application.character_name}
+        discordId={application.discord_id || undefined}
+        onConfirm={handleConfirmReject}
+      />
     </div>
   );
 }

@@ -28,7 +28,7 @@ class OnDutyCommand extends CommandController {
 
       await dutyLogService.logOnDuty(
         interaction.client,
-        member,
+        interaction.user.id,
         session
       );
     } catch (error) {

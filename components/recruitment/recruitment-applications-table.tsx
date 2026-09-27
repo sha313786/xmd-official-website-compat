@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 
 import { useApplications } from "@/hooks/use-applications";
+import { useProfile } from "@/hooks/profile/use-profile";
+import { RejectApplicationDialog } from "@/components/recruitment/reject-application-dialog";
+import type { RecruitmentApplication } from "@/types/recruitment";
 
 import {
   Card,
@@ -30,6 +33,7 @@ type StatusFilter =
 
 export function RecruitmentApplicationsTable() {
   const router = useRouter();
+  const { profile } = useProfile();
 
   const {
     applications,
@@ -40,6 +44,8 @@ export function RecruitmentApplicationsTable() {
 
   const [statusFilter, setStatusFilter] =
     useState<StatusFilter>("all");
+  const [rejectTarget, setRejectTarget] =
+    useState<RecruitmentApplication | null>(null);
 
   const filteredApplications =
     useMemo(() => {
@@ -213,27 +219,28 @@ export function RecruitmentApplicationsTable() {
                       </Button>
 
                       {application.status === "pending" && (
-  <>
-    <Button
-      size="sm"
-      onClick={() =>
-        approveApplication(application.id)
-      }
-    >
-      <Check className="h-4 w-4" />
-    </Button>
+                        <>
+                          <Button
+                            size="sm"
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                            onClick={() =>
+                              approveApplication(application.id, profile?.id ?? null)
+                            }
+                            title="Approve Application"
+                          >
+                            <Check className="h-4 w-4" />
+                          </Button>
 
-    <Button
-      size="sm"
-      variant="destructive"
-      onClick={() =>
-        rejectApplication(application.id)
-      }
-    >
-      <X className="h-4 w-4" />
-    </Button>
-  </>
-)}
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => setRejectTarget(application)}
+                            title="Reject Application (with custom reason)"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -269,6 +276,24 @@ export function RecruitmentApplicationsTable() {
           </table>
         </div>
       </CardContent>
+
+      <RejectApplicationDialog
+        open={Boolean(rejectTarget)}
+        onOpenChange={(open) => {
+          if (!open) setRejectTarget(null);
+        }}
+        applicantName={rejectTarget?.full_name}
+        characterName={rejectTarget?.character_name}
+        discordId={rejectTarget?.discord_id || undefined}
+        onConfirm={async (reason) => {
+          if (!rejectTarget) return;
+          await rejectApplication(
+            rejectTarget.id,
+            profile?.id ?? null,
+            reason
+          );
+        }}
+      />
     </Card>
   );
 }
