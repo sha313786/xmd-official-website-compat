@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { promotionService } from "@/services/promotion.service";
-import { requireManagement } from "@/lib/auth/require-management";
+import { DashboardRoleServerService } from "@/services/dashboard/dashboard-role.server.service";
 
 async function refresh() {
   const results = await promotionService.refreshActiveCycle();
@@ -14,7 +14,25 @@ async function refresh() {
 
 async function handleRefresh() {
   try {
-    await requireManagement();
+    const dashboardUser =
+      await DashboardRoleServerService.getDashboardUser();
+
+    if (!dashboardUser) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    if (dashboardUser.dashboard !== "management") {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Forbidden: Management access required",
+        },
+        { status: 403 }
+      );
+    }
 
     return await refresh();
   } catch (error) {

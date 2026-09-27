@@ -67,7 +67,7 @@ export const promotionCycleService = {
     // Trigger promotion results recalculation if hours/days were modified
     if (updates.required_hours !== undefined || updates.required_days !== undefined || updates.is_active) {
       try {
-        await fetch("/api/promotion/refresh").catch(() => {});
+        await fetch("/api/promotion/refresh", { method: "POST" }).catch(() => {});
       } catch {}
     }
 
