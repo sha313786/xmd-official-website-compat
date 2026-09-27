@@ -21,6 +21,8 @@ export const promotionCycleService = {
     name: string;
     start_date: string;
     end_date: string;
+    required_hours?: number;
+    required_days?: number;
   }): Promise<PromotionCycle> {
     const supabase = createClient();
     const { error: activeError } = await supabase
@@ -36,6 +38,8 @@ export const promotionCycleService = {
       .from("promotion_cycles")
       .insert({
         ...data,
+        required_hours: data.required_hours ?? 25,
+        required_days: data.required_days ?? 0,
         is_active: true,
       })
       .select()
@@ -45,24 +49,29 @@ export const promotionCycleService = {
 
     return cycle;
   },
-    async updateCycle(
+
+  async updateCycle(
     id: string,
     updates: Partial<PromotionCycle>
   ): Promise<PromotionCycle> {
     const supabase = createClient();
     const { data, error } = await supabase
-  .from("promotion_cycles")
-  .update(updates)
-  .eq("id", id)
-  .select();
-
-console.log("UPDATE ID:", id);
-console.log("UPDATE DATA:", data);
-console.log("UPDATE ERROR:", error);
+      .from("promotion_cycles")
+      .update(updates)
+      .eq("id", id)
+      .select()
+      .single();
 
     if (error) throw error;
 
-    return data;
+    // Trigger promotion results recalculation if hours/days were modified
+    if (updates.required_hours !== undefined || updates.required_days !== undefined || updates.is_active) {
+      try {
+        await fetch("/api/promotion/refresh").catch(() => {});
+      } catch {}
+    }
+
+    return data as PromotionCycle;
   },
 
   async deleteCycle(id: string) {

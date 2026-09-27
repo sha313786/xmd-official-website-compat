@@ -79,6 +79,26 @@ export function ViewPromotionCycleDialog({
             </div>
           </div>
 
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Minimum Duty Hours
+              </p>
+              <p className="font-semibold text-red-400">
+                {cycle.required_hours ?? 25} hrs
+              </p>
+            </div>
+
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Minimum Duty Days
+              </p>
+              <p className="font-semibold">
+                {cycle.required_days ?? 0} days
+              </p>
+            </div>
+          </div>
+
           <div>
             <p className="text-sm text-muted-foreground mb-2">
               Status

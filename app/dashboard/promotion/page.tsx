@@ -20,8 +20,33 @@ import { EligibleMembersTable } from "@/components/promotion/eligible-members-ta
 import { ManagementRolesTable } from "@/components/promotion/management-rewards-table";
 import { PromotionRefreshButton } from "@/components/promotion/promotion-refresh-button";
 import { PromotionSummaryCard } from "@/components/promotion/promotion-summary-card";
+import {
+  useActivePromotionCycle,
+  usePromotionResults,
+} from "@/hooks/promotion/use-promotion-cycles";
 
 export default function PromotionDashboardPage() {
+  const { cycle } = useActivePromotionCycle();
+  const { results, loading } = usePromotionResults(cycle?.id);
+
+  const eligibleCount = loading
+    ? "--"
+    : results.filter((r) => r.eligible).length;
+
+  const singleCount = loading
+    ? "--"
+    : results.filter((r) => r.promotion_type === "SINGLE").length;
+
+  const doubleCount = loading
+    ? "--"
+    : results.filter((r) => r.promotion_type === "DOUBLE").length;
+
+  const managementCount = loading
+    ? "--"
+    : results.filter(
+        (r) => r.promotion_type === "MANAGEMENT_REWARD"
+      ).length;
+
   return (
     <ManagementRouteGuard>
       <div className="space-y-6 p-6">
@@ -54,28 +79,28 @@ export default function PromotionDashboardPage() {
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           <PromotionSummaryCard
             title="Eligible Members"
-            value="--"
+            value={eligibleCount}
             icon={Users}
             color="text-blue-500"
           />
 
           <PromotionSummaryCard
             title="Single Promotions"
-            value="--"
+            value={singleCount}
             icon={Award}
             color="text-green-500"
           />
 
           <PromotionSummaryCard
             title="Double Promotions"
-            value="--"
+            value={doubleCount}
             icon={Trophy}
             color="text-yellow-500"
           />
 
           <PromotionSummaryCard
             title="Management Roles"
-            value="--"
+            value={managementCount}
             icon={ShieldCheck}
             color="text-red-500"
           />

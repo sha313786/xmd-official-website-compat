@@ -22,6 +22,8 @@ interface CreatePromotionCycleDialogProps {
     name: string;
     start_date: string;
     end_date: string;
+    required_hours: number;
+    required_days: number;
   }) => Promise<void> | void;
 }
 
@@ -34,6 +36,8 @@ export function CreatePromotionCycleDialog({
   const [name, setName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [requiredHours, setRequiredHours] = useState(25);
+  const [requiredDays, setRequiredDays] = useState(0);
 
   async function handleSubmit() {
     if (!name || !startDate || !endDate) return;
@@ -45,11 +49,15 @@ export function CreatePromotionCycleDialog({
         name,
         start_date: startDate,
         end_date: endDate,
+        required_hours: Number(requiredHours) || 0,
+        required_days: Number(requiredDays) || 0,
       });
 
       setName("");
       setStartDate("");
       setEndDate("");
+      setRequiredHours(25);
+      setRequiredDays(0);
 
       setOpen(false);
     } finally {
@@ -95,30 +103,64 @@ export function CreatePromotionCycleDialog({
             />
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="start">
-              Start Date
-            </Label>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="start">
+                Start Date
+              </Label>
 
-            <Input
-              id="start"
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
+              <Input
+                id="start"
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="end">
+                End Date
+              </Label>
+
+              <Input
+                id="end"
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </div>
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="end">
-              End Date
-            </Label>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="create-hours">
+                Minimum Duty Hours <span className="text-red-400">*</span>
+              </Label>
 
-            <Input
-              id="end"
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
+              <Input
+                id="create-hours"
+                type="number"
+                min="0"
+                step="1"
+                value={requiredHours}
+                onChange={(e) => setRequiredHours(Number(e.target.value))}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="create-days">
+                Minimum Duty Days
+              </Label>
+
+              <Input
+                id="create-days"
+                type="number"
+                min="0"
+                step="1"
+                value={requiredDays}
+                onChange={(e) => setRequiredDays(Number(e.target.value))}
+              />
+            </div>
           </div>
         </div>
 

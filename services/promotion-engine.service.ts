@@ -134,13 +134,19 @@ export class PromotionEngine {
   static determinePromotionType(
     rank: string,
     totalHours: number,
-    leaderboardPosition: number
+    leaderboardPosition: number,
+    requiredHours = 25,
+    dutyDays = 0,
+    requiredDays = 0
   ): PromotionResult["promotion_type"] {
     if (this.isManagement(rank)) {
       return "MANAGEMENT_REWARD";
     }
 
-    if (totalHours < 25) {
+    if (
+      totalHours < requiredHours ||
+      (requiredDays > 0 && dutyDays < requiredDays)
+    ) {
       return "NONE";
     }
 
@@ -156,13 +162,20 @@ export class PromotionEngine {
 
   static isEligible(
     rank: string,
-    totalHours: number
+    totalHours: number,
+    dutyDays = 0,
+    requiredHours = 25,
+    requiredDays = 0
   ) {
     if (this.isManagement(rank)) {
       return false;
     }
 
-    return totalHours >= 25;
+    const hoursEligible = totalHours >= requiredHours;
+    const daysEligible =
+      requiredDays > 0 ? dutyDays >= requiredDays : true;
+
+    return hoursEligible && daysEligible;
   }
 
   static createResult(
@@ -173,16 +186,24 @@ export class PromotionEngine {
       total_hours: number;
       duty_days: number;
       leaderboard_position: number;
+      required_hours?: number;
+      required_days?: number;
     }
   ): Omit<
     PromotionResult,
     "id" | "created_at" | "updated_at"
   > {
+    const requiredHours = Number(data.required_hours ?? 25);
+    const requiredDays = Number(data.required_days ?? 0);
+
     const promotionType =
       this.determinePromotionType(
         data.current_rank,
         data.total_hours,
-        data.leaderboard_position
+        data.leaderboard_position,
+        requiredHours,
+        data.duty_days,
+        requiredDays
       );
 
     const newRank =
@@ -211,7 +232,10 @@ export class PromotionEngine {
 
       eligible: this.isEligible(
         data.current_rank,
-        data.total_hours
+        data.total_hours,
+        data.duty_days,
+        requiredHours,
+        requiredDays
       ),
 
       position: data.leaderboard_position,
@@ -248,7 +272,9 @@ export class PromotionEngine {
   static buildLeaderboard(
     logs: DutyLog[],
     memberRanks: Record<string, string>,
-    cycleId: string
+    cycleId: string,
+    requiredHours = 25,
+    requiredDays = 0
   ) {
     const grouped = this.groupLogsByMember(logs);
 
@@ -283,6 +309,8 @@ export class PromotionEngine {
         total_hours: member.total_hours,
         duty_days: member.duty_days,
         leaderboard_position: index + 1,
+        required_hours: requiredHours,
+        required_days: requiredDays,
       })
     );
   }
@@ -303,34 +331,40 @@ export class PromotionEngine {
   }
 
   static processCycle(
-  cycleId: string,
-  logs: DutyLog[],
-  memberRanks: Record<string, string>
-) {
-  console.log("========== PROMOTION ENGINE ==========");
-  console.log("Cycle:", cycleId);
-  console.log("Logs received:", logs.length);
-  console.log("MemberRanks:", Object.keys(memberRanks).length);
+    cycleId: string,
+    logs: DutyLog[],
+    memberRanks: Record<string, string>,
+    requiredHours = 25,
+    requiredDays = 0
+  ) {
+    console.log("========== PROMOTION ENGINE ==========");
+    console.log("Cycle:", cycleId);
+    console.log("Required Hours:", requiredHours);
+    console.log("Required Days:", requiredDays);
+    console.log("Logs received:", logs.length);
+    console.log("MemberRanks:", Object.keys(memberRanks).length);
 
-  const validLogs = this.filterValidLogs(logs);
+    const validLogs = this.filterValidLogs(logs);
 
-  console.log("Valid logs:", validLogs.length);
+    console.log("Valid logs:", validLogs.length);
 
-  const grouped = this.groupLogsByMember(validLogs);
+    const grouped = this.groupLogsByMember(validLogs);
 
-  console.log("Grouped members:", grouped.size);
+    console.log("Grouped members:", grouped.size);
 
-  const results = this.buildLeaderboard(
-    validLogs,
-    memberRanks,
-    cycleId
-  );
+    const results = this.buildLeaderboard(
+      validLogs,
+      memberRanks,
+      cycleId,
+      requiredHours,
+      requiredDays
+    );
 
-  console.log("Results:", results.length);
-  console.log(results);
+    console.log("Results:", results.length);
+    console.log(results);
 
-  return results;
-}
+    return results;
+  }
 
   static getTopPerformers(
     results: Omit<

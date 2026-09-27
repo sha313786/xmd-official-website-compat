@@ -60,6 +60,8 @@ export function PromotionCycleTable({
               <TableHead>Name</TableHead>
               <TableHead>Start Date</TableHead>
               <TableHead>End Date</TableHead>
+              <TableHead>Min Hours</TableHead>
+              <TableHead>Min Days</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">
                 Actions
@@ -71,7 +73,7 @@ export function PromotionCycleTable({
             {cycles.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={5}
+                  colSpan={7}
                   className="h-24 text-center text-muted-foreground"
                 >
                   No promotion cycles found.
@@ -79,7 +81,7 @@ export function PromotionCycleTable({
               </TableRow>
             ) : (
               cycles.map((cycle) => (
-                                <TableRow key={cycle.id}>
+                <TableRow key={cycle.id}>
                   <TableCell className="font-medium">
                     {cycle.name}
                   </TableCell>
@@ -94,6 +96,14 @@ export function PromotionCycleTable({
                     {new Date(
                       cycle.end_date
                     ).toLocaleDateString()}
+                  </TableCell>
+
+                  <TableCell className="font-semibold text-red-400">
+                    {cycle.required_hours ?? 25} hrs
+                  </TableCell>
+
+                  <TableCell>
+                    {cycle.required_days ?? 0} days
                   </TableCell>
 
                   <TableCell>

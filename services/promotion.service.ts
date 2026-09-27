@@ -116,7 +116,17 @@ export const promotionService = {
 
   async calculateCycleResults(cycleId: string) {
     const supabase = getSupabaseAdmin();
-    const logs = await this.getDutyLogs(cycleId);
+    const [logs, cycleRes] = await Promise.all([
+      this.getDutyLogs(cycleId),
+      supabase
+        .from("promotion_cycles")
+        .select("required_hours, required_days")
+        .eq("id", cycleId)
+        .single(),
+    ]);
+
+    const requiredHours = Number(cycleRes.data?.required_hours ?? 25);
+    const requiredDays = Number(cycleRes.data?.required_days ?? 0);
 
     const { data: members, error } = await supabase
       .from("members")
@@ -130,7 +140,13 @@ export const promotionService = {
       memberRanks[member.id] = member.rank;
     });
 
-    return PromotionEngine.processCycle(cycleId, logs, memberRanks);
+    return PromotionEngine.processCycle(
+      cycleId,
+      logs,
+      memberRanks,
+      requiredHours,
+      requiredDays
+    );
   },
 
   async saveCycleResults(cycleId: string) {

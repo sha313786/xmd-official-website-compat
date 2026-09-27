@@ -23,14 +23,36 @@ export function PromotionCycleCard() {
         {loading ? (
           <p>Loading...</p>
         ) : cycle ? (
-          <div className="space-y-2">
-            <p className="font-semibold">
-              {cycle.name}
-            </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="space-y-1">
+              <p className="font-semibold text-lg">
+                {cycle.name}
+              </p>
 
-            <p className="text-sm text-muted-foreground">
-              {cycle.start_date} → {cycle.end_date}
-            </p>
+              <p className="text-sm text-muted-foreground">
+                {cycle.start_date} → {cycle.end_date}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="rounded-lg border bg-muted/40 px-3.5 py-2 text-center">
+                <span className="text-xs text-muted-foreground block">
+                  Minimum Duty Hours
+                </span>
+                <span className="text-base font-bold text-red-400">
+                  {cycle.required_hours ?? 25} hrs
+                </span>
+              </div>
+
+              <div className="rounded-lg border bg-muted/40 px-3.5 py-2 text-center">
+                <span className="text-xs text-muted-foreground block">
+                  Minimum Duty Days
+                </span>
+                <span className="text-base font-bold text-foreground">
+                  {cycle.required_days ?? 0} days
+                </span>
+              </div>
+            </div>
           </div>
         ) : (
           <p>No active cycle.</p>

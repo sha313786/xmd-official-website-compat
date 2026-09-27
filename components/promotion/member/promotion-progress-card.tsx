@@ -16,7 +16,7 @@ export default function PromotionProgressCard({
 }: PromotionProgressCardProps) {
   const totalHours = result?.total_hours ?? 0;
 
-  const requiredHours = 25;
+  const requiredHours = Number(cycle?.required_hours ?? 25);
 
   const percentage = Math.min(
     (totalHours / requiredHours) * 100,

@@ -42,6 +42,8 @@ export function usePromotionCycles() {
     name: string;
     start_date: string;
     end_date: string;
+    required_hours?: number;
+    required_days?: number;
   }) {
     await promotionCycleService.createCycle(data);
     await refresh();
@@ -53,6 +55,8 @@ export function usePromotionCycles() {
       name: string;
       start_date: string;
       end_date: string;
+      required_hours?: number;
+      required_days?: number;
     }
   ) {
     await promotionCycleService.updateCycle(id, data);

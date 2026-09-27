@@ -27,6 +27,8 @@ interface EditPromotionCycleDialogProps {
       name: string;
       start_date: string;
       end_date: string;
+      required_hours: number;
+      required_days: number;
     }
   ) => Promise<void> | void;
 }
@@ -40,21 +42,24 @@ export function EditPromotionCycleDialog({
   const [loading, setLoading] = useState(false);
 
   const [name, setName] = useState("");
-
   const [startDate, setStartDate] = useState("");
-
   const [endDate, setEndDate] = useState("");
-    useEffect(() => {
-  if (!cycle) return;
+  const [requiredHours, setRequiredHours] = useState(25);
+  const [requiredDays, setRequiredDays] = useState(0);
 
-  const id = requestAnimationFrame(() => {
-    setName(cycle.name);
-    setStartDate(cycle.start_date.slice(0, 10));
-    setEndDate(cycle.end_date.slice(0, 10));
-  });
+  useEffect(() => {
+    if (!cycle) return;
 
-  return () => cancelAnimationFrame(id);
-}, [cycle]);
+    const id = requestAnimationFrame(() => {
+      setName(cycle.name);
+      setStartDate(cycle.start_date.slice(0, 10));
+      setEndDate(cycle.end_date.slice(0, 10));
+      setRequiredHours(cycle.required_hours ?? 25);
+      setRequiredDays(cycle.required_days ?? 0);
+    });
+
+    return () => cancelAnimationFrame(id);
+  }, [cycle]);
 
   async function handleSave() {
     if (!cycle) return;
@@ -66,6 +71,8 @@ export function EditPromotionCycleDialog({
         name,
         start_date: startDate,
         end_date: endDate,
+        required_hours: Number(requiredHours) || 0,
+        required_days: Number(requiredDays) || 0,
       });
 
       onOpenChange(false);
@@ -88,12 +95,12 @@ export function EditPromotionCycleDialog({
           </DialogTitle>
 
           <DialogDescription>
-            Update the promotion cycle details.
+            Update the promotion cycle details and minimum duty requirements.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
-                      <div className="grid gap-2">
+          <div className="grid gap-2">
             <Label htmlFor="cycle-name">
               Cycle Name
             </Label>
@@ -107,34 +114,72 @@ export function EditPromotionCycleDialog({
             />
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="start-date">
-              Start Date
-            </Label>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="start-date">
+                Start Date
+              </Label>
 
-            <Input
-              id="start-date"
-              type="date"
-              value={startDate}
-              onChange={(e) =>
-                setStartDate(e.target.value)
-              }
-            />
+              <Input
+                id="start-date"
+                type="date"
+                value={startDate}
+                onChange={(e) =>
+                  setStartDate(e.target.value)
+                }
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="end-date">
+                End Date
+              </Label>
+
+              <Input
+                id="end-date"
+                type="date"
+                value={endDate}
+                onChange={(e) =>
+                  setEndDate(e.target.value)
+                }
+              />
+            </div>
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="end-date">
-              End Date
-            </Label>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="req-hours">
+                Minimum Duty Hours <span className="text-red-400">*</span>
+              </Label>
 
-            <Input
-              id="end-date"
-              type="date"
-              value={endDate}
-              onChange={(e) =>
-                setEndDate(e.target.value)
-              }
-            />
+              <Input
+                id="req-hours"
+                type="number"
+                min="0"
+                step="1"
+                value={requiredHours}
+                onChange={(e) =>
+                  setRequiredHours(Number(e.target.value))
+                }
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="req-days">
+                Minimum Duty Days
+              </Label>
+
+              <Input
+                id="req-days"
+                type="number"
+                min="0"
+                step="1"
+                value={requiredDays}
+                onChange={(e) =>
+                  setRequiredDays(Number(e.target.value))
+                }
+              />
+            </div>
           </div>
         </div>
 
