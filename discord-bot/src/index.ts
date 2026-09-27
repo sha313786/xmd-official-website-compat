@@ -10,6 +10,7 @@ import { registerEvents } from "./handlers/event-handler";
 
 import { HealthService } from "./services/health.service";
 import { StatusDashboardService } from "./services/status-dashboard.service";
+import { RecruitmentDMMonitorService } from "./services/recruitment-dm-monitor.service";
 
 // Register commands and events
 registerCommands(client);
@@ -25,6 +26,9 @@ client.once(Events.ClientReady, (readyClient) => {
 
   // Start Discord status dashboard
   StatusDashboardService.start();
+
+  // Start Recruitment DM Monitor
+  RecruitmentDMMonitorService.start();
 });
 
 // Unhandled Promise Rejections
@@ -44,6 +48,7 @@ async function shutdown(signal: string) {
   try {
     HealthService.stop();
     StatusDashboardService.stop();
+    RecruitmentDMMonitorService.stop();
 
     client.destroy();
 
