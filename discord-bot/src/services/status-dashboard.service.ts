@@ -10,7 +10,7 @@ import { botSettingsService } from "./bot-settings.service";
 
 export class StatusDashboardService {
   private static interval: NodeJS.Timeout | null = null;
-  private static readonly UPDATE_INTERVAL = 60_000;
+  private static readonly UPDATE_INTERVAL = 180_000; // Update every 3 minutes (reduced from 1 min)
 
   static start() {
     if (this.interval) {

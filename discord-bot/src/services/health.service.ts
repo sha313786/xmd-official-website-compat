@@ -6,7 +6,7 @@ import { Logger } from "../config/logger";
 
 export class HealthService {
   private static interval: NodeJS.Timeout | null = null;
-  private static readonly INTERVAL_MS = 60_000;
+  private static readonly INTERVAL_MS = 300_000; // Run every 5 minutes (reduced from 1 min)
 
   static start() {
     if (this.interval) {

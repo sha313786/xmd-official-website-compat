@@ -45,11 +45,12 @@ export function useProfile() {
     void loadProfile();
 
     // Refresh every 30 seconds while profile page is open
+    // Fallback polling every 2 minutes (Realtime handles instant changes)
     const interval = setInterval(() => {
       if (active) {
         void loadProfile();
       }
-    }, 30000);
+    }, 120000);
 
     // Use a unique channel name for each hook instance.
     // This prevents Supabase Realtime from reusing an already-subscribed

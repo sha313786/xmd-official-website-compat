@@ -81,9 +81,10 @@ export function useDashboardDuty(): UseDashboardDutyReturn {
       )
       .subscribe();
 
+    // Fallback polling every 2 minutes (Realtime handles instant changes)
     const interval = setInterval(() => {
       void loadDashboard();
-    }, 30000);
+    }, 120000);
 
     return () => {
       cancelAnimationFrame(frame);

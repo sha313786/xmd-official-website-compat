@@ -16,10 +16,10 @@ export class RecruitmentDMMonitorService {
     // Run immediately when the bot starts
     void RecruitmentDMService.processApplications();
 
-    // Check every 10 seconds
+    // Check every 60 seconds (optimized for Supabase log and query quotas)
     this.interval = setInterval(() => {
       void RecruitmentDMService.processApplications();
-    }, 10_000);
+    }, 60_000);
   }
 
   static stop(): void {

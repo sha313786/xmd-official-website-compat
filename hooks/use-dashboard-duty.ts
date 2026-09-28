@@ -64,9 +64,10 @@ export function useDashboardDuty(): UseDashboardDutyReturn {
     void loadDashboard();
   });
 
+  // Fallback polling every 2 minutes
   const interval = setInterval(() => {
     void loadDashboard();
-  }, 30000);
+  }, 120000);
 
   return () => {
     cancelAnimationFrame(frame);
