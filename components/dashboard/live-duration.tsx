@@ -9,32 +9,27 @@ interface LiveDurationProps {
 export default function LiveDuration({
   dutyStart,
 }: LiveDurationProps) {
-  const [, forceUpdate] = useState(0);
+  const [now, setNow] = useState(() => Date.now());
 
+  // Update every second for real-time duration
   useEffect(() => {
     const interval = setInterval(() => {
-      forceUpdate((v) => v + 1);
+      setNow(Date.now());
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const [now, setNow] = useState(() => Date.now());
+  const start = new Date(dutyStart).getTime();
 
-useEffect(() => {
-  const id = setInterval(() => {
-    setNow(Date.now());
-  }, 60000);
+  // Prevent negative durations
+  const diff = Math.max(0, now - start);
 
-  return () => clearInterval(id);
-}, []);
+  const totalSeconds = Math.floor(diff / 1000);
 
-const start = new Date(dutyStart).getTime();
-const diff = now - start;
-
-  const hours = Math.floor(diff / 3600000);
-  const minutes = Math.floor((diff % 3600000) / 60000);
-  const seconds = Math.floor((diff % 60000) / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
 
   return (
     <span>
