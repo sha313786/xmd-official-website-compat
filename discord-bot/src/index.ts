@@ -1,3 +1,4 @@
+import http from "http";
 import { Events } from "discord.js";
 
 import { client } from "./client";
@@ -11,6 +12,17 @@ import { registerEvents } from "./handlers/event-handler";
 import { HealthService } from "./services/health.service";
 import { StatusDashboardService } from "./services/status-dashboard.service";
 import { RecruitmentDMMonitorService } from "./services/recruitment-dm-monitor.service";
+
+// HTTP keep-alive server for Render & UptimeRobot health checks
+const PORT = process.env.PORT || 3000;
+const server = http.createServer((_req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("Bot is online!");
+});
+
+server.listen(PORT, () => {
+  Logger.info(`Health check HTTP server listening on port ${PORT}`);
+});
 
 // Register commands and events
 registerCommands(client);
@@ -46,6 +58,7 @@ async function shutdown(signal: string) {
   Logger.warn(`${signal} received. Shutting down...`);
 
   try {
+    server.close();
     HealthService.stop();
     StatusDashboardService.stop();
     RecruitmentDMMonitorService.stop();
