@@ -16,6 +16,29 @@ import { RecruitmentDMMonitorService } from "./services/recruitment-dm-monitor.s
 
 let lastLoginError: string | null = null;
 
+// Debug and error listeners for real-time telemetry
+client.on(Events.Debug, (info: string) => {
+  // Filter out noise heartbeats
+  if (!info.includes("Heartbeat acknowledged") && !info.includes("Sending a heartbeat")) {
+    recordLiveLog(`[GATEWAY DEBUG] ${info}`);
+  }
+});
+
+client.on(Events.Warn, (warning: string) => {
+  recordLiveLog(`[GATEWAY WARN] ${warning}`);
+  Logger.warn(`[DISCORD WARN] ${warning}`);
+});
+
+client.on(Events.Error, (err: Error) => {
+  recordLiveLog(`[GATEWAY ERROR] ${err.message}`);
+  Logger.error(`[DISCORD ERROR]`, err);
+});
+
+client.rest.on("rateLimited", (info: any) => {
+  recordLiveLog(`[REST RATE LIMITED] Route: ${info.route} | RetryAfter: ${info.timeToReset}ms`);
+  Logger.warn(`[DISCORD RATE LIMITED]`, info);
+});
+
 // HTTP keep-alive server for Render & UptimeRobot health checks
 const PORT = Number(process.env.PORT) || 3000;
 const server = http.createServer((_req, res) => {
@@ -55,8 +78,15 @@ async function bootstrap() {
     await registerEvents(client);
     recordLiveLog("Commands and events registered successfully");
 
-    recordLiveLog("Connecting to Discord Gateway...");
-    await client.login(env.DISCORD_TOKEN);
+    recordLiveLog(`Connecting to Gateway with token prefix ${env.DISCORD_TOKEN.slice(0, 10)}...`);
+    
+    // Login with timeout safety
+    const loginPromise = client.login(env.DISCORD_TOKEN);
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Gateway connection timed out after 30 seconds")), 30000)
+    );
+
+    await Promise.race([loginPromise, timeoutPromise]);
   } catch (error: any) {
     lastLoginError = error?.message || String(error);
     recordLiveLog(`Bootstrap/Login Error: ${lastLoginError}`);
