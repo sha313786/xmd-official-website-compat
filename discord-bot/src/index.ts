@@ -5,6 +5,7 @@ import { client } from "./client";
 
 import { env } from "./config/env";
 import { Logger } from "./config/logger";
+import { liveLogs, recordLiveLog } from "./utils/live-logger";
 
 import { registerCommands } from "./handlers/command-handler";
 import { registerEvents } from "./handlers/event-handler";
@@ -14,14 +15,6 @@ import { StatusDashboardService } from "./services/status-dashboard.service";
 import { RecruitmentDMMonitorService } from "./services/recruitment-dm-monitor.service";
 
 let lastLoginError: string | null = null;
-export const liveLogs: string[] = [];
-
-export function recordLiveLog(message: string) {
-  const line = `[${new Date().toISOString()}] ${message}`;
-  liveLogs.push(line);
-  if (liveLogs.length > 50) liveLogs.shift();
-  console.log(line);
-}
 
 // HTTP keep-alive server for Render & UptimeRobot health checks
 const PORT = Number(process.env.PORT) || 3000;
@@ -54,9 +47,27 @@ server.listen(PORT, "0.0.0.0", () => {
   Logger.info(`Health check HTTP server listening on http://0.0.0.0:${PORT}`);
 });
 
-// Register commands and events
-registerCommands(client);
-registerEvents(client);
+// Async bootstrap to ensure commands and events load sequentially before login
+async function bootstrap() {
+  try {
+    recordLiveLog("Starting bootstrap...");
+    await registerCommands(client);
+    await registerEvents(client);
+    recordLiveLog("Commands and events registered successfully");
+
+    recordLiveLog("Connecting to Discord Gateway...");
+    await client.login(env.DISCORD_TOKEN);
+  } catch (error: any) {
+    lastLoginError = error?.message || String(error);
+    recordLiveLog(`Bootstrap/Login Error: ${lastLoginError}`);
+    Logger.error("Failed during bot bootstrap or login:", error);
+    if (error?.code === "TokenInvalid") {
+      Logger.error(
+        "CRITICAL: The provided DISCORD_TOKEN is invalid or revoked. Please reset the token in the Discord Developer Portal and update Render environment variables."
+      );
+    }
+  }
+}
 
 // Client Ready
 client.once(Events.ClientReady, (readyClient) => {
@@ -115,14 +126,4 @@ process.on("SIGTERM", () => {
   void shutdown("SIGTERM");
 });
 
-// Login
-client.login(env.DISCORD_TOKEN).catch((error) => {
-  lastLoginError = error?.message || String(error);
-  recordLiveLog(`Failed to login to Gateway: ${lastLoginError}`);
-  Logger.error("Failed to login to Discord Gateway:", error);
-  if (error?.code === "TokenInvalid") {
-    Logger.error(
-      "CRITICAL: The provided DISCORD_TOKEN is invalid or revoked. Please reset the token in the Discord Developer Portal and update Render environment variables."
-    );
-  }
-});
+bootstrap();

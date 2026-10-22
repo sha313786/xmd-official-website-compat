@@ -1,5 +1,5 @@
 import { Events, Interaction } from "discord.js";
-import { recordLiveLog } from "../index";
+import { recordLiveLog } from "../utils/live-logger";
 
 export default {
   name: Events.InteractionCreate,
