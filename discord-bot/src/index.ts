@@ -15,10 +15,10 @@ import { StatusDashboardService } from "./services/status-dashboard.service";
 import { RecruitmentDMMonitorService } from "./services/recruitment-dm-monitor.service";
 
 let lastLoginError: string | null = null;
+let isConnecting = false;
 
 // Debug and error listeners for real-time telemetry
 client.on(Events.Debug, (info: string) => {
-  // Filter out noise heartbeats
   if (!info.includes("Heartbeat acknowledged") && !info.includes("Sending a heartbeat")) {
     recordLiveLog(`[GATEWAY DEBUG] ${info}`);
   }
@@ -70,6 +70,33 @@ server.listen(PORT, "0.0.0.0", () => {
   Logger.info(`Health check HTTP server listening on http://0.0.0.0:${PORT}`);
 });
 
+async function connectGateway(attempt = 1) {
+  if (isConnecting || client.isReady()) return;
+  isConnecting = true;
+
+  try {
+    recordLiveLog(`Connecting to Discord Gateway (attempt #${attempt})...`);
+    await client.login(env.DISCORD_TOKEN);
+    lastLoginError = null;
+    isConnecting = false;
+    recordLiveLog(`Gateway connection established successfully as ${client.user?.tag}`);
+  } catch (err: any) {
+    isConnecting = false;
+    lastLoginError = err?.message || String(err);
+    recordLiveLog(`Gateway connection attempt #${attempt} failed: ${lastLoginError}`);
+    Logger.error(`Failed Gateway connection on attempt #${attempt}:`, err);
+
+    if (err?.code === "TokenInvalid") {
+      recordLiveLog("CRITICAL: Invalid DISCORD_TOKEN. Please update in Render environment variables.");
+      return;
+    }
+
+    const delaySec = Math.min(5 * attempt, 30);
+    recordLiveLog(`Retrying Discord Gateway connection in ${delaySec}s...`);
+    setTimeout(() => connectGateway(attempt + 1), delaySec * 1000);
+  }
+}
+
 // Async bootstrap to ensure commands and events load sequentially before login
 async function bootstrap() {
   try {
@@ -78,24 +105,10 @@ async function bootstrap() {
     await registerEvents(client);
     recordLiveLog("Commands and events registered successfully");
 
-    recordLiveLog(`Connecting to Gateway with token prefix ${env.DISCORD_TOKEN.slice(0, 10)}...`);
-    
-    // Login with timeout safety
-    const loginPromise = client.login(env.DISCORD_TOKEN);
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Gateway connection timed out after 30 seconds")), 30000)
-    );
-
-    await Promise.race([loginPromise, timeoutPromise]);
+    await connectGateway(1);
   } catch (error: any) {
-    lastLoginError = error?.message || String(error);
-    recordLiveLog(`Bootstrap/Login Error: ${lastLoginError}`);
-    Logger.error("Failed during bot bootstrap or login:", error);
-    if (error?.code === "TokenInvalid") {
-      Logger.error(
-        "CRITICAL: The provided DISCORD_TOKEN is invalid or revoked. Please reset the token in the Discord Developer Portal and update Render environment variables."
-      );
-    }
+    recordLiveLog(`Bootstrap Error: ${error?.message || String(error)}`);
+    Logger.error("Failed during bot bootstrap:", error);
   }
 }
 
@@ -114,6 +127,12 @@ client.once(Events.ClientReady, (readyClient) => {
 
   // Start Recruitment DM Monitor
   RecruitmentDMMonitorService.start();
+});
+
+// Client Disconnect / Reconnect handling
+client.on(Events.ShardDisconnect, (event, shardId) => {
+  recordLiveLog(`[GATEWAY DISCONNECT] Shard ${shardId} disconnected (code: ${event.code}, reason: ${event.reason || 'none'}). Reconnecting...`);
+  connectGateway(1);
 });
 
 // Unhandled Promise Rejections
