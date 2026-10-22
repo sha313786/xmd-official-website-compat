@@ -13,15 +13,35 @@ import { HealthService } from "./services/health.service";
 import { StatusDashboardService } from "./services/status-dashboard.service";
 import { RecruitmentDMMonitorService } from "./services/recruitment-dm-monitor.service";
 
+let lastLoginError: string | null = null;
+
 // HTTP keep-alive server for Render & UptimeRobot health checks
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const server = http.createServer((_req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("Bot is online!");
+  const isReady = client.isReady();
+  const statusCode = isReady ? 200 : (lastLoginError ? 503 : 200);
+
+  res.writeHead(statusCode, { "Content-Type": "application/json" });
+  res.end(
+    JSON.stringify(
+      {
+        status: isReady ? "online" : (lastLoginError ? "error" : "connecting"),
+        gateway: isReady ? "connected" : "disconnected",
+        bot: client.user ? client.user.tag : null,
+        ping: isReady ? client.ws.ping : null,
+        guilds: isReady ? client.guilds.cache.size : 0,
+        error: lastLoginError,
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+      },
+      null,
+      2
+    )
+  );
 });
 
-server.listen(PORT, () => {
-  Logger.info(`Health check HTTP server listening on port ${PORT}`);
+server.listen(PORT, "0.0.0.0", () => {
+  Logger.info(`Health check HTTP server listening on http://0.0.0.0:${PORT}`);
 });
 
 // Register commands and events
@@ -30,6 +50,7 @@ registerEvents(client);
 
 // Client Ready
 client.once(Events.ClientReady, (readyClient) => {
+  lastLoginError = null;
   Logger.success(`Logged in as ${readyClient.user.tag}`);
   Logger.info(`${client.commands.size} command(s) loaded.`);
 
@@ -83,6 +104,11 @@ process.on("SIGTERM", () => {
 
 // Login
 client.login(env.DISCORD_TOKEN).catch((error) => {
-  Logger.error("Failed to login to Discord:", error);
-  process.exit(1);
+  lastLoginError = error?.message || String(error);
+  Logger.error("Failed to login to Discord Gateway:", error);
+  if (error?.code === "TokenInvalid") {
+    Logger.error(
+      "CRITICAL: The provided DISCORD_TOKEN is invalid or revoked. Please reset the token in the Discord Developer Portal and update Render environment variables."
+    );
+  }
 });

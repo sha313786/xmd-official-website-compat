@@ -44,15 +44,26 @@ export default {
     // Buttons
     if (interaction.isButton()) {
       try {
-        const button = require(
-          `../buttons/${interaction.customId}`
-        ).default;
+        let buttonModule: any;
+        try {
+          buttonModule = require(`../buttons/${interaction.customId}`);
+        } catch {
+          buttonModule = await import(`../buttons/${interaction.customId}`);
+        }
 
-        if (!button) return;
+        const button =
+          buttonModule?.default?.default ??
+          buttonModule?.default ??
+          buttonModule;
+
+        if (!button) {
+          console.warn(`[BUTTON] Unknown button clicked: ${interaction.customId}`);
+          return;
+        }
 
         await button.execute(interaction);
       } catch (error) {
-        console.error(error);
+        console.error(`[BUTTON ERROR] Failed executing button ${interaction.customId}:`, error);
 
         if (interaction.replied || interaction.deferred) {
           await interaction.followUp({
