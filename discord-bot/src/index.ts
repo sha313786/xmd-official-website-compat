@@ -14,6 +14,14 @@ import { StatusDashboardService } from "./services/status-dashboard.service";
 import { RecruitmentDMMonitorService } from "./services/recruitment-dm-monitor.service";
 
 let lastLoginError: string | null = null;
+export const liveLogs: string[] = [];
+
+export function recordLiveLog(message: string) {
+  const line = `[${new Date().toISOString()}] ${message}`;
+  liveLogs.push(line);
+  if (liveLogs.length > 50) liveLogs.shift();
+  console.log(line);
+}
 
 // HTTP keep-alive server for Render & UptimeRobot health checks
 const PORT = Number(process.env.PORT) || 3000;
@@ -29,10 +37,12 @@ const server = http.createServer((_req, res) => {
         gateway: isReady ? "connected" : "disconnected",
         bot: client.user ? client.user.tag : null,
         ping: isReady ? client.ws.ping : null,
-        guilds: isReady ? client.guilds.cache.size : 0,
+        guildCount: isReady ? client.guilds.cache.size : 0,
+        guilds: isReady ? client.guilds.cache.map(g => ({ id: g.id, name: g.name })) : [],
         error: lastLoginError,
         uptime: process.uptime(),
         timestamp: new Date().toISOString(),
+        recentLogs: liveLogs,
       },
       null,
       2
@@ -51,6 +61,7 @@ registerEvents(client);
 // Client Ready
 client.once(Events.ClientReady, (readyClient) => {
   lastLoginError = null;
+  recordLiveLog(`Logged in to Gateway as ${readyClient.user.tag}`);
   Logger.success(`Logged in as ${readyClient.user.tag}`);
   Logger.info(`${client.commands.size} command(s) loaded.`);
 
@@ -66,11 +77,13 @@ client.once(Events.ClientReady, (readyClient) => {
 
 // Unhandled Promise Rejections
 process.on("unhandledRejection", (reason) => {
+  recordLiveLog(`Unhandled Promise Rejection: ${String(reason)}`);
   Logger.error("Unhandled Promise Rejection:", reason);
 });
 
 // Uncaught Exceptions
 process.on("uncaughtException", (error) => {
+  recordLiveLog(`Uncaught Exception: ${error?.message || String(error)}`);
   Logger.error("Uncaught Exception:", error);
 });
 
@@ -105,6 +118,7 @@ process.on("SIGTERM", () => {
 // Login
 client.login(env.DISCORD_TOKEN).catch((error) => {
   lastLoginError = error?.message || String(error);
+  recordLiveLog(`Failed to login to Gateway: ${lastLoginError}`);
   Logger.error("Failed to login to Discord Gateway:", error);
   if (error?.code === "TokenInvalid") {
     Logger.error(
