@@ -41,7 +41,38 @@ client.rest.on("rateLimited", (info: any) => {
 
 // HTTP keep-alive server for Render & UptimeRobot health checks
 const PORT = Number(process.env.PORT) || 3000;
-const server = http.createServer((_req, res) => {
+const server = http.createServer(async (req, res) => {
+  if (req.url === "/test-discord") {
+    try {
+      const start = Date.now();
+      const testRes = await fetch("https://discord.com/api/v10/gateway/bot", {
+        headers: {
+          Authorization: `Bot ${env.DISCORD_TOKEN}`,
+        },
+        signal: AbortSignal.timeout(10000),
+      });
+      const text = await testRes.text();
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify(
+          {
+            statusCode: testRes.status,
+            statusText: testRes.statusText,
+            headers: Object.fromEntries(testRes.headers.entries()),
+            body: text,
+            durationMs: Date.now() - start,
+          },
+          null,
+          2
+        )
+      );
+    } catch (err: any) {
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: err.message, name: err.name, stack: err.stack }));
+    }
+    return;
+  }
+
   const isReady = client.isReady();
   const statusCode = isReady ? 200 : (lastLoginError ? 503 : 200);
 
