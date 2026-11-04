@@ -1,9 +1,36 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+
+function AuthErrorMessage() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+  const errorDescription = searchParams.get("error_description");
+
+  if (!error) return null;
+
+  let message = "An error occurred during authentication.";
+  if (error === "server_error" || error === "oauth_error") {
+    message = errorDescription || "OAuth verification failed. Please try again.";
+  } else if (error === "no_user") {
+    message = "Unable to retrieve user details from authentication.";
+  } else if (error === "no_discord_id") {
+    message = "Could not resolve your Discord identity. Please try again.";
+  } else if (error === "missing_code") {
+    message = "No authorization code was provided by Discord.";
+  }
+
+  return (
+    <div className="mt-4 rounded-xl border border-red-500/40 bg-red-950/50 p-3 text-left text-xs text-red-300">
+      <span className="font-semibold block text-red-200">Sign-in Notice:</span>
+      <span className="text-zinc-300">{message}</span>
+    </div>
+  );
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -61,6 +88,10 @@ export default function LoginPage() {
               <p className="mt-4 text-xs sm:text-sm text-zinc-400">
                 Sign in with Discord to access the XMD Command Portal
               </p>
+
+              <Suspense fallback={null}>
+                <AuthErrorMessage />
+              </Suspense>
 
               <button
                 type="button"
