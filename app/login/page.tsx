@@ -13,21 +13,23 @@ function AuthErrorMessage() {
 
   if (!error) return null;
 
-  let message = "An error occurred during authentication.";
-  if (error === "server_error" || error === "oauth_error") {
-    message = errorDescription || "OAuth verification failed. Please try again.";
-  } else if (error === "no_user") {
-    message = "Unable to retrieve user details from authentication.";
-  } else if (error === "no_discord_id") {
-    message = "Could not resolve your Discord identity. Please try again.";
-  } else if (error === "missing_code") {
-    message = "No authorization code was provided by Discord.";
+  let message = errorDescription || "An error occurred during authentication.";
+  if (!errorDescription) {
+    if (error === "server_error" || error === "oauth_error") {
+      message = "OAuth verification failed. Please try again.";
+    } else if (error === "no_user") {
+      message = "Unable to retrieve user details from authentication.";
+    } else if (error === "no_discord_id") {
+      message = "Could not resolve your Discord identity. Please try again.";
+    } else if (error === "missing_code") {
+      message = "No authorization code or session was received from Discord.";
+    }
   }
 
   return (
     <div className="mt-4 rounded-xl border border-red-500/40 bg-red-950/50 p-3 text-left text-xs text-red-300">
       <span className="font-semibold block text-red-200">Sign-in Notice:</span>
-      <span className="text-zinc-300">{message}</span>
+      <span className="text-zinc-300 break-words">{message}</span>
     </div>
   );
 }
