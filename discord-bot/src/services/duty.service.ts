@@ -1,6 +1,7 @@
 import { supabase } from "../config/supabase";
 import { MemberService } from "./member.service";
 import { PromotionCycleService } from "./promotion-cycle.service";
+import { dutyLogService } from "./duty-log.service";
 
 export class DutyService {
   /**
@@ -159,6 +160,55 @@ export class DutyService {
     }
 
     return data;
+  }
+
+  /**
+   * Auto-ends all active duties at 1:00 AM and notifies Discord.
+   */
+  static async autoEndAllDuties(client?: any) {
+    console.log("[AUTO OFF-DUTY] Checking for active duty sessions at 1:00 AM...");
+
+    const { data: activeSessions, error } = await supabase
+      .from("duty_logs")
+      .select("*")
+      .is("duty_end", null);
+
+    if (error) {
+      console.error("[AUTO OFF-DUTY] Failed to fetch active sessions:", error);
+      return [];
+    }
+
+    if (!activeSessions || activeSessions.length === 0) {
+      console.log("[AUTO OFF-DUTY] No active sessions found.");
+      return [];
+    }
+
+    const closedList = [];
+
+    for (const session of activeSessions) {
+      try {
+        const closed = await this.endDutyForMember(session.member_id);
+
+        if (client) {
+          const { data: member } = await supabase
+            .from("members")
+            .select("*")
+            .eq("id", session.member_id)
+            .maybeSingle();
+
+          if (member) {
+            await dutyLogService.logOffDuty(client, member.discord_id || member, closed);
+          }
+        }
+
+        closedList.push(closed);
+      } catch (err) {
+        console.error(`[AUTO OFF-DUTY] Error closing duty for member ${session.member_id}:`, err);
+      }
+    }
+
+    console.log(`[AUTO OFF-DUTY] Successfully auto-ended ${closedList.length} session(s).`);
+    return closedList;
   }
 }
 

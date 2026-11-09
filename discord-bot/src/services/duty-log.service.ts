@@ -121,7 +121,7 @@ export class DutyLogService {
 
   static async logOffDuty(
     client: Client,
-    discordId: string,
+    target: string | any,
     session: {
       id?: string;
       duty_start?: string;
@@ -129,9 +129,20 @@ export class DutyLogService {
       duty_hours?: number;
     }
   ): Promise<void> {
+    let discordId = "";
     try {
+      let member: any;
+
+      if (typeof target === "object" && target !== null) {
+        member = target;
+        discordId = member.discord_id ?? "";
+      } else {
+        discordId = String(target);
+        member = await MemberService.getByDiscordId(discordId);
+      }
+
       Logger.info(
-        `[DUTY LOG] Sending OFF DUTY log for ${discordId}`
+        `[DUTY LOG] Sending OFF DUTY log for ${discordId || member?.full_name}`
       );
 
       const channel = await this.getChannel(client);
@@ -139,9 +150,6 @@ export class DutyLogService {
       if (!channel) {
         return;
       }
-
-      const member =
-        await MemberService.getByDiscordId(discordId);
 
       const dutyStart = session.duty_start
         ? new Date(session.duty_start)

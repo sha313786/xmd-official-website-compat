@@ -42,6 +42,3 @@ next-env.d.ts
 
 # Discord bot logs
 discord-bot/logs/
-
-# Discord bot build output
-discord-bot/dist/
