@@ -94,7 +94,23 @@ class RecruitmentDMService {
                 }
             }
             catch (error) {
-                logger_1.Logger.error(`Failed to send recruitment DM to Discord ID ${application.discord_id}:`, error);
+                // If user left server (50278), closed DMs (50007), or unknown user (10013)
+                if (error?.code === 50278 ||
+                    error?.code === 50007 ||
+                    error?.code === 10013) {
+                    logger_1.Logger.warn(`[RECRUITMENT] Skipped DM to ${application.discord_id}: User left server or DMs closed (Code ${error.code}).`);
+                    // Mark as handled in database so bot does not retry infinitely
+                    const updateField = application.status === "approved"
+                        ? { acceptance_dm_sent: true }
+                        : { rejection_dm_sent: true };
+                    await supabase
+                        .from("recruitment_applications")
+                        .update(updateField)
+                        .eq("id", application.id);
+                }
+                else {
+                    logger_1.Logger.error(`Failed to send recruitment DM to Discord ID ${application.discord_id}:`, error);
+                }
             }
         }
     }
