@@ -257,27 +257,27 @@ client.once(Events.ClientReady, (readyClient) => {
   // Recruitment DM monitor
   RecruitmentDMMonitorService.start();
 
-  // Daily Auto Off-Duty at 1:00 AM IST
+  // Daily Auto Off-Duty at 1:15 AM IST
   cron.schedule(
-    "0 1 * * *",
+    "15 1 * * *",
     async () => {
       recordLiveLog(
-        "⏰ [CRON] 1:00 AM IST reached. Running Auto Off-Duty..."
+        "⏰ [CRON] 1:15 AM IST reached. Running Auto Off-Duty..."
       );
 
       Logger.info(
-        "⏰ [CRON] 1:00 AM IST reached. Running Auto Off-Duty..."
+        "⏰ [CRON] 1:15 AM IST reached. Running Auto Off-Duty..."
       );
 
       try {
         await dutyService.autoEndAllDuties(client);
       } catch (cronErr) {
         recordLiveLog(
-          `⏰ [CRON ERROR] Failed 1:00 AM Auto Off-Duty: ${cronErr}`
+          `⏰ [CRON ERROR] Failed 1:15 AM Auto Off-Duty: ${cronErr}`
         );
 
         Logger.error(
-          "Error during 1:00 AM Auto Off-Duty:",
+          "Error during 1:15 AM Auto Off-Duty:",
           cronErr
         );
       }
@@ -288,7 +288,7 @@ client.once(Events.ClientReady, (readyClient) => {
   );
 
   Logger.info(
-    "⏰ 1:00 AM IST Auto Off-Duty cron job scheduled."
+    "⏰ 1:15 AM IST Auto Off-Duty cron job scheduled."
   );
 });
 

@@ -158,21 +158,21 @@ client_1.client.once(discord_js_1.Events.ClientReady, (readyClient) => {
     status_dashboard_service_1.StatusDashboardService.start();
     // Recruitment DM monitor
     recruitment_dm_monitor_service_1.RecruitmentDMMonitorService.start();
-    // Daily Auto Off-Duty at 1:00 AM IST
-    node_cron_1.default.schedule("0 1 * * *", async () => {
-        (0, live_logger_1.recordLiveLog)("⏰ [CRON] 1:00 AM IST reached. Running Auto Off-Duty...");
-        logger_1.Logger.info("⏰ [CRON] 1:00 AM IST reached. Running Auto Off-Duty...");
+    // Daily Auto Off-Duty at 1:15 AM IST
+    node_cron_1.default.schedule("15 1 * * *", async () => {
+        (0, live_logger_1.recordLiveLog)("⏰ [CRON] 1:15 AM IST reached. Running Auto Off-Duty...");
+        logger_1.Logger.info("⏰ [CRON] 1:15 AM IST reached. Running Auto Off-Duty...");
         try {
             await duty_service_1.dutyService.autoEndAllDuties(client_1.client);
         }
         catch (cronErr) {
-            (0, live_logger_1.recordLiveLog)(`⏰ [CRON ERROR] Failed 1:00 AM Auto Off-Duty: ${cronErr}`);
-            logger_1.Logger.error("Error during 1:00 AM Auto Off-Duty:", cronErr);
+            (0, live_logger_1.recordLiveLog)(`⏰ [CRON ERROR] Failed 1:15 AM Auto Off-Duty: ${cronErr}`);
+            logger_1.Logger.error("Error during 1:15 AM Auto Off-Duty:", cronErr);
         }
     }, {
         timezone: "Asia/Kolkata",
     });
-    logger_1.Logger.info("⏰ 1:00 AM IST Auto Off-Duty cron job scheduled.");
+    logger_1.Logger.info("⏰ 1:15 AM IST Auto Off-Duty cron job scheduled.");
 });
 // Client Disconnect / Reconnect monitoring
 client_1.client.on(discord_js_1.Events.ShardDisconnect, (event, shardId) => {

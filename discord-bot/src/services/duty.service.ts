@@ -163,10 +163,10 @@ export class DutyService {
   }
 
   /**
-   * Auto-ends all active duties at 1:00 AM and notifies Discord.
+   * Auto-ends all active duties at 1:15 AM and notifies Discord.
    */
   static async autoEndAllDuties(client?: any) {
-    console.log("[AUTO OFF-DUTY] Checking for active duty sessions at 1:00 AM...");
+    console.log("[AUTO OFF-DUTY] Checking for active duty sessions at 1:15 AM...");
 
     const { data: activeSessions, error } = await supabase
       .from("duty_logs")
