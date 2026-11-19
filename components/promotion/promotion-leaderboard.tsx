@@ -25,25 +25,39 @@ export function PromotionLeaderboard() {
     cycle?.id
   );
 
-  function getBadge(type: string) {
+  function getBadge(type: string, eligible: boolean) {
     switch (type) {
       case "DOUBLE":
         return (
-          <Badge className="bg-yellow-500 hover:bg-yellow-500 text-black">
-            🏆 DOUBLE PROMOTION
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge className="bg-yellow-500 hover:bg-yellow-500 text-black font-semibold">
+              🏆 DOUBLE PROMOTION
+            </Badge>
+            {!eligible && (
+              <Badge variant="outline" className="border-amber-500/40 text-amber-400 text-xs">
+                PENDING
+              </Badge>
+            )}
+          </div>
         );
 
       case "SINGLE":
         return (
-          <Badge className="bg-green-600 hover:bg-green-600">
-            SINGLE PROMOTION
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge className="bg-green-600 hover:bg-green-600 font-semibold">
+              SINGLE PROMOTION
+            </Badge>
+            {!eligible && (
+              <Badge variant="outline" className="border-amber-500/40 text-amber-400 text-xs">
+                PENDING
+              </Badge>
+            )}
+          </div>
         );
 
       case "MANAGEMENT_REWARD":
         return (
-          <Badge className="bg-blue-600 hover:bg-blue-600">
+          <Badge className="bg-blue-600 hover:bg-blue-600 font-semibold">
             MANAGEMENT ROLE
           </Badge>
         );
@@ -51,7 +65,7 @@ export function PromotionLeaderboard() {
       default:
         return (
           <Badge variant="secondary">
-            NOT ELIGIBLE
+            {eligible ? "ELIGIBLE" : "PENDING"}
           </Badge>
         );
     }
@@ -90,7 +104,7 @@ export function PromotionLeaderboard() {
                   </p>
 
                   <div className="mt-2">
-                    {getBadge(result.promotion_type)}
+                    {getBadge(result.promotion_type, result.eligible)}
                   </div>
                 </div>
 

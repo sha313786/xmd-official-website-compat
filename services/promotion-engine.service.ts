@@ -144,13 +144,6 @@ export class PromotionEngine {
     }
 
     if (
-      totalHours < requiredHours ||
-      (requiredDays > 0 && dutyDays < requiredDays)
-    ) {
-      return "NONE";
-    }
-
-    if (
       leaderboardPosition <= 3 &&
       this.canReceiveDoublePromotion(rank)
     ) {
@@ -213,9 +206,7 @@ export class PromotionEngine {
             data.current_rank,
             promotionType === "DOUBLE"
               ? "DOUBLE"
-              : promotionType === "SINGLE"
-              ? "SINGLE"
-              : "NONE"
+              : "SINGLE"
           );
 
     return {

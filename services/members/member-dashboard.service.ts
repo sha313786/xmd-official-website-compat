@@ -5,6 +5,7 @@ import {
 
 import { dutyService } from "@/services/duty-service";
 import { promotionService } from "@/services/promotion.service";
+import { PromotionEngine } from "@/services/promotion-engine.service";
 
 import {
   MemberActivity,
@@ -145,12 +146,27 @@ export const memberDashboardService = {
             member.rank,
 
           nextRank:
-            promotionResult?.new_rank ??
-            null,
+            promotionResult?.new_rank && promotionResult.new_rank !== member.rank
+              ? promotionResult.new_rank
+              : PromotionEngine.isManagement(member.rank)
+              ? member.rank
+              : PromotionEngine.nextRank(
+                  member.rank,
+                  promotionResult?.promotion_type === "DOUBLE" ||
+                  (promotionResult?.position && promotionResult.position <= 3 && PromotionEngine.canReceiveDoublePromotion(member.rank))
+                    ? "DOUBLE"
+                    : "SINGLE"
+                ),
 
           promotionType:
-            (promotionResult?.promotion_type as MemberPromotionType) ??
-            "NONE",
+            (promotionResult?.promotion_type && promotionResult.promotion_type !== "NONE"
+              ? (promotionResult.promotion_type as MemberPromotionType)
+              : null) ??
+            (PromotionEngine.isManagement(member.rank)
+              ? "MANAGEMENT_REWARD"
+              : (promotionResult?.position && promotionResult.position <= 3 && PromotionEngine.canReceiveDoublePromotion(member.rank))
+              ? "DOUBLE"
+              : "SINGLE"),
 
           leaderboardPosition:
             promotionResult?.position ??

@@ -64,15 +64,38 @@ export default function PromotionProgressCard({
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <Info
-  label="Duty Hours"
-  value={`${Number(totalHours).toFixed(2)} / ${requiredHours}`}
-/>
+            label="Current Rank"
+            value={result?.current_rank || "Trainee"}
+          />
+
+          <Info
+            label="Next Rank"
+            value={result?.new_rank || "-"}
+          />
+
+          <Info
+            label="Promotion Type"
+            value={
+              result?.promotion_type === "MANAGEMENT_REWARD"
+                ? "Management Role"
+                : result?.promotion_type === "DOUBLE"
+                ? "Double Promotion"
+                : result?.promotion_type === "SINGLE"
+                ? "Single Promotion"
+                : "Single Promotion"
+            }
+          />
+
+          <Info
+            label="Duty Hours"
+            value={`${Number(totalHours).toFixed(2)} / ${requiredHours}`}
+          />
 
           <Info
             label="Duty Days"
-            value={result?.duty_days ?? 0}
+            value={`${result?.duty_days ?? 0}${cycle?.required_days ? ` / ${cycle.required_days}` : ""}`}
           />
 
           <Info
@@ -83,31 +106,28 @@ export default function PromotionProgressCard({
                 : "-"
             }
           />
-
-          <Info
-  label="Promotion Type"
-  value={
-    result?.promotion_type === "MANAGEMENT_REWARD"
-      ? "Management Role"
-      : result?.promotion_type === "DOUBLE"
-      ? "Double Promotion"
-      : result?.promotion_type === "SINGLE"
-      ? "Single Promotion"
-      : "Not Eligible"
-  }
-/>
         </div>
 
         <div className="rounded-lg border border-white/10 bg-slate-800 p-4">
-          {totalHours >= requiredHours ? (
+          {totalHours >= requiredHours && (!cycle?.required_days || (result?.duty_days ?? 0) >= cycle.required_days) ? (
             <p className="font-semibold text-green-400">
               Eligible for Promotion
             </p>
           ) : (
-            <p className="font-semibold text-yellow-400">
-  {Number(remainingHours).toFixed(2)} more duty hour
-  {remainingHours === 1 ? "" : "s"} required
-</p>
+            <div className="space-y-1">
+              {totalHours < requiredHours && (
+                <p className="font-semibold text-yellow-400">
+                  {Number(remainingHours).toFixed(2)} more duty hour
+                  {remainingHours === 1 ? "" : "s"} required
+                </p>
+              )}
+              {cycle?.required_days && (result?.duty_days ?? 0) < cycle.required_days && (
+                <p className="text-sm text-slate-400">
+                  {cycle.required_days - (result?.duty_days ?? 0)} more duty day
+                  {cycle.required_days - (result?.duty_days ?? 0) === 1 ? "" : "s"} required
+                </p>
+              )}
+            </div>
           )}
         </div>
       </CardContent>

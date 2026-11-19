@@ -12,6 +12,7 @@ import { createClient } from "@/lib/supabase/client";
 import {
   DashboardRoleService,
 } from "@/services/dashboard/dashboard-role.service";
+import { PromotionEngine } from "@/services/promotion-engine.service";
 
 export function useMemberPromotion() {
   const [cycle, setCycle] =
@@ -232,6 +233,44 @@ export function useMemberPromotion() {
         // with current duty_logs values.
         // ============================================
 
+        const memberRank =
+          storedResult?.current_rank ||
+          dashboardUser.rank ||
+          "Trainee";
+
+        const position = storedResult?.position ?? null;
+
+        let promoType = storedResult?.promotion_type;
+        if (!promoType || promoType === "NONE") {
+          if (PromotionEngine.isManagement(memberRank)) {
+            promoType = "MANAGEMENT_REWARD";
+          } else if (
+            position &&
+            position <= 3 &&
+            PromotionEngine.canReceiveDoublePromotion(memberRank)
+          ) {
+            promoType = "DOUBLE";
+          } else {
+            promoType = "SINGLE";
+          }
+        }
+
+        const calculatedNextRank =
+          storedResult?.new_rank && storedResult.new_rank !== memberRank
+            ? storedResult.new_rank
+            : PromotionEngine.isManagement(memberRank)
+            ? memberRank
+            : PromotionEngine.nextRank(
+                memberRank,
+                promoType === "DOUBLE" ? "DOUBLE" : "SINGLE"
+              );
+
+        const isMemberEligible =
+          totalHours >= Number(activeCycle.required_hours ?? 25) &&
+          (activeCycle.required_days
+            ? dutyDays >= Number(activeCycle.required_days)
+            : true);
+
         const finalResult = {
           ...(storedResult ?? {}),
 
@@ -240,6 +279,18 @@ export function useMemberPromotion() {
 
           member_id:
             dashboardUser.id,
+
+          current_rank:
+            memberRank,
+
+          new_rank:
+            calculatedNextRank,
+
+          promotion_type:
+            promoType,
+
+          eligible:
+            isMemberEligible,
 
           total_hours:
             Number(

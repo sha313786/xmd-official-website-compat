@@ -180,7 +180,7 @@ export default function PromotionOverviewCard({
             </p>
 
             <p className="mt-2 font-semibold">
-              {remainingHours} hrs
+              {Number(remainingHours).toFixed(2)} hrs
             </p>
 
             <p className="text-sm text-muted-foreground">
