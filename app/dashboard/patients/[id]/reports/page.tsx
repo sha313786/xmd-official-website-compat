@@ -302,7 +302,7 @@ export default function PatientReportsPage() {
               </p>
 
               <p className="mt-1 text-sm text-slate-500">
-                Click "+ Add Report" to upload a report.
+                Click &quot;+ Add Report&quot; to upload a report.
               </p>
             </div>
           </div>

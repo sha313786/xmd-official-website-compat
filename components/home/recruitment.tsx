@@ -65,7 +65,7 @@ export default function Recruitment() {
                     Start your journey with XMD today and become part of an
                     elite emergency medical team serving XLANTIS City.
                     Explore the recruitment process and begin your
-                    medical career with one of the city's most respected
+                    medical career with one of the city&apos;s most respected
                     healthcare departments.
                   </p>
 

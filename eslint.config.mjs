@@ -20,7 +20,7 @@ export default defineConfig([
     "next-env.d.ts",
 
     // Discord Bot
-    "discord-bot/dist/**",
+    "discord-bot/**",
 
     // Other
     "node_modules/**",

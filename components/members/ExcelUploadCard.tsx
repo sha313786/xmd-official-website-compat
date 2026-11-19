@@ -195,7 +195,7 @@ export function ExcelUploadCard({
 
             <li>
               • Department is assigned automatically
-              based on the member's rank.
+              based on the member&apos;s rank.
             </li>
 
             <li>

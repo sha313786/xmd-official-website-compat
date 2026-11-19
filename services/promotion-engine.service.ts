@@ -133,11 +133,11 @@ export class PromotionEngine {
 
   static determinePromotionType(
     rank: string,
-    totalHours: number,
+    _totalHours: number,
     leaderboardPosition: number,
-    requiredHours = 25,
-    dutyDays = 0,
-    requiredDays = 0
+    _requiredHours = 25,
+    _dutyDays = 0,
+    _requiredDays = 0
   ): PromotionResult["promotion_type"] {
     if (this.isManagement(rank)) {
       return "MANAGEMENT_REWARD";

@@ -20,7 +20,7 @@ export default function MaintenancePage() {
 
         <div className="mt-8 text-center">
           <h1 className="text-5xl font-extrabold tracking-tight">
-            We'll Be Back Soon
+            We&apos;ll Be Back Soon
           </h1>
 
           <p className="mt-6 text-lg text-muted-foreground">
