@@ -46,7 +46,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         { name: "Patients", href: "/dashboard/patients", icon: UserCheck },
         { name: "Promotion", href: "/dashboard/promotion", icon: Award },
         { name: "Recruitment", href: "/dashboard/recruitment", icon: UserPlus },
-        { name: "Reports", href: "/dashboard/reports", icon: FileText },
+        { name: "Reports", href: "/dashboard/report", icon: FileText },
 
         ...(profile?.isSuperAdmin
           ? [

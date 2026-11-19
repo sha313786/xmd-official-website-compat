@@ -1,9 +1,10 @@
 import Link from "next/link";
 import {
   ClipboardList,
-  Megaphone,
   Settings,
   Trophy,
+  UserCheck,
+  UserPlus,
   Users,
 } from "lucide-react";
 
@@ -17,7 +18,7 @@ import {
 const actions = [
   {
     title: "Promotion Tracker",
-    href: "/dashboard/promotion-tracker",
+    href: "/dashboard/promotion",
     icon: Trophy,
   },
   {
@@ -26,18 +27,18 @@ const actions = [
     icon: Users,
   },
   {
-    title: "Discord Verification",
-    href: "/dashboard/discord",
-    icon: Users,
+    title: "Patients",
+    href: "/dashboard/patients",
+    icon: UserCheck,
   },
   {
-    title: "Announcements",
-    href: "/dashboard/announcements",
-    icon: Megaphone,
+    title: "Recruitment",
+    href: "/dashboard/recruitment",
+    icon: UserPlus,
   },
   {
     title: "Reports",
-    href: "/dashboard/reports",
+    href: "/dashboard/report",
     icon: ClipboardList,
   },
   {
